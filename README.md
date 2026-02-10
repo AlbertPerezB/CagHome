@@ -29,6 +29,8 @@ Tryk på login linket
 
 ## Notes
 
+[Mongo](https://www.mongodb.com/resources/products/capabilities/mongodb-time-series-data) til timeseries. [Mongo Timeseries docs](https://www.mongodb.com/docs/manual/core/timeseries-collections/)
+
 Det er smart at have en broker, fordi den kan være det første kunderne møder. Brug den til verficere login / auth. Men også da den som broker kan smide forskellige beskeder til forskellige consumere. Hvis der er mange beskeder til consumer eller vi ændre navne på klasser sygdomme whatever, så rammer alle beskeder samme endpoint og vi kan dele det ud til alle mulige consumere / mqtt consumere på bagsiden. Fungerer som en gateway. 
 
 Brokerne kan også som det første smide correlation id på alt og vi har overblik i logs/traces.
