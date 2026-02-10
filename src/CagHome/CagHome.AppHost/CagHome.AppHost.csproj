@@ -1,0 +1,23 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.1.0">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>5b8bb558-32de-4742-af6f-bfd405210d22</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CagHome.ApiService\CagHome.ApiService.csproj" />
+    <ProjectReference Include="..\CagHome.Broker\CagHome.Broker.csproj" />
+    <ProjectReference Include="..\CagHome.Consumer\CagHome.Consumer.csproj" />
+    <ProjectReference Include="..\CagHome.Web\CagHome.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.MongoDB" Version="13.1.0" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.1.0" />
+  </ItemGroup>
+
+</Project>
