@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.Web", "CagHome.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Broker", "CagHome.Broker\CagHome.Broker.csproj", "{7B62D4FE-320C-4682-B439-52847DF31A71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Consumer", "CagHome.Consumer\CagHome.Consumer.csproj", "{8C73E4A2-410D-4983-A126-63B8C9D4E892}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.IngestionService", "CagHome.Consumer\CagHome.IngestionService.csproj", "{8C73E4A2-410D-4983-A126-63B8C9D4E892}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Simulator", "CagHome.Simulator\CagHome.Simulator.csproj", "{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}"
 EndProject
