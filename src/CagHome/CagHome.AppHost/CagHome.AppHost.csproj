@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CagHome.ApiService\CagHome.ApiService.csproj" />
     <ProjectReference Include="..\CagHome.Broker\CagHome.Broker.csproj" />
-    <ProjectReference Include="..\CagHome.Consumer\CagHome.Consumer.csproj" />
+    <ProjectReference Include="..\CagHome.Consumer\CagHome.IngestionService.csproj" />
     <ProjectReference Include="..\CagHome.Simulator\CagHome.Simulator.csproj" />
     <ProjectReference Include="..\CagHome.Web\CagHome.Web.csproj" />
   </ItemGroup>

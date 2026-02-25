@@ -32,7 +32,7 @@ var simulatorProfile = builder.AddParameter("simulator-profile", "normal");
 var broker = builder.AddProject<Projects.CagHome_Broker>("broker")
     .WithEnvironment("MQTT_PORT", brokerPort);
 
-builder.AddProject<Projects.CagHome_Consumer>("consumer")
+builder.AddProject<Projects.CagHome_IngestionService>("ingestionservice")
     .WithReference(broker)
     .WithReference(mongodb)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort)
