@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Broker", "CagHome.B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Consumer", "CagHome.Consumer\CagHome.Consumer.csproj", "{8C73E4A2-410D-4983-A126-63B8C9D4E892}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Simulator", "CagHome.Simulator\CagHome.Simulator.csproj", "{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{8C73E4A2-410D-4983-A126-63B8C9D4E892}.Release|x64.Build.0 = Release|Any CPU
 		{8C73E4A2-410D-4983-A126-63B8C9D4E892}.Release|x86.ActiveCfg = Release|Any CPU
 		{8C73E4A2-410D-4983-A126-63B8C9D4E892}.Release|x86.Build.0 = Release|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Debug|x64.Build.0 = Debug|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Debug|x86.Build.0 = Debug|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|x64.ActiveCfg = Release|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|x64.Build.0 = Release|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|x86.ActiveCfg = Release|Any CPU
+		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

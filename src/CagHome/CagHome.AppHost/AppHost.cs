@@ -26,6 +26,8 @@ builder.AddProject<Projects.CagHome_Web>("webfrontend")
     .WithReference(apiService);
 
 var brokerPort = builder.AddParameter("mqtt-broker-port", "1883");
+var brokerHost = builder.AddParameter("mqtt-broker-host", "localhost");
+var simulatorProfile = builder.AddParameter("simulator-profile", "normal");
 
 var broker = builder.AddProject<Projects.CagHome_Broker>("broker")
     .WithEnvironment("MQTT_PORT", brokerPort);
@@ -35,5 +37,11 @@ builder.AddProject<Projects.CagHome_Consumer>("consumer")
     .WithReference(mongodb)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort)
     .WithReplicas(3);
+
+builder.AddProject<Projects.CagHome_Simulator>("simulator")
+    .WithReference(broker)
+    .WithEnvironment("Simulator__BrokerHost", brokerHost)
+    .WithEnvironment("Simulator__BrokerPort", brokerPort)
+    .WithEnvironment("Simulator__Profile", simulatorProfile);
     
 builder.Build().Run();
