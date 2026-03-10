@@ -36,9 +36,11 @@ var broker = builder.AddProject<Projects.CagHome_Broker>("broker")
 
 builder.AddProject<Projects.CagHome_IngestionService>("ingestionservice")
     .WithReference(broker)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq)
     .WithReference(mongodb)
-    .WithEnvironment("MQTT_BROKER_PORT", brokerPort)
-    .WithReplicas(3);
+    .WithEnvironment("MQTT_BROKER_PORT", brokerPort);
+    // .WithReplicas(3);
 
 builder.AddProject<Projects.CagHome_Simulator>("simulator")
     .WithReference(broker)
@@ -47,6 +49,7 @@ builder.AddProject<Projects.CagHome_Simulator>("simulator")
     .WithEnvironment("Simulator__Profile", simulatorProfile);
 
 builder.AddProject<Projects.RabbitMQBroker>("rabbitmqbroker")
-    .WithReference(rabbitmq);
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq);
     
 builder.Build().Run();

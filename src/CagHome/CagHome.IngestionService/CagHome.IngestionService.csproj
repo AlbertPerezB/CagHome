@@ -11,6 +11,8 @@
     <PackageReference Include="Aspire.MongoDB.Driver" Version="13.1.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
     <PackageReference Include="MQTTnet" Version="5.1.0.1559" />
+    <PackageReference Include="WolverineFx" Version="4.9.0" />
+    <PackageReference Include="WolverineFx.RabbitMQ" Version="4.9.0" />
   </ItemGroup>
 
 </Project>

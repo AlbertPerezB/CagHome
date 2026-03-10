@@ -1,7 +1,6 @@
 using CagHome.IngestionService.Application.Validation;
 using CagHome.IngestionService.Domain.Models;
-using CagHome.IngestionService.Infrastructure;
-using DnsClient.Internal;
+using CagHome.IngestionService.Infrastructure.Messaging;
 using Microsoft.Extensions.Logging;
 
 namespace CagHome.IngestionService.Application.Pipeline
