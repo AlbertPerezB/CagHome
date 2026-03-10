@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
 
-namespace CagHome.IngestionService.Infrastructure.Consumers
+namespace CagHome.IngestionService.Infrastructure
 {
     public class MqttConsumerService : IHostedService, IDisposable
     {
@@ -90,7 +90,9 @@ namespace CagHome.IngestionService.Infrastructure.Consumers
             _logger.LogInformation("Subscribed to all topics (#)");
         }
 
-        private async Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs args)
+        private async Task<Task> OnMessageReceivedAsync(
+            MqttApplicationMessageReceivedEventArgs args
+        )
         {
             var topic = args.ApplicationMessage.Topic;
             var payload = Encoding.UTF8.GetString(args.ApplicationMessage.Payload);
@@ -105,7 +107,6 @@ namespace CagHome.IngestionService.Infrastructure.Consumers
                 retain
             );
             var rawBatch = new RawBatch(topic, payload, DateTime.UtcNow);
-            await pipelineHand
             return Task.CompletedTask;
         }
 

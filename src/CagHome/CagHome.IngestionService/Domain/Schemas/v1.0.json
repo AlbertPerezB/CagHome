@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "required": [
+        "schemaVersion",
+        "appVersion",
+        "patientId",
+        "measurements"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "type": "integer"
+        },
+        "appVersion": {
+            "type": "number"
+        },
+        "patientId": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "measurements": {
+            "type": "array",
+            "items": {
+                "required": [
+                    "measurementId",
+                    "type",
+                    "value",
+                    "unit",
+                    "deviceReported"
+                ],
+                "properties": {
+                    "measurementId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "HEART_RATE",
+                            "SPO2"
+                        ]
+                    },
+                    "value": {
+                        "type": "number"
+                    },
+                    "unit": {
+                        "type": "string"
+                    },
+                    "deviceReported": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            }
+        }
+    }
+}
