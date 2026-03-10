@@ -15,6 +15,8 @@ var mongo = builder.AddMongoDB("mongo")
 
                    var mongodb = mongo.AddDatabase("mongodb");
 
+var rabbitmq = builder.AddRabbitMQ("messaging");
+
 
 
 var apiService = builder.AddProject<Projects.CagHome_ApiService>("apiservice")
@@ -43,5 +45,8 @@ builder.AddProject<Projects.CagHome_Simulator>("simulator")
     .WithEnvironment("Simulator__BrokerHost", brokerHost)
     .WithEnvironment("Simulator__BrokerPort", brokerPort)
     .WithEnvironment("Simulator__Profile", simulatorProfile);
+
+builder.AddProject<Projects.RabbitMQBroker>("rabbitmqbroker")
+    .WithReference(rabbitmq);
     
 builder.Build().Run();

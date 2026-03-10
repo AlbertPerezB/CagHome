@@ -15,9 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.Web", "CagHome.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Broker", "CagHome.Broker\CagHome.Broker.csproj", "{7B62D4FE-320C-4682-B439-52847DF31A71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.IngestionService", "CagHome.Consumer\CagHome.IngestionService.csproj", "{8C73E4A2-410D-4983-A126-63B8C9D4E892}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.IngestionService", "CagHome.IngestionService\CagHome.IngestionService.csproj", "{8C73E4A2-410D-4983-A126-63B8C9D4E892}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Simulator", "CagHome.Simulator\CagHome.Simulator.csproj", "{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQBroker", "RabbitMQBroker\RabbitMQBroker.csproj", "{FB8BBAD4-906C-4BE5-B41B-8759886306E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +127,18 @@ Global
 		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|x64.Build.0 = Release|Any CPU
 		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|x86.ActiveCfg = Release|Any CPU
 		{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}.Release|x86.Build.0 = Release|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Debug|x64.Build.0 = Debug|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Debug|x86.Build.0 = Debug|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Release|x64.ActiveCfg = Release|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Release|x64.Build.0 = Release|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

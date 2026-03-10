@@ -1,12 +1,11 @@
-using CagHome.IngestionService.Infrastructure.Consumers;
+using RabbitMQBroker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddHostedService<MqttConsumerService>();
-
-builder.AddMongoDBClient(connectionName: "mongodb");
+builder.AddRabbitMQClient(connectionName: "messaging");
+builder.Services.AddHostedService<RabbitMqBrokerWorker>();
 
 var host = builder.Build();
 
