@@ -1,4 +1,3 @@
-using CagHome.IngestionService.Infrastructure.Consumers;
 using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Application.Validation;
 using CagHome.IngestionService.Domain.Models;
