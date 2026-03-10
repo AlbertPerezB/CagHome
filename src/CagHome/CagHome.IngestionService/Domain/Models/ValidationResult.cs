@@ -1,6 +1,6 @@
 using CagHome.IngestionService.Domain.Enums;
 
-namespace CagHome.IngestionService.Application.Validation;
+namespace CagHome.IngestionService.Domain.Models;
 
 public class ValidationResult
 {

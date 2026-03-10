@@ -9,6 +9,5 @@ namespace CagHome.IngestionService.Domain.Enums
         DeviceReportedInFuture,
         DeviceReportedTooOld,
         TopicPatientIdMismatch,
-        MissingRequiredBatchField,
     }
 }
