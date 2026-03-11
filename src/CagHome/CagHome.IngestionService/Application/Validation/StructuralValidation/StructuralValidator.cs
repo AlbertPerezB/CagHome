@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using CagHome.IngestionService.Domain.Models;
 
-namespace CagHome.IngestionService.Application.Validation;
+namespace CagHome.IngestionService.Application.Validation.StructuralValidation;
 
 public class StructuralValidator : Validator<RawBatch>
 {

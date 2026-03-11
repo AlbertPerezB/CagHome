@@ -4,7 +4,7 @@ using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure.Schemas;
 
-namespace CagHome.IngestionService.Application.Validation;
+namespace CagHome.IngestionService.Application.Validation.StructuralValidation;
 
 public class SchemaVersionSupportedRule : IValidationRule<RawBatch>
 {
