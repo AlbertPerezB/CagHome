@@ -2,10 +2,12 @@ namespace CagHome.IngestionService.Domain.Enums
 {
     public enum ValidationCode
     {
-        PatientInactive,
         InvalidSchema,
+        UnsupportedSchemaVersion,
+
+        PatientInactive,
         MissingRequiredField,
-        InvalidFieldValue,
+        InvalidUnit,
         DeviceReportedInFuture,
         DeviceReportedTooOld,
         TopicPatientIdMismatch,

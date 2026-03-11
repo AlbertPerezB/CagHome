@@ -1,32 +1,55 @@
+using System.Collections.Concurrent;
 using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation;
 
-public abstract class Validator<T> : IValidator<T>
+public abstract class Validator<T>
 {
-    protected abstract IEnumerable<IValidationRule<T>> Rules { get; }
+    protected readonly List<IValidationRule<T>> Rules;
 
-    public async Task<ValidationOutcome> ValidateAsync(T item, CancellationToken ct)
+    protected Validator(List<IValidationRule<T>> rules)
     {
-        var results = new Dictionary<string, ValidationResult>();
+        Rules = rules;
+    }
 
-        await Task.WhenAll(
-            Rules.Select(async rule =>
+    protected async Task<(bool fatal, List<ValidationError> errors)> ValidateSequential(T target)
+    {
+        var errors = new List<ValidationError>();
+
+        foreach (var rule in Rules)
+        {
+            var error = await rule.ValidateAsync(target);
+
+            if (error == null)
+                continue;
+
+            errors.Add(error);
+
+            if (rule.IsFatal)
+                return (true, errors);
+        }
+
+        return (false, errors);
+    }
+
+    protected async Task<List<ValidationError>> ValidateParallel(IEnumerable<T> items)
+    {
+        var errors = new ConcurrentBag<ValidationError>();
+
+        await Parallel.ForEachAsync(
+            items,
+            async (item, _) =>
             {
-                var result = await rule.ValidateAsync(item, ct);
-                if (!result.IsValid)
+                foreach (var rule in Rules)
                 {
-                    results[rule.GetType().Name] = result;
-                    if (rule.StopOnFailure)
-                    {
-                        return;
-                    }
-                }
+                    var result = await rule.ValidateAsync(item);
 
-                results[rule.GetType().Name] = result;
-            })
+                    if (result != null)
+                        errors.Add(result);
+                }
+            }
         );
 
-        return new ValidationOutcome { Results = results };
+        return errors.ToList();
     }
 }
