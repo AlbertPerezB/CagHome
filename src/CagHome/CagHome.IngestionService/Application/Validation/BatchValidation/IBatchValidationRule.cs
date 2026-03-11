@@ -2,7 +2,7 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation;
 
-public interface IValidationRule<T>
+public interface IBatchValidationRule : IValidationRule<Batch>
 {
-    Task<ValidationError?> ValidateAsync(T input);
+    bool IsFatal { get; }
 }

@@ -1,4 +1,7 @@
 using System.Text;
+using System.Text.Json;
+using CagHome.IngestionService.Application;
+using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Domain.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -15,9 +18,14 @@ namespace CagHome.IngestionService.Infrastructure
         private readonly string _clientId;
         private readonly CancellationTokenSource _reconnectCts;
         private Task? _reconnectTask;
+        private readonly IIngestionService _ingestionService;
 
-        public MqttConsumerService(ILogger<MqttConsumerService> logger)
+        public MqttConsumerService(
+            ILogger<MqttConsumerService> logger,
+            IIngestionService ingestionService
+        )
         {
+            _ingestionService = ingestionService;
             _logger = logger;
             _reconnectCts = new CancellationTokenSource();
 
@@ -90,9 +98,7 @@ namespace CagHome.IngestionService.Infrastructure
             _logger.LogInformation("Subscribed to all topics (#)");
         }
 
-        private async Task<Task> OnMessageReceivedAsync(
-            MqttApplicationMessageReceivedEventArgs args
-        )
+        private async Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs args)
         {
             var topic = args.ApplicationMessage.Topic;
             var payload = Encoding.UTF8.GetString(args.ApplicationMessage.Payload);
@@ -106,8 +112,9 @@ namespace CagHome.IngestionService.Infrastructure
                 qos,
                 retain
             );
-            var rawBatch = new RawBatch(topic, payload, DateTime.UtcNow);
-            return Task.CompletedTask;
+            var json = JsonElement.Parse(payload);
+            var rawBatch = new RawBatch(topic, json, DateTime.UtcNow);
+            await _ingestionService.ProcessAsync(rawBatch);
         }
 
         private Task OnDisconnectedAsync(MqttClientDisconnectedEventArgs args)

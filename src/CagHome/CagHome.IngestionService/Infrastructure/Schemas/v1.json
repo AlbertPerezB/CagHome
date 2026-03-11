@@ -1,0 +1,74 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "schemaVersion": {
+            "type": "integer"
+        },
+        "appVersion": {
+            "type": "number"
+        },
+        "patientId": {
+            "type": "string"
+        },
+        "measurements": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "measurementId": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": [
+                            "number",
+                            "integer"
+                        ]
+                    },
+                    "unit": {
+                        "type": "string"
+                    },
+                    "deviceReported": {
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "object",
+                        "properties": {
+                            "deviceManufacturer": {
+                                "type": "string"
+                            },
+                            "deviceModel": {
+                                "type": "string"
+                            },
+                            "platform": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "deviceManufacturer",
+                            "deviceModel",
+                            "platform"
+                        ]
+                    }
+                },
+                "required": [
+                    "measurementId",
+                    "type",
+                    "value",
+                    "unit",
+                    "deviceReported",
+                    "source"
+                ]
+            }
+        }
+    },
+    "required": [
+        "schemaVersion",
+        "appVersion",
+        "patientId",
+        "measurements"
+    ]
+}

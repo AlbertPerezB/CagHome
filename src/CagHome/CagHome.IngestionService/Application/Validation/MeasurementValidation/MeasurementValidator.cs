@@ -4,22 +4,26 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation.MeasurementValidation;
 
-public class MeasurementValidator : Validator<Measurement>
+public class MeasurementValidator
 {
-    public MeasurementValidator(
-        CorrectUnitRule correctUnitRule,
-        DeviceReportedNotInFutureRule deviceReportedNotInFutureRule
-    )
-        : base(
-            new List<IValidationRule<Measurement>>
-            {
-                correctUnitRule,
-                deviceReportedNotInFutureRule,
-            }
-        ) { }
+    private IEnumerable<IValidationRule<Measurement>> Rules { get; }
 
-    public Task<List<ValidationError>> ValidateAsync(IEnumerable<Measurement> measurements)
+    public MeasurementValidator(IEnumerable<IValidationRule<Measurement>> rules)
     {
-        return ValidateParallel(measurements);
+        Rules = rules;
+    }
+
+    public Task<Measurement> ValidateAsync(Measurement input)
+    {
+        Task.WhenAll(
+            Rules.Select(async rule =>
+            {
+                var error = await rule.ValidateAsync(input);
+
+                if (error != null)
+                    input.validationErrors.Add(error);
+            })
+        );
+        return Task.FromResult(input);
     }
 }

@@ -1,0 +1,23 @@
+using System.Text.Json;
+using CagHome.IngestionService.Infrastructure;
+
+namespace CagHome.IngestionService.Application.Pipeline.Handlers;
+
+public class ErrorPublishingHandler : IngestionHandler
+{
+    private readonly MqttPublisher _publisher;
+
+    public ErrorPublishingHandler(MqttPublisher publisher)
+    {
+        _publisher = publisher;
+    }
+
+    protected override async Task ProcessAsync(IngestionContext context)
+    {
+        if (context.fatalError != null)
+        {
+            var json = JsonSerializer.Serialize(context.fatalError);
+            _publisher.PublishAsync(json);
+        }
+    }
+}

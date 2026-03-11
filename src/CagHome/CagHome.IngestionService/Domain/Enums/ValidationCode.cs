@@ -4,7 +4,7 @@ namespace CagHome.IngestionService.Domain.Enums
     {
         InvalidSchema,
         UnsupportedSchemaVersion,
-
+        ParseError,
         PatientInactive,
         MissingRequiredField,
         InvalidUnit,

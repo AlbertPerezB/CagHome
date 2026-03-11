@@ -2,13 +2,32 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation.BatchValidation;
 
-public class BatchValidator : Validator<Batch>
+public class BatchValidator
 {
-    public BatchValidator(PatientActiveRule patientActiveRule)
-        : base(new List<IValidationRule<Batch>> { patientActiveRule }) { }
+    private IEnumerable<IBatchValidationRule> Rules { get; }
 
-    public Task<(bool fatal, List<ValidationError> errors)> ValidateAsync(Batch batch)
+    public BatchValidator(IEnumerable<IBatchValidationRule> rules)
     {
-        return ValidateSequential(batch);
+        Rules = rules;
+    }
+
+    public async Task<Batch> ValidateAsync(Batch input)
+    {
+        foreach (var rule in Rules)
+        {
+            var error = await rule.ValidateAsync(input);
+
+            if (error != null)
+            {
+                input.ValidationErrors.Add(error);
+                if (rule.IsFatal)
+                {
+                    input.FatalError = error;
+                    break;
+                }
+            }
+        }
+
+        return input;
     }
 }

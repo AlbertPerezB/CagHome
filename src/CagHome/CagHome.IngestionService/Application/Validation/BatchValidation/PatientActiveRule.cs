@@ -3,7 +3,7 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation.BatchValidation;
 
-public class PatientActiveRule : IValidationRule<Batch>
+public class PatientActiveRule : IBatchValidationRule
 {
     public bool IsFatal => true;
 
@@ -13,8 +13,8 @@ public class PatientActiveRule : IValidationRule<Batch>
         if (status == PatientStatus.Inactive)
         {
             var error = new ValidationError(
-                $"Patient {input.PatientId} is not active.",
-                ValidationCode.PatientInactive
+                ValidationCode.PatientInactive,
+                $"Patient {input.PatientId} is not active."
             );
             return error;
         }

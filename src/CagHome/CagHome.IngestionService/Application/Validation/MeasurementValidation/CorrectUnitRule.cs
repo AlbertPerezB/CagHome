@@ -5,7 +5,6 @@ namespace CagHome.IngestionService.Application.Validation.MeasurementValidation;
 
 public class CorrectUnitRule : IValidationRule<Measurement>
 {
-    public bool IsFatal => true;
     private static readonly Dictionary<MeasurementType, HashSet<Unit>> AllowedUnits = new()
     {
         {
@@ -27,8 +26,8 @@ public class CorrectUnitRule : IValidationRule<Measurement>
         if (!AllowedUnits[input.MeasurementType].Contains(input.Unit))
         {
             var error = new ValidationError(
-                $"Measurement of type {input.MeasurementType} has invalid unit {input.Unit}",
-                ValidationCode.InvalidUnit
+                ValidationCode.InvalidUnit,
+                $"Measurement of type {input.MeasurementType} has invalid unit {input.Unit}"
             );
 
             return error;

@@ -8,7 +8,7 @@ public class ValidationError
 
     public ValidationCode Code { get; }
 
-    public ValidationError(string message, ValidationCode code)
+    public ValidationError(ValidationCode code, string message)
     {
         Message = message;
         Code = code;

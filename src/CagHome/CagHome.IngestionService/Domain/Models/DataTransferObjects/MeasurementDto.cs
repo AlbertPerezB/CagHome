@@ -11,4 +11,6 @@ public class MeasurementDto
     public string? Unit { get; set; }
 
     public DateTime? DeviceReported { get; set; }
+
+    public DeviceDto? Source { get; set; }
 }

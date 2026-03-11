@@ -1,7 +1,13 @@
+using System.Security.Cryptography.X509Certificates;
+using ZstdSharp;
+
 namespace CagHome.IngestionService.Infrastructure
 {
     public class RabbitMqPublisher
     {
-        // Implementation of RabbitMQ publisher
+        public void PublishAsync(string json)
+        {
+            throw new NotImplementedException("RabbitMQ publisher is not implemented yet.");
+        }
     }
 }

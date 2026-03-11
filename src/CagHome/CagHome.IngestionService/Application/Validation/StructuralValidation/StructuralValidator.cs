@@ -1,24 +1,30 @@
 using System.Collections.Concurrent;
+using System.Security.AccessControl;
 using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation.StructuralValidation;
 
-public class StructuralValidator : Validator<RawBatch>
+public class StructuralValidator
 {
-    public StructuralValidator(
-        SchemaVersionFoundRule schemaVersionFoundRule,
-        SchemaVersionSupportedRule schemaVersionSupportedRule
-    )
-        : base(
-            new List<IValidationRule<RawBatch>>
-            {
-                schemaVersionFoundRule,
-                schemaVersionSupportedRule,
-            }
-        ) { }
+    private IEnumerable<IValidationRule<RawBatch>> Rules { get; }
 
-    public Task<(bool fatal, List<ValidationError> errors)> ValidateAsync(RawBatch rawBatch)
+    public StructuralValidator(IEnumerable<IValidationRule<RawBatch>> rules)
     {
-        return ValidateSequential(rawBatch);
+        Rules = rules;
+    }
+
+    public async Task<ValidationError?> ValidateAsync(RawBatch input)
+    {
+        foreach (var rule in Rules)
+        {
+            var error = await rule.ValidateAsync(input);
+
+            if (error != null)
+            {
+                return error;
+            }
+        }
+
+        return null;
     }
 }
