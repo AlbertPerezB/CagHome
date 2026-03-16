@@ -14,9 +14,9 @@ public class ErrorPublishingHandler : IngestionHandler
 
     protected override async Task ProcessAsync(IngestionContext context)
     {
-        if (context.fatalError != null)
+        if (context.FatalError != null)
         {
-            var json = JsonSerializer.Serialize(context.fatalError);
+            var json = JsonSerializer.Serialize(context.FatalError);
             _publisher.PublishAsync(json);
         }
     }

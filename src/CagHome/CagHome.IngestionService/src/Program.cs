@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CagHome.IngestionService.Application;
 using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Application.Pipeline.Handlers;
@@ -33,8 +34,8 @@ builder.Services.AddScoped<BatchValidator>();
 builder.Services.AddScoped<MeasurementValidator>();
 
 // Structural rules
-builder.Services.AddScoped<IValidationRule<RawBatch>, SchemaVersionFoundRule>();
-builder.Services.AddScoped<IValidationRule<RawBatch>, SchemaVersionSupportedRule>();
+builder.Services.AddScoped<IValidationRule<JsonDocument>, SchemaVersionFoundRule>();
+builder.Services.AddScoped<IValidationRule<JsonDocument>, SchemaVersionSupportedRule>();
 
 // Batch rules
 builder.Services.AddScoped<IBatchValidationRule, PatientActiveRule>();
@@ -45,7 +46,7 @@ builder.Services.AddScoped<IValidationRule<Measurement>, DeviceReportedNotInFutu
 
 builder.Services.AddScoped<IIngestionService, IngestionService>();
 
-builder.Services.AddScoped(sp =>
+builder.Services.AddScoped<IIngestionHandler>(sp =>
 {
     var structural = sp.GetRequiredService<StructuralValidationHandler>();
     var parsing = sp.GetRequiredService<ParsingHandler>();

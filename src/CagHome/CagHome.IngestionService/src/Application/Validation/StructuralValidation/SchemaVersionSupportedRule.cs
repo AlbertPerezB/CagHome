@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Application.Validation;
 using CagHome.IngestionService.Domain.Enums;
@@ -6,7 +7,7 @@ using CagHome.IngestionService.Infrastructure.Schemas;
 
 namespace CagHome.IngestionService.Application.Validation.StructuralValidation;
 
-public class SchemaVersionSupportedRule : IValidationRule<RawBatch>
+public class SchemaVersionSupportedRule : IValidationRule<JsonDocument>
 {
     private readonly IJsonSchemaRegistry _registry;
 
@@ -17,9 +18,9 @@ public class SchemaVersionSupportedRule : IValidationRule<RawBatch>
         _registry = registry;
     }
 
-    public Task<ValidationError?> ValidateAsync(RawBatch batch)
+    public Task<ValidationError?> ValidateAsync(JsonDocument json)
     {
-        var version = batch.JsonPayload.GetProperty("schemaVersion").GetInt32();
+        var version = json.RootElement.GetProperty("schemaVersion").GetInt32();
         if (!_registry.IsSupported(version))
         {
             return Task.FromResult<ValidationError?>(

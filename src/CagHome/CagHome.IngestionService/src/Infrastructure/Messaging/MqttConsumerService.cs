@@ -101,7 +101,7 @@ namespace CagHome.IngestionService.Infrastructure
         private async Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs args)
         {
             var topic = args.ApplicationMessage.Topic;
-            var payload = Encoding.UTF8.GetString(args.ApplicationMessage.Payload);
+            var payload = Encoding.UTF8.GetString(args.ApplicationMessage.Payload).ToString();
             var qos = args.ApplicationMessage.QualityOfServiceLevel;
             var retain = args.ApplicationMessage.Retain;
 
@@ -112,8 +112,7 @@ namespace CagHome.IngestionService.Infrastructure
                 qos,
                 retain
             );
-            var json = JsonElement.Parse(payload);
-            var rawBatch = new RawBatch(topic, json, DateTime.UtcNow);
+            var rawBatch = new RawBatch(topic, payload, DateTime.UtcNow);
             await _ingestionService.ProcessAsync(rawBatch);
         }
 

@@ -7,21 +7,21 @@ namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
 public class ParsingHandler : IngestionHandler
 {
-    private Batch? Parse(JsonElement jsonElement)
-    {
-        return JsonSerializer.Deserialize<Batch>(jsonElement.GetRawText());
-    }
-
     protected override Task ProcessAsync(IngestionContext context)
     {
         try
         {
-            context.Batch = Parse(context.RawBatch.JsonPayload);
+            context.Json = JsonDocument.Parse(context.RawBatch.Payload);
+
+            context.BatchDto = JsonSerializer.Deserialize<BatchDto>(
+                context.Json.RootElement.GetRawText()
+            );
         }
         catch (Exception ex)
         {
-            context.fatalError = new ValidationError(ValidationCode.ParseError, ex.Message);
+            context.FatalError = new ValidationError(ValidationCode.ParseError, ex.Message);
         }
+
         return Task.CompletedTask;
     }
 }

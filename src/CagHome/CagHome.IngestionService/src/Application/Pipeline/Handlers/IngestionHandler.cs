@@ -14,7 +14,7 @@ public abstract class IngestionHandler : IIngestionHandler
     {
         await ProcessAsync(context);
 
-        if (context.fatalError == null && _next != null)
+        if (context.FatalError == null && _next != null)
             await _next.HandleAsync(context);
     }
 

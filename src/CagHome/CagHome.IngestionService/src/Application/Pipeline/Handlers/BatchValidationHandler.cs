@@ -20,7 +20,7 @@ public class BatchValidationHandler : IngestionHandler
         var fatalError = batch.FatalError;
         if (fatalError != null)
         {
-            context.fatalError = fatalError;
+            context.FatalError = fatalError;
         }
         return;
     }
