@@ -8,8 +8,6 @@ public sealed class ExerciseSimulationProfile : ISimulationProfile
 	{
 		return new TelemetrySample(
 			Timestamp: DateTimeOffset.UtcNow,
-			DeviceId: $"{options.DevicePrefix}-{index:000}",
-			PatientId: $"{options.PatientPrefix}-{index:000}",
 			Profile: SimulationProfiles.Exercise,
 			HeartRateBpm: NextValue(random, 112, 156),
 			RhythmFlag: "normal",

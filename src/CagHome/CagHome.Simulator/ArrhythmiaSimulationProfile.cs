@@ -13,8 +13,6 @@ public sealed class ArrhythmiaSimulationProfile : ISimulationProfile
 
 		return new TelemetrySample(
 			Timestamp: DateTimeOffset.UtcNow,
-			DeviceId: $"{options.DevicePrefix}-{index:000}",
-			PatientId: $"{options.PatientPrefix}-{index:000}",
 			Profile: SimulationProfiles.Arrhythmia,
 			HeartRateBpm: heartRate,
 			RhythmFlag: irregular ? "irregular" : "normal",

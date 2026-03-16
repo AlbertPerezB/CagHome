@@ -14,9 +14,13 @@ public sealed class BiometricPublisherService(
 {
 	private readonly Random _random = new();
 	private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
+	private readonly Dictionary<int, Guid> _patientIdsByIndex = [];
+	private static readonly MeasurementSourcePayload DefaultMeasurementSource =
+		new("Apple", "Watch Series 9", "iOS");
 	private readonly FrozenDictionary<string, ISimulationProfile> _profilesByName =
 		profiles.ToFrozenDictionary(profile => profile.Name, StringComparer.OrdinalIgnoreCase);
 	private IMqttClient? _mqttClient;
+	// Make sure a default profile called "normal" is registered
 	private readonly ISimulationProfile _defaultProfile = profiles.FirstOrDefault(profile =>
 		profile.Name.Equals(SimulationProfiles.Normal, StringComparison.OrdinalIgnoreCase))
 		?? throw new InvalidOperationException("A default simulation profile named 'normal' must be registered.");
@@ -137,9 +141,11 @@ public sealed class BiometricPublisherService(
 		for (var index = 1; index <= options.DeviceCount; index++)
 		{
 			var telemetry = profile.CreateSample(options, index, _random);
-			var payload = JsonSerializer.Serialize(telemetry, _jsonOptions);
-			// Topic pattern: biometrics/{deviceId}/telemetry
-			var topic = $"{options.TopicPrefix}/{telemetry.DeviceId}/telemetry";
+			var patientId = GetOrCreatePatientId(index);
+			var measurementBatch = CreateMeasurementBatch(telemetry, patientId);
+			var payload = JsonSerializer.Serialize(measurementBatch, _jsonOptions);
+			// Topic pattern: biometrics/{patientId}/telemetry
+			var topic = $"{options.TopicPrefix}/{patientId:D}/telemetry";
 
 			var message = new MqttApplicationMessageBuilder()
 				.WithTopic(topic)
@@ -154,6 +160,48 @@ public sealed class BiometricPublisherService(
 			"Published {Count} telemetry samples with profile '{Profile}'",
 			options.DeviceCount,
 			profile.Name);
+	}
+
+	private Guid GetOrCreatePatientId(int index)
+	{
+		if (_patientIdsByIndex.TryGetValue(index, out var patientId))
+		{
+			return patientId;
+		}
+
+		patientId = Guid.NewGuid();
+		_patientIdsByIndex[index] = patientId;
+		return patientId;
+	}
+
+	private static MeasurementBatchPayload CreateMeasurementBatch(TelemetrySample telemetry, Guid patientId)
+	{
+		var deviceReported = telemetry.Timestamp;
+
+		return new MeasurementBatchPayload(
+			SchemaVersion: 1,
+			AppVersion: 2.0m,
+			PatientId: patientId,
+			Measurements:
+			[
+				CreateMeasurement("HEART_RATE", telemetry.HeartRateBpm, "BPM", deviceReported),
+				CreateMeasurement("SPO2", telemetry.Spo2Pct, "Percent", deviceReported),
+			]);
+	}
+
+	private static MeasurementPayload CreateMeasurement(
+		string type,
+		double value,
+		string unit,
+		DateTimeOffset deviceReported)
+	{
+		return new MeasurementPayload(
+			MeasurementId: Guid.NewGuid(),
+			Type: type,
+			Value: value,
+			Unit: unit,
+			DeviceReported: deviceReported,
+			Source: DefaultMeasurementSource);
 	}
 
 	/// <summary>
