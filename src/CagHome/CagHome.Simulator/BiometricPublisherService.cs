@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Collections.Frozen;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Protocol;
@@ -8,12 +9,17 @@ namespace CagHome.Simulator;
 
 public sealed class BiometricPublisherService(
 	ILogger<BiometricPublisherService> logger,
-	IOptions<SimulatorOptions> optionsAccessor) : BackgroundService
+	IOptionsMonitor<SimulatorOptions> optionsMonitor,
+	IEnumerable<ISimulationProfile> profiles) : BackgroundService
 {
 	private readonly Random _random = new();
 	private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
-	private readonly SimulatorOptions _options = optionsAccessor.Value;
+	private readonly FrozenDictionary<string, ISimulationProfile> _profilesByName =
+		profiles.ToFrozenDictionary(profile => profile.Name, StringComparer.OrdinalIgnoreCase);
 	private IMqttClient? _mqttClient;
+	private readonly ISimulationProfile _defaultProfile = profiles.FirstOrDefault(profile =>
+		profile.Name.Equals(SimulationProfiles.Normal, StringComparison.OrdinalIgnoreCase))
+		?? throw new InvalidOperationException("A default simulation profile named 'normal' must be registered.");
 
 	/// <summary>
 	/// Runs the simulator worker loop, ensuring MQTT connectivity and publishing telemetry on a fixed interval.
@@ -23,14 +29,16 @@ public sealed class BiometricPublisherService(
 	{
 		var factory = new MqttClientFactory();
 		_mqttClient = factory.CreateMqttClient();
-		var options = GetValidatedOptions();
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
 			try
 			{
+				var options = GetValidatedOptions(optionsMonitor.CurrentValue);
+				var profile = ResolveProfile(options.Profile);
+
 				await EnsureConnectedAsync(options, stoppingToken);
-				await PublishBatchAsync(options, options.Profile, stoppingToken);
+				await PublishBatchAsync(options, profile, stoppingToken);
 
 				var intervalSeconds = options.PublishIntervalSeconds;
 				intervalSeconds = Math.Clamp(intervalSeconds, 1, 60);
@@ -52,22 +60,43 @@ public sealed class BiometricPublisherService(
 	/// Returns configured simulator options after applying value normalization and guardrails.
 	/// </summary>
 	/// <returns>A validated <see cref="SimulatorOptions"/> instance.</returns>
-	private SimulatorOptions GetValidatedOptions()
+	private static SimulatorOptions GetValidatedOptions(SimulatorOptions source)
 	{
-		var options = _options;
+		var profile = string.IsNullOrWhiteSpace(source.Profile)
+			? SimulationProfiles.Normal
+			: source.Profile.Trim().ToLowerInvariant();
 
-		options.DeviceCount = Math.Clamp(options.DeviceCount, 1, 10);
-		options.PublishIntervalSeconds = Math.Clamp(options.PublishIntervalSeconds, 1, 60);
-		if (!SimulationProfiles.IsSupported(options.Profile))
+		return new SimulatorOptions
 		{
-			options.Profile = SimulationProfiles.Normal;
-		}
-		else
+			BrokerHost = source.BrokerHost,
+			BrokerPort = source.BrokerPort,
+			TopicPrefix = source.TopicPrefix,
+			Profile = profile,
+			DeviceCount = Math.Clamp(source.DeviceCount, 1, 10),
+			PublishIntervalSeconds = Math.Clamp(source.PublishIntervalSeconds, 1, 60),
+			DevicePrefix = source.DevicePrefix,
+			PatientPrefix = source.PatientPrefix
+		};
+	}
+
+	/// <summary>
+	/// Resolves the active simulation profile strategy for the current publish cycle.
+	/// </summary>
+	/// <param name="profileName">Configured profile name.</param>
+	/// <returns>The resolved profile strategy, falling back to normal when unknown.</returns>
+	private ISimulationProfile ResolveProfile(string profileName)
+	{
+		if (_profilesByName.TryGetValue(profileName, out var profile))
 		{
-			options.Profile = options.Profile.ToLowerInvariant();
+			return profile;
 		}
 
-		return options;
+		logger.LogWarning(
+			"Unknown simulation profile '{Profile}'. Falling back to '{FallbackProfile}'.",
+			profileName,
+			_defaultProfile.Name);
+
+		return _defaultProfile;
 	}
 
 	/// <summary>
@@ -96,9 +125,9 @@ public sealed class BiometricPublisherService(
 	/// Publishes a telemetry message batch for all configured devices.
 	/// </summary>
 	/// <param name="options">Resolved simulator options.</param>
-	/// <param name="profile">Active simulation profile.</param>
+	/// <param name="profile">Active simulation profile strategy.</param>
 	/// <param name="cancellationToken">Token used to cancel publish operations.</param>
-	private async Task PublishBatchAsync(SimulatorOptions options, string profile, CancellationToken cancellationToken)
+	private async Task PublishBatchAsync(SimulatorOptions options, ISimulationProfile profile, CancellationToken cancellationToken)
 	{
 		if (_mqttClient is null || !_mqttClient.IsConnected)
 		{
@@ -107,7 +136,7 @@ public sealed class BiometricPublisherService(
 
 		for (var index = 1; index <= options.DeviceCount; index++)
 		{
-			var telemetry = CreateTelemetry(options, profile, index);
+			var telemetry = profile.CreateSample(options, index, _random);
 			var payload = JsonSerializer.Serialize(telemetry, _jsonOptions);
 			// Topic pattern: biometrics/{deviceId}/telemetry
 			var topic = $"{options.TopicPrefix}/{telemetry.DeviceId}/telemetry";
@@ -124,112 +153,7 @@ public sealed class BiometricPublisherService(
 		logger.LogInformation(
 			"Published {Count} telemetry samples with profile '{Profile}'",
 			options.DeviceCount,
-			profile);
-	}
-
-	/// <summary>
-	/// Creates a telemetry sample using the profile-specific value generator.
-	/// </summary>
-	/// <param name="options">Resolved simulator options.</param>
-	/// <param name="profile">Requested simulation profile.</param>
-	/// <param name="index">Device index.</param>
-	/// <returns>A populated <see cref="TelemetrySample"/>.</returns>
-	private TelemetrySample CreateTelemetry(SimulatorOptions options, string profile, int index)
-	{
-		var normalizedProfile = SimulationProfiles.IsSupported(profile)
-			? profile.ToLowerInvariant()
-			: SimulationProfiles.Normal;
-
-		return normalizedProfile switch
-		{
-			SimulationProfiles.Exercise => CreateExerciseSample(options, index),
-			SimulationProfiles.Arrhythmia => CreateArrhythmiaSample(options, index),
-			_ => CreateNormalSample(options, index)
-		};
-	}
-
-	/// <summary>
-	/// Creates a normal-profile telemetry sample.
-	/// </summary>
-	/// <param name="options">Resolved simulator options.</param>
-	/// <param name="index">Device index.</param>
-	/// <returns>A normal-profile telemetry sample.</returns>
-	private TelemetrySample CreateNormalSample(SimulatorOptions options, int index)
-	{
-		return new TelemetrySample(
-			Timestamp: DateTimeOffset.UtcNow,
-			DeviceId: $"{options.DevicePrefix}-{index:000}",
-			PatientId: $"{options.PatientPrefix}-{index:000}",
-			Profile: SimulationProfiles.Normal,
-			HeartRateBpm: NextValue(64, 82),
-			RhythmFlag: "normal",
-			HrvRmssdMs: NextDouble(28, 55),
-			Spo2Pct: NextValue(96, 99),
-			TemperatureC: NextDouble(36.4, 37.1));
-	}
-
-	/// <summary>
-	/// Creates an exercise-profile telemetry sample.
-	/// </summary>
-	/// <param name="options">Resolved simulator options.</param>
-	/// <param name="index">Device index.</param>
-	/// <returns>An exercise-profile telemetry sample.</returns>
-	private TelemetrySample CreateExerciseSample(SimulatorOptions options, int index)
-	{
-		return new TelemetrySample(
-			Timestamp: DateTimeOffset.UtcNow,
-			DeviceId: $"{options.DevicePrefix}-{index:000}",
-			PatientId: $"{options.PatientPrefix}-{index:000}",
-			Profile: SimulationProfiles.Exercise,
-			HeartRateBpm: NextValue(112, 156),
-			RhythmFlag: "normal",
-			HrvRmssdMs: NextDouble(12, 30),
-			Spo2Pct: NextValue(94, 98),
-			TemperatureC: NextDouble(36.8, 37.8));
-	}
-
-	/// <summary>
-	/// Creates an arrhythmia-profile telemetry sample with periodic irregular rhythm spikes.
-	/// </summary>
-	/// <param name="options">Resolved simulator options.</param>
-	/// <param name="index">Device index.</param>
-	/// <returns>An arrhythmia-profile telemetry sample.</returns>
-	private TelemetrySample CreateArrhythmiaSample(SimulatorOptions options, int index)
-	{
-		// 35% of samples are generated as irregular rhythm events.
-		var irregular = _random.NextDouble() < 0.35;
-		var heartRate = irregular ? NextValue(120, 170) : NextValue(70, 100);
-		var hrv = irregular ? NextDouble(5, 20) : NextDouble(22, 45);
-
-		return new TelemetrySample(
-			Timestamp: DateTimeOffset.UtcNow,
-			DeviceId: $"{options.DevicePrefix}-{index:000}",
-			PatientId: $"{options.PatientPrefix}-{index:000}",
-			Profile: SimulationProfiles.Arrhythmia,
-			HeartRateBpm: heartRate,
-			RhythmFlag: irregular ? "irregular" : "normal",
-			HrvRmssdMs: hrv,
-			Spo2Pct: NextValue(93, 98),
-			TemperatureC: NextDouble(36.5, 37.5));
-	}
-
-	/// <summary>
-	/// Returns a random integer within an inclusive range.
-	/// </summary>
-	/// <param name="minInclusive">Lower bound (inclusive).</param>
-	/// <param name="maxInclusive">Upper bound (inclusive).</param>
-	/// <returns>A pseudo-random integer within the specified range.</returns>
-	private int NextValue(int minInclusive, int maxInclusive) => _random.Next(minInclusive, maxInclusive + 1);
-
-	/// <summary>
-	/// Returns a random floating-point value within an inclusive range, rounded to one decimal place.
-	/// </summary>
-	/// <param name="minInclusive">Lower bound (inclusive).</param>
-	/// <param name="maxInclusive">Upper bound (inclusive).</param>
-	/// <returns>A pseudo-random rounded value within the specified range.</returns>
-	private double NextDouble(double minInclusive, double maxInclusive)
-	{
-		return Math.Round(minInclusive + (_random.NextDouble() * (maxInclusive - minInclusive)), 1);
+			profile.Name);
 	}
 
 	/// <summary>
