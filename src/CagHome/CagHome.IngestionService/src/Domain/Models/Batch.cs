@@ -1,12 +1,12 @@
 namespace CagHome.IngestionService.Domain.Models;
 
-public abstract record Batch
+public record Batch
 {
     public required Guid BatchId { get; init; } = new Guid();
 
     public required Guid PatientId { get; init; }
 
-    public required int SchemaVerion { get; init; }
+    public required int SchemaVersion { get; init; }
 
     public required Version AppVersion { get; init; }
 

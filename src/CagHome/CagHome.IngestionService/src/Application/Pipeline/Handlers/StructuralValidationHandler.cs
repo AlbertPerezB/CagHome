@@ -14,15 +14,15 @@ public class StructuralValidationHandler : IngestionHandler
 
     protected override async Task ProcessAsync(IngestionContext context)
     {
-        if (context.Json == null)
+        if (context.Json != null)
         {
+            var error = await _validator.ValidateAsync(context.Json);
+            if (error != null)
+            {
+                context.FatalError = error;
+            }
+
             return;
         }
-        var error = await _validator.ValidateAsync(context.Json);
-        if (error != null)
-        {
-            context.FatalError = error;
-        }
-        return;
     }
 }

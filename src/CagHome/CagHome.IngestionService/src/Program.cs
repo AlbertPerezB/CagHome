@@ -22,7 +22,7 @@ builder.Services.AddSingleton<IJsonSchemaRegistry, JsonSchemaRegistry>();
 
 //Handlers
 builder.Services.AddScoped<StructuralValidationHandler>();
-builder.Services.AddScoped<ParsingHandler>();
+builder.Services.AddScoped<ParseJsonHandler>();
 builder.Services.AddScoped<BatchValidationHandler>();
 builder.Services.AddScoped<MeasurementValidationHandler>();
 builder.Services.AddScoped<PublishBatchHandler>();
@@ -49,13 +49,22 @@ builder.Services.AddScoped<IIngestionService, IngestionService>();
 builder.Services.AddScoped<IIngestionHandler>(sp =>
 {
     var structural = sp.GetRequiredService<StructuralValidationHandler>();
-    var parsing = sp.GetRequiredService<ParsingHandler>();
+    var jsonParser = sp.GetRequiredService<ParseJsonHandler>();
+    var batchMapping = sp.GetRequiredService<BatchMappingHandler>();
     var batch = sp.GetRequiredService<BatchValidationHandler>();
     var measurement = sp.GetRequiredService<MeasurementValidationHandler>();
     var publish = sp.GetRequiredService<PublishBatchHandler>();
     var errors = sp.GetRequiredService<ErrorPublishingHandler>();
 
-    return IngestionPipelineBuilder.Build(structural, parsing, batch, measurement, publish, errors);
+    return IngestionPipelineBuilder.Build(
+        structural,
+        jsonParser,
+        batchMapping,
+        batch,
+        measurement,
+        publish,
+        errors
+    );
 });
 builder.AddMongoDBClient(connectionName: "mongodb");
 

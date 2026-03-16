@@ -3,7 +3,7 @@ using CagHome.IngestionService.Domain.Enums;
 
 namespace CagHome.IngestionService.Domain.Models;
 
-public abstract record Measurement
+public record Measurement
 {
     public required Guid MeasurementId { get; init; }
 
@@ -15,7 +15,7 @@ public abstract record Measurement
 
     public required DateTime DeviceReported { get; init; }
 
-    public required DeviceInfo source { get; init; }
+    public required DeviceInfo Source { get; init; }
 
-    public ConcurrentBag<ValidationError> validationErrors { get; set; } = new();
+    public ConcurrentBag<ValidationError> ValidationErrors { get; set; } = new();
 }

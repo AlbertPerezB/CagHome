@@ -6,15 +6,17 @@ public static class IngestionPipelineBuilder
 {
     public static IIngestionHandler Build(
         StructuralValidationHandler structural,
-        ParsingHandler parsing,
+        ParseJsonHandler jsonParser,
+        BatchMappingHandler batchMappingHandler,
         BatchValidationHandler batch,
         MeasurementValidationHandler measurement,
         PublishBatchHandler publish,
         ErrorPublishingHandler errors
     )
     {
-        structural
-            .SetNext(parsing)
+        jsonParser
+            .SetNext(structural)
+            .SetNext(batchMappingHandler)
             .SetNext(batch)
             .SetNext(measurement)
             .SetNext(publish)

@@ -21,7 +21,7 @@ public class MeasurementValidator
                 var error = await rule.ValidateAsync(input);
 
                 if (error != null)
-                    input.validationErrors.Add(error);
+                    input.ValidationErrors.Add(error);
             })
         );
         return Task.FromResult(input);
