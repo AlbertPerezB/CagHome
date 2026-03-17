@@ -10,22 +10,22 @@ var postgres = builder.AddPostgres("postgres")
 
 var patientdb = postgres.AddDatabase("patient");
 
-var mongo = builder.AddMongoDB("mongo")
-                   .WithLifetime(ContainerLifetime.Persistent);
+// var mongo = builder.AddMongoDB("mongo")
+//                    .WithLifetime(ContainerLifetime.Persistent);
 
-                   var mongodb = mongo.AddDatabase("mongodb");
+//                    var mongodb = mongo.AddDatabase("mongodb");
 
 var rabbitmq = builder.AddRabbitMQ("messaging");
 
 
 
-var apiService = builder.AddProject<Projects.CagHome_ApiService>("apiservice")
-    .WithHttpHealthCheck("/health");
+// var apiService = builder.AddProject<Projects.CagHome_ApiService>("apiservice")
+//     .WithHttpHealthCheck("/health");
 
-builder.AddProject<Projects.CagHome_Web>("webfrontend")
-    .WithExternalHttpEndpoints()
-    .WithHttpHealthCheck("/health")
-    .WithReference(apiService);
+// builder.AddProject<Projects.CagHome_Web>("webfrontend")
+//     .WithExternalHttpEndpoints()
+//     .WithHttpHealthCheck("/health")
+//     .WithReference(apiService);
 
 var brokerPort = builder.AddParameter("mqtt-broker-port", "1883");
 var brokerHost = builder.AddParameter("mqtt-broker-host", "localhost");
@@ -37,7 +37,7 @@ builder.AddProject<Projects.CagHome_IngestionService>("ingestionservice")
     .WithReference(broker)
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq)
-    .WithReference(mongodb)
+    // .WithReference(mongodb)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort);
     // .WithReplicas(3);
 

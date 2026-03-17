@@ -4,7 +4,7 @@ public sealed class ArrhythmiaSimulationProfile : ISimulationProfile
 {
 	public string Name => SimulationProfiles.Arrhythmia;
 
-	public TelemetrySample CreateSample(SimulatorOptions options, int index, Random random)
+	public TelemetrySample CreateSample(Random random)
 	{
 		// 35% of samples are generated as irregular rhythm events.
 		var irregular = random.NextDouble() < 0.35;
@@ -13,7 +13,6 @@ public sealed class ArrhythmiaSimulationProfile : ISimulationProfile
 
 		return new TelemetrySample(
 			Timestamp: DateTimeOffset.UtcNow,
-			Profile: SimulationProfiles.Arrhythmia,
 			HeartRateBpm: heartRate,
 			RhythmFlag: irregular ? "irregular" : "normal",
 			HrvRmssdMs: hrv,

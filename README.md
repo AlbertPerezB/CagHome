@@ -26,3 +26,34 @@ Aspire.Hosting.DistributedApplication: Information: Login to the dashboard at ht
 ```
 
 Click the login link if the page does not open automatically. 
+
+## Simulator configuration
+The simulator project is `src/CagHome/CagHome.Simulator`.
+
+### Configure in appsettings
+Update the `Simulator` section in:
+- `src/CagHome/CagHome.Simulator/appsettings.json`
+
+Example:
+
+```json
+{
+    "Simulator": {
+        "Profile": "normal",
+        "DeviceCount": 3,
+        "PublishIntervalSeconds": 2
+    }
+}
+```
+
+Supported profile values are:
+- `normal`
+- `exercise`
+- `arrhythmia`
+
+If an invalid profile value is entered, the simulator defaults to `normal`.
+
+### Change profile at runtime
+The simulator uses runtime configuration reloading. While it is running, you can change `Simulator:Profile` in `appsettings.json` and save the file.
+
+On the next publish cycle, the simulator picks up the new profile without restarting the process.

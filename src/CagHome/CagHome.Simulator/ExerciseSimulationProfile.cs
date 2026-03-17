@@ -4,11 +4,10 @@ public sealed class ExerciseSimulationProfile : ISimulationProfile
 {
 	public string Name => SimulationProfiles.Exercise;
 
-	public TelemetrySample CreateSample(SimulatorOptions options, int index, Random random)
+	public TelemetrySample CreateSample(Random random)
 	{
 		return new TelemetrySample(
 			Timestamp: DateTimeOffset.UtcNow,
-			Profile: SimulationProfiles.Exercise,
 			HeartRateBpm: NextValue(random, 112, 156),
 			RhythmFlag: "normal",
 			HrvRmssdMs: NextDouble(random, 12, 30),

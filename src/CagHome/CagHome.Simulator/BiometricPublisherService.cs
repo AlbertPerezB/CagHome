@@ -44,9 +44,7 @@ public sealed class BiometricPublisherService(
 				await EnsureConnectedAsync(options, stoppingToken);
 				await PublishBatchAsync(options, profile, stoppingToken);
 
-				var intervalSeconds = options.PublishIntervalSeconds;
-				intervalSeconds = Math.Clamp(intervalSeconds, 1, 60);
-				await Task.Delay(TimeSpan.FromSeconds(intervalSeconds), stoppingToken);
+				await Task.Delay(TimeSpan.FromSeconds(options.PublishIntervalSeconds), stoppingToken);
 			}
 			catch (OperationCanceledException)
 			{
@@ -78,8 +76,6 @@ public sealed class BiometricPublisherService(
 			Profile = profile,
 			DeviceCount = Math.Clamp(source.DeviceCount, 1, 10),
 			PublishIntervalSeconds = Math.Clamp(source.PublishIntervalSeconds, 1, 60),
-			DevicePrefix = source.DevicePrefix,
-			PatientPrefix = source.PatientPrefix
 		};
 	}
 
@@ -140,7 +136,7 @@ public sealed class BiometricPublisherService(
 
 		for (var index = 1; index <= options.DeviceCount; index++)
 		{
-			var telemetry = profile.CreateSample(options, index, _random);
+			var telemetry = profile.CreateSample(_random);
 			var patientId = GetOrCreatePatientId(index);
 			var measurementBatch = CreateMeasurementBatch(telemetry, patientId);
 			var payload = JsonSerializer.Serialize(measurementBatch, _jsonOptions);
@@ -176,16 +172,18 @@ public sealed class BiometricPublisherService(
 
 	private static MeasurementBatchPayload CreateMeasurementBatch(TelemetrySample telemetry, Guid patientId)
 	{
-		var deviceReported = telemetry.Timestamp;
-
 		return new MeasurementBatchPayload(
 			SchemaVersion: 1,
 			AppVersion: 2.0m,
 			PatientId: patientId,
 			Measurements:
 			[
-				CreateMeasurement("HEART_RATE", telemetry.HeartRateBpm, "BPM", deviceReported),
-				CreateMeasurement("SPO2", telemetry.Spo2Pct, "Percent", deviceReported),
+				CreateMeasurement("HEART_RATE", telemetry.HeartRateBpm, "BPM", telemetry.Timestamp),
+				CreateMeasurement("SPO2", telemetry.Spo2Pct, "Percent", telemetry.Timestamp),
+				CreateMeasurement("HRV_RMSSD", telemetry.HrvRmssdMs, "ms", telemetry.Timestamp),
+				CreateMeasurement("TEMPERATURE", telemetry.TemperatureC, "Celsius", telemetry.Timestamp),
+				// RhythmFlag encoded as 0.0 (normal) or 1.0 (irregular)
+				CreateMeasurement("RHYTHM_IRREGULAR", telemetry.RhythmFlag == "irregular" ? 1.0 : 0.0, "Flag", telemetry.Timestamp),
 			]);
 	}
 
