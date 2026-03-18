@@ -1,5 +1,6 @@
 using System.Text.Json;
 using CagHome.IngestionService.Infrastructure;
+using CagHome.IngestionService.Infrastructure.Messaging;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
@@ -19,7 +20,7 @@ public class PublishBatchHandler : IngestionHandler
         {
             _logger.LogInformation("No validation errors. Publishing message");
             var json = JsonSerializer.Serialize(context.Batch);
-            _publisher.PublishAsync(json);
+            //publish
         }
     }
 }

@@ -8,8 +8,11 @@ using CagHome.IngestionService.Application.Validation.MeasurementValidation;
 using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure;
+using CagHome.IngestionService.Infrastructure.Messaging;
 using CagHome.IngestionService.Infrastructure.Schemas;
 using Microsoft.Extensions.Hosting;
+using Wolverine;
+using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
 
