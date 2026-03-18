@@ -6,7 +6,8 @@ public class BatchValidationHandler : IngestionHandler
 {
     private readonly BatchValidator _validator;
 
-    public BatchValidationHandler(BatchValidator validator)
+    public BatchValidationHandler(BatchValidator validator, ILoggerFactory loggerFactory)
+        : base(loggerFactory)
     {
         _validator = validator;
     }
@@ -15,6 +16,7 @@ public class BatchValidationHandler : IngestionHandler
     {
         if (context.Batch != null)
         {
+            _logger.LogDebug("Starting Batch validation.");
             var batch = await _validator.ValidateAsync(context.Batch);
             var fatalError = batch.FatalError;
             if (fatalError != null)

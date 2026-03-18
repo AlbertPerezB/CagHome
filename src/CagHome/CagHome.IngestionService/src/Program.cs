@@ -28,6 +28,7 @@ builder.Services.AddScoped<MeasurementValidationHandler>();
 builder.Services.AddScoped<PublishBatchHandler>();
 builder.Services.AddScoped<ErrorPublishingHandler>();
 builder.Services.AddScoped<BatchMappingHandler>();
+builder.Services.AddScoped<IngestionHandler>();
 
 //Validators
 builder.Services.AddScoped<StructuralValidator>();
@@ -69,6 +70,14 @@ builder.Services.AddScoped<IIngestionHandler>(sp =>
     );
 });
 builder.AddMongoDBClient(connectionName: "mongodb");
+
+builder.Services.AddWolverine(options =>
+{
+    options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision();
+    options.ListenToRabbitQueue(PingPongTopology.QueueName);
+    options.PublishMessage<PingMessage>().ToRabbitQueue(PingPongTopology.QueueName);
+    options.PublishMessage<PongMessage>().ToRabbitQueue(PingPongTopology.QueueName);
+});
 
 var host = builder.Build();
 

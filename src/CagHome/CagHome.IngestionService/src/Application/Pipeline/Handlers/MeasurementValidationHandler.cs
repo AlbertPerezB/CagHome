@@ -6,7 +6,11 @@ public class MeasurementValidationHandler : IngestionHandler
 {
     private readonly MeasurementValidator _validator;
 
-    public MeasurementValidationHandler(MeasurementValidator validator)
+    public MeasurementValidationHandler(
+        MeasurementValidator validator,
+        ILoggerFactory loggerFactory
+    )
+        : base(loggerFactory)
     {
         _validator = validator;
     }
@@ -15,6 +19,7 @@ public class MeasurementValidationHandler : IngestionHandler
     {
         if (context.Batch != null)
         {
+            _logger.LogInformation("Starting measurement validation");
             Parallel.ForEach(
                 context.Batch.Measurements,
                 async measurement =>

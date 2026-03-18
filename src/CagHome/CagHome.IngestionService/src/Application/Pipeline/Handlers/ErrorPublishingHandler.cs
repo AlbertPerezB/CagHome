@@ -7,7 +7,8 @@ public class ErrorPublishingHandler : IngestionHandler
 {
     private readonly MqttPublisher _publisher;
 
-    public ErrorPublishingHandler(MqttPublisher publisher)
+    public ErrorPublishingHandler(MqttPublisher publisher, ILoggerFactory loggerFactory)
+        : base(loggerFactory)
     {
         _publisher = publisher;
     }
@@ -16,6 +17,7 @@ public class ErrorPublishingHandler : IngestionHandler
     {
         if (ShouldProcess(context))
         {
+            _logger.LogError($"FatalError: {context!.FatalError!.Message}");
             var json = JsonSerializer.Serialize(context.FatalError);
             _publisher.PublishAsync(json);
         }

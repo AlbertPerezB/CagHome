@@ -5,8 +5,12 @@ namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
 public class BatchMappingHandler : IngestionHandler
 {
+    public BatchMappingHandler(ILoggerFactory loggerFactory)
+        : base(loggerFactory) { }
+
     protected override Task ProcessAsync(IngestionContext context)
     {
+        _logger.LogDebug("Starting BatchMapping");
         var dto = context.BatchDto;
 
         if (

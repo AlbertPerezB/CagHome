@@ -5,8 +5,12 @@ namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
 public class TopicValidationHandler : IngestionHandler
 {
+    public TopicValidationHandler(ILoggerFactory loggerFactory)
+        : base(loggerFactory) { }
+
     protected override Task ProcessAsync(IngestionContext context)
     {
+        _logger.LogInformation("Starting topic validation");
         var topic = context.RawBatch.Topic;
         var batch = context.Batch;
         if (!string.IsNullOrWhiteSpace(topic))

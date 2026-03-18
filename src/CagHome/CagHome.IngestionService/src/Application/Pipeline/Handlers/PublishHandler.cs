@@ -7,7 +7,8 @@ public class PublishBatchHandler : IngestionHandler
 {
     private readonly RabbitMqPublisher _publisher;
 
-    public PublishBatchHandler(RabbitMqPublisher publisher)
+    public PublishBatchHandler(RabbitMqPublisher publisher, ILoggerFactory loggerFactory)
+        : base(loggerFactory)
     {
         _publisher = publisher;
     }
@@ -16,6 +17,7 @@ public class PublishBatchHandler : IngestionHandler
     {
         if (context.Batch != null)
         {
+            _logger.LogInformation("No validation errors. Publishing message");
             var json = JsonSerializer.Serialize(context.Batch);
             _publisher.PublishAsync(json);
         }

@@ -7,6 +7,9 @@ namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
 public class ParseJsonHandler : IngestionHandler
 {
+    public ParseJsonHandler(ILoggerFactory loggerFactory)
+        : base(loggerFactory) { }
+
     private static readonly JsonSerializerOptions _options = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -14,6 +17,7 @@ public class ParseJsonHandler : IngestionHandler
 
     protected override Task ProcessAsync(IngestionContext context)
     {
+        _logger.LogInformation("Parsing json");
         try
         {
             context.Json = JsonDocument.Parse(context.RawBatch.Payload);
