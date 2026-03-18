@@ -13,15 +13,15 @@ public class MeasurementValidationHandler : IngestionHandler
 
     protected override async Task ProcessAsync(IngestionContext context)
     {
-        if (context.Batch == null)
-            return;
-
-        Parallel.ForEach(
-            context.Batch.Measurements,
-            async measurement =>
-            {
-                await _validator.ValidateAsync(measurement);
-            }
-        );
+        if (context.Batch != null)
+        {
+            Parallel.ForEach(
+                context.Batch.Measurements,
+                async measurement =>
+                {
+                    await _validator.ValidateAsync(measurement);
+                }
+            );
+        }
     }
 }

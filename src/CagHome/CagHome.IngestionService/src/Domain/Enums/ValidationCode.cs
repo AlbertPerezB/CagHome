@@ -13,6 +13,7 @@ namespace CagHome.IngestionService.Domain.Enums
         InvalidUnit,
         DeviceReportedInFuture,
         DeviceReportedTooOld,
-        TopicPatientIdMismatch,
+        InvalidTopic,
+        NoMeasurements,
     }
 }

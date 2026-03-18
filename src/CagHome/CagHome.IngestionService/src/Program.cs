@@ -14,10 +14,10 @@ using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+//Infrastructure
 builder.Services.AddHostedService<MqttConsumerService>();
 builder.Services.AddScoped<RabbitMqPublisher>();
 builder.Services.AddScoped<MqttPublisher>();
-
 builder.Services.AddSingleton<IJsonSchemaRegistry, JsonSchemaRegistry>();
 
 //Handlers
@@ -27,6 +27,7 @@ builder.Services.AddScoped<BatchValidationHandler>();
 builder.Services.AddScoped<MeasurementValidationHandler>();
 builder.Services.AddScoped<PublishBatchHandler>();
 builder.Services.AddScoped<ErrorPublishingHandler>();
+builder.Services.AddScoped<BatchMappingHandler>();
 
 //Validators
 builder.Services.AddScoped<StructuralValidator>();
@@ -34,8 +35,7 @@ builder.Services.AddScoped<BatchValidator>();
 builder.Services.AddScoped<MeasurementValidator>();
 
 // Structural rules
-builder.Services.AddScoped<IValidationRule<JsonDocument>, SchemaVersionFoundRule>();
-builder.Services.AddScoped<IValidationRule<JsonDocument>, SchemaVersionSupportedRule>();
+builder.Services.AddScoped<IValidationRule<JsonDocument>, SchemaValidationRule>();
 
 // Batch rules
 builder.Services.AddScoped<IBatchValidationRule, PatientActiveRule>();
@@ -51,6 +51,7 @@ builder.Services.AddScoped<IIngestionHandler>(sp =>
     var structural = sp.GetRequiredService<StructuralValidationHandler>();
     var jsonParser = sp.GetRequiredService<ParseJsonHandler>();
     var batchMapping = sp.GetRequiredService<BatchMappingHandler>();
+    var topicValidation = sp.GetRequiredService<TopicValidationHandler>();
     var batch = sp.GetRequiredService<BatchValidationHandler>();
     var measurement = sp.GetRequiredService<MeasurementValidationHandler>();
     var publish = sp.GetRequiredService<PublishBatchHandler>();
@@ -60,6 +61,7 @@ builder.Services.AddScoped<IIngestionHandler>(sp =>
         structural,
         jsonParser,
         batchMapping,
+        topicValidation,
         batch,
         measurement,
         publish,

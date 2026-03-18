@@ -33,7 +33,7 @@ public class BatchMappingHandlerTests
             {
                 DeviceManufacturer = "Apple",
                 DeviceModel = "Apple Watch Series 9",
-                Platform = "iOS",
+                DeviceId = "iOS",
             },
         };
 
@@ -147,8 +147,6 @@ public class BatchMappingHandlerTests
         Assert.Empty(context.Batch!.Measurements);
     }
 
-    // --- Fatal error: missing required fields ---
-
     [Fact]
     public async Task NullDto_SetsFatalError()
     {
@@ -183,8 +181,6 @@ public class BatchMappingHandlerTests
         Assert.NotNull(context.FatalError);
         Assert.Equal(ValidationCode.MissingRequiredField, context.FatalError!.Code);
     }
-
-    // --- Fatal error: bad enums ---
 
     [Fact]
     public async Task UnknownMeasurementType_SetsFatalError()

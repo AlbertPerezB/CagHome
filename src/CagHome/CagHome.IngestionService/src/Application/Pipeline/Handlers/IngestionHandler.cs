@@ -12,11 +12,14 @@ public abstract class IngestionHandler : IIngestionHandler
 
     public async Task HandleAsync(IngestionContext context)
     {
-        await ProcessAsync(context);
+        if (ShouldProcess(context))
+            await ProcessAsync(context);
 
-        if (context.FatalError == null && _next != null)
+        if (_next != null)
             await _next.HandleAsync(context);
     }
+
+    public virtual bool ShouldProcess(IngestionContext context) => context.FatalError == null;
 
     protected abstract Task ProcessAsync(IngestionContext context);
 }

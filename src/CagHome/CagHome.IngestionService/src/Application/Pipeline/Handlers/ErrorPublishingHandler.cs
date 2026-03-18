@@ -14,10 +14,12 @@ public class ErrorPublishingHandler : IngestionHandler
 
     protected override async Task ProcessAsync(IngestionContext context)
     {
-        if (context.FatalError != null)
+        if (ShouldProcess(context))
         {
             var json = JsonSerializer.Serialize(context.FatalError);
             _publisher.PublishAsync(json);
         }
     }
+
+    public override bool ShouldProcess(IngestionContext context) => context.FatalError != null;
 }

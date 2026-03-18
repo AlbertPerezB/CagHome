@@ -23,7 +23,10 @@ public class CorrectUnitRule : IValidationRule<Measurement>
 
     public async Task<ValidationError?> ValidateAsync(Measurement input)
     {
-        if (!AllowedUnits[input.MeasurementType].Contains(input.Unit))
+        if (
+            !AllowedUnits.TryGetValue(input.MeasurementType, out var allowed)
+            || !allowed.Contains(input.Unit)
+        )
         {
             var error = new ValidationError(
                 ValidationCode.InvalidUnit,

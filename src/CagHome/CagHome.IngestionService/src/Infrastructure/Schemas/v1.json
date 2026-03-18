@@ -1,23 +1,38 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
+    "required": [
+        "schemaVersion",
+        "appVersion",
+        "patientId",
+        "measurements"
+    ],
     "properties": {
         "schemaVersion": {
             "type": "integer"
         },
         "appVersion": {
-            "type": "number"
+            "type": "string"
         },
         "patientId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
         },
         "measurements": {
             "type": "array",
             "items": {
                 "type": "object",
+                "required": [
+                    "measurementId",
+                    "type",
+                    "value",
+                    "unit",
+                    "deviceReported"
+                ],
                 "properties": {
                     "measurementId": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "type": {
                         "type": "string"
@@ -32,43 +47,25 @@
                         "type": "string"
                     },
                     "deviceReported": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "source": {
                         "type": "object",
                         "properties": {
-                            "deviceManufacturer": {
+                            "id": {
                                 "type": "string"
                             },
-                            "deviceModel": {
+                            "name": {
                                 "type": "string"
                             },
-                            "platform": {
+                            "model": {
                                 "type": "string"
                             }
-                        },
-                        "required": [
-                            "deviceManufacturer",
-                            "deviceModel",
-                            "platform"
-                        ]
+                        }
                     }
-                },
-                "required": [
-                    "measurementId",
-                    "type",
-                    "value",
-                    "unit",
-                    "deviceReported",
-                    "source"
-                ]
+                }
             }
         }
-    },
-    "required": [
-        "schemaVersion",
-        "appVersion",
-        "patientId",
-        "measurements"
-    ]
+    }
 }

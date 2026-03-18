@@ -6,5 +6,5 @@ public class DeviceDto
 
     public string? DeviceModel { get; init; }
 
-    public string? Platform { get; init; }
+    public string? DeviceId { get; init; }
 }

@@ -4,19 +4,19 @@ public record DeviceInfo
 {
     public string? DeviceManufacturer { get; init; }
     public string? DeviceModel { get; init; }
-    public string? Platform { get; init; }
+    public string? DeviceId { get; init; }
 
     public DeviceInfo(DeviceDto dto)
     {
         DeviceManufacturer = dto.DeviceManufacturer;
         DeviceModel = dto.DeviceModel;
-        Platform = dto.Platform;
+        DeviceId = dto.DeviceId;
     }
 
     public DeviceInfo()
     {
         DeviceManufacturer = "unknown";
         DeviceModel = "unknown";
-        Platform = "unknown";
+        DeviceId = "unknown";
     }
 }

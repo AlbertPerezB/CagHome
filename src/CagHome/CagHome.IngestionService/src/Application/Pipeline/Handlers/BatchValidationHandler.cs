@@ -13,15 +13,14 @@ public class BatchValidationHandler : IngestionHandler
 
     protected override async Task ProcessAsync(IngestionContext context)
     {
-        if (context.Batch == null)
-            return;
-
-        var batch = await _validator.ValidateAsync(context.Batch);
-        var fatalError = batch.FatalError;
-        if (fatalError != null)
+        if (context.Batch != null)
         {
-            context.FatalError = fatalError;
+            var batch = await _validator.ValidateAsync(context.Batch);
+            var fatalError = batch.FatalError;
+            if (fatalError != null)
+            {
+                context.FatalError = fatalError;
+            }
         }
-        return;
     }
 }
