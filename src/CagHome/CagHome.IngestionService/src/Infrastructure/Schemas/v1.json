@@ -1,0 +1,71 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+        "schemaVersion",
+        "appVersion",
+        "patientId",
+        "measurements"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "type": "integer"
+        },
+        "appVersion": {
+            "type": "string"
+        },
+        "patientId": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "measurements": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "measurementId",
+                    "type",
+                    "value",
+                    "unit",
+                    "deviceReported"
+                ],
+                "properties": {
+                    "measurementId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": [
+                            "number",
+                            "integer"
+                        ]
+                    },
+                    "unit": {
+                        "type": "string"
+                    },
+                    "deviceReported": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "source": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "model": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
