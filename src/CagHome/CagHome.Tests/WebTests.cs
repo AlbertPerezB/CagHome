@@ -7,6 +7,7 @@ public class WebTests
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
     [Test]
+    [Explicit("Requires local Aspire/Docker infrastructure to be available.")]
     public async Task GetWebResourceRootReturnsOkStatusCode()
     {
         // Arrange

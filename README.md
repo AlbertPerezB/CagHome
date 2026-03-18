@@ -17,12 +17,13 @@ The project will be built and started.
 At some point, you should see this in the debug console:
 
 ```
-info: Aspire.Hosting.DistributedApplication[0]  
-    Now listening on: https://studentcoursereviews.dev.localhost:17062  
-Aspire.Hosting.DistributedApplication: Information: Now listening on: https://studentcoursereviews.dev.localhost:17062  
-info: Aspire.Hosting.DistributedApplication[0]  
-    Login to the dashboard at https://studentcoursereviews.dev.localhost:17062/login?t=6c80f101f90eaaf42ed443f7c73ea3f2  
-Aspire.Hosting.DistributedApplication: Information: Login to the dashboard at https://studentcoursereviews.dev.localhost:17062/login?t=6c80f101f90eaaf42ed443f7c73ea3f2  
+Starting dashboard...
+Now listening on: https://localhost:17182
+AppHost:  src\CagHome\CagHome.AppHost\CagHome.AppHost.csproj
+Logs:  C:\Users\Albert\.aspire\cli\logs\apphost-29688-2026-03-18-11-36-07.log
+Dashboard: https://localhost:17182/login?t=d445f2ce56d03ed929f7da56a3078ca9
+Login to the dashboard at https://localhost:17182/login?t=d445f2ce56d03ed929f7da56a3078ca9
+Distributed application started. Press Ctrl+C to shut down.
 ```
 
 Click the login link if the page does not open automatically. 
