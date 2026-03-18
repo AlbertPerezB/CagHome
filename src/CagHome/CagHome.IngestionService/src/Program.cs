@@ -9,7 +9,6 @@ using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure;
 using CagHome.IngestionService.Infrastructure.Schemas;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -24,6 +23,7 @@ builder.Services.AddSingleton<IJsonSchemaRegistry, JsonSchemaRegistry>();
 builder.Services.AddScoped<StructuralValidationHandler>();
 builder.Services.AddScoped<ParseJsonHandler>();
 builder.Services.AddScoped<BatchValidationHandler>();
+builder.Services.AddScoped<TopicValidationHandler>();
 builder.Services.AddScoped<MeasurementValidationHandler>();
 builder.Services.AddScoped<PublishBatchHandler>();
 builder.Services.AddScoped<ErrorPublishingHandler>();
