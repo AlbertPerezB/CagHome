@@ -15,11 +15,13 @@ public sealed class BiometricPublisherService(
 	private readonly Random _random = new();
 	private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 	private readonly Dictionary<int, Guid> _patientIdsByIndex = [];
+	private readonly Dictionary<Guid, List<MeasurementPayload>> _accumulatedMeasurementsByPatient = [];
 	private static readonly MeasurementSourcePayload DefaultMeasurementSource =
-		new("Apple", "Watch Series 9", "iOS");
+		new("Apple", "Watch Series 9", "simulator-device");
 	private readonly FrozenDictionary<string, ISimulationProfile> _profilesByName =
 		profiles.ToFrozenDictionary(profile => profile.Name, StringComparer.OrdinalIgnoreCase);
 	private IMqttClient? _mqttClient;
+	private DateTime _lastBatchPublishTime = DateTime.UtcNow;
 	// Make sure a default profile called "normal" is registered
 	private readonly ISimulationProfile _defaultProfile = profiles.FirstOrDefault(profile =>
 		profile.Name.Equals(SimulationProfiles.Normal, StringComparison.OrdinalIgnoreCase))
@@ -42,9 +44,18 @@ public sealed class BiometricPublisherService(
 				var profile = ResolveProfile(options.Profile);
 
 				await EnsureConnectedAsync(options, stoppingToken);
-				await PublishBatchAsync(options, profile, stoppingToken);
+				
+				// Sample biometrics and accumulate for batch publishing
+				SampleAndAccumulateBiometrics(options, profile);
+				
+				// Check if it's time to publish accumulated batch
+				if (DateTime.UtcNow - _lastBatchPublishTime >= TimeSpan.FromSeconds(options.PublishBatchIntervalSeconds))
+				{
+					await PublishAccumulatedBatchAsync(options, stoppingToken);
+					_lastBatchPublishTime = DateTime.UtcNow;
+				}
 
-				await Task.Delay(TimeSpan.FromSeconds(options.PublishIntervalSeconds), stoppingToken);
+				await Task.Delay(TimeSpan.FromSeconds(options.PublishBiometricsIntervalSeconds), stoppingToken);
 			}
 			catch (OperationCanceledException)
 			{
@@ -75,7 +86,8 @@ public sealed class BiometricPublisherService(
 			TopicPrefix = source.TopicPrefix,
 			Profile = profile,
 			DeviceCount = Math.Clamp(source.DeviceCount, 1, 10),
-			PublishIntervalSeconds = Math.Clamp(source.PublishIntervalSeconds, 1, 60),
+			PublishBiometricsIntervalSeconds = Math.Clamp(source.PublishBiometricsIntervalSeconds, 1, 60),
+			PublishBatchIntervalSeconds = Math.Clamp(source.PublishBatchIntervalSeconds, 10, 600),
 		};
 	}
 
@@ -122,25 +134,58 @@ public sealed class BiometricPublisherService(
 	}
 
 	/// <summary>
-	/// Publishes a telemetry message batch for all configured devices.
+	/// Samples biometric telemetry for all configured devices and accumulates measurements for batch publishing.
 	/// </summary>
 	/// <param name="options">Resolved simulator options.</param>
 	/// <param name="profile">Active simulation profile strategy.</param>
+	private void SampleAndAccumulateBiometrics(SimulatorOptions options, ISimulationProfile profile)
+	{
+		for (var index = 1; index <= options.DeviceCount; index++)
+		{
+			var telemetry = profile.CreateSample(_random);
+			var patientId = GetOrCreatePatientId(index);
+			var measurements = CreateMeasurements(telemetry);
+			
+			// Accumulate measurements for batch publishing
+			if (!_accumulatedMeasurementsByPatient.ContainsKey(patientId))
+			{
+				_accumulatedMeasurementsByPatient[patientId] = new List<MeasurementPayload>();
+			}
+			_accumulatedMeasurementsByPatient[patientId].AddRange(measurements);
+		}
+
+		logger.LogInformation(
+			"Sampled {Count} biometric measurements from profile '{Profile}'",
+			options.DeviceCount,
+			profile.Name);
+	}
+
+	/// <summary>
+	/// Publishes accumulated measurements as large batches for all devices.
+	/// </summary>
+	/// <param name="options">Resolved simulator options.</param>
 	/// <param name="cancellationToken">Token used to cancel publish operations.</param>
-	private async Task PublishBatchAsync(SimulatorOptions options, ISimulationProfile profile, CancellationToken cancellationToken)
+	private async Task PublishAccumulatedBatchAsync(SimulatorOptions options, CancellationToken cancellationToken)
 	{
 		if (_mqttClient is null || !_mqttClient.IsConnected)
 		{
 			return;
 		}
 
-		for (var index = 1; index <= options.DeviceCount; index++)
+		foreach (var (patientId, measurements) in _accumulatedMeasurementsByPatient)
 		{
-			var telemetry = profile.CreateSample(_random);
-			var patientId = GetOrCreatePatientId(index);
-			var measurementBatch = CreateMeasurementBatch(telemetry, patientId);
-			var payload = JsonSerializer.Serialize(measurementBatch, _jsonOptions);
-			// Topic pattern: biometrics/{patientId}/telemetry
+			if (measurements.Count == 0)
+			{
+				continue;
+			}
+
+			var accumulatedBatch = new MeasurementBatchPayload(
+				SchemaVersion: 1,
+				AppVersion: "2.0.0",
+				PatientId: patientId,
+				Measurements: measurements.ToArray());
+
+			var payload = JsonSerializer.Serialize(accumulatedBatch, _jsonOptions);
 			var topic = $"{options.TopicPrefix}/{patientId:D}/telemetry";
 
 			var message = new MqttApplicationMessageBuilder()
@@ -153,9 +198,11 @@ public sealed class BiometricPublisherService(
 		}
 
 		logger.LogInformation(
-			"Published {Count} telemetry samples with profile '{Profile}'",
-			options.DeviceCount,
-			profile.Name);
+			"Published accumulated batch with {PatientCount} patients",
+			_accumulatedMeasurementsByPatient.Count);
+
+		// Clear accumulated measurements for next batch cycle
+		_accumulatedMeasurementsByPatient.Clear();
 	}
 
 	private Guid GetOrCreatePatientId(int index)
@@ -170,21 +217,14 @@ public sealed class BiometricPublisherService(
 		return patientId;
 	}
 
-	private static MeasurementBatchPayload CreateMeasurementBatch(TelemetrySample telemetry, Guid patientId)
+	private static MeasurementPayload[] CreateMeasurements(TelemetrySample telemetry)
 	{
-		return new MeasurementBatchPayload(
-			SchemaVersion: 1,
-			AppVersion: 2.0m,
-			PatientId: patientId,
-			Measurements:
-			[
-				CreateMeasurement("HEART_RATE", telemetry.HeartRateBpm, "BPM", telemetry.Timestamp),
-				CreateMeasurement("SPO2", telemetry.Spo2Pct, "Percent", telemetry.Timestamp),
-				CreateMeasurement("HRV_RMSSD", telemetry.HrvRmssdMs, "ms", telemetry.Timestamp),
-				CreateMeasurement("TEMPERATURE", telemetry.TemperatureC, "Celsius", telemetry.Timestamp),
-				// RhythmFlag encoded as 0.0 (normal) or 1.0 (irregular)
-				CreateMeasurement("RHYTHM_IRREGULAR", telemetry.RhythmFlag == "irregular" ? 1.0 : 0.0, "Flag", telemetry.Timestamp),
-			]);
+		return
+		[
+			CreateMeasurement("HeartRate", telemetry.HeartRateBpm, "Bpm", telemetry.Timestamp),
+			CreateMeasurement("Spo2", telemetry.Spo2Pct, "Percent", telemetry.Timestamp),
+			CreateMeasurement("BodyTemperature", telemetry.TemperatureC, "C", telemetry.Timestamp),
+		];
 	}
 
 	private static MeasurementPayload CreateMeasurement(

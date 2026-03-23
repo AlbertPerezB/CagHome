@@ -31,7 +31,6 @@ builder.Services.AddScoped<MeasurementValidationHandler>();
 builder.Services.AddScoped<PublishBatchHandler>();
 builder.Services.AddScoped<ErrorPublishingHandler>();
 builder.Services.AddScoped<BatchMappingHandler>();
-builder.Services.AddScoped<IngestionHandler>();
 
 //Validators
 builder.Services.AddScoped<StructuralValidator>();

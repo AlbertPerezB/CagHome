@@ -9,6 +9,7 @@ public sealed class SimulatorOptions
 	public required string TopicPrefix { get; set; }
 	public required string Profile { get; set; }
 	public int DeviceCount { get; set; }
-	public int PublishIntervalSeconds { get; set; }
+	public int PublishBiometricsIntervalSeconds { get; set; }
+	public int PublishBatchIntervalSeconds { get; set; }
 
 }

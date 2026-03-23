@@ -2,14 +2,14 @@ using CagHome.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder
-    .AddPostgres("postgres")
-    .WithHostPort(5432)
-    .WithImage("postgres", "18")
-    .WithV18DataVolume()
-    .WithPgAdmin();
+// var postgres = builder
+//     .AddPostgres("postgres")
+//     .WithHostPort(5432)
+//     .WithImage("postgres", "18")
+//     .WithV18DataVolume()
+//     .WithPgAdmin();
 
-var patientdb = postgres.AddDatabase("patient");
+// var patientdb = postgres.AddDatabase("patient");
 
 // var mongo = builder.AddMongoDB("mongo")
 //                    .WithLifetime(ContainerLifetime.Persistent);

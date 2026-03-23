@@ -24,6 +24,6 @@ public static class IngestionPipelineBuilder
             .SetNext(publish)
             .SetNext(errors);
 
-        return structural;
+        return jsonParser;
     }
 }

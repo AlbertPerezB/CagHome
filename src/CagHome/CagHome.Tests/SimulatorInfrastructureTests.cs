@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CagHome.Tests;
 
-public class SimulatorTests
+public class SimulatorInfrastructureTests
 {
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 

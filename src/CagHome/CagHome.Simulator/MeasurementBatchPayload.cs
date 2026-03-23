@@ -2,7 +2,7 @@ namespace CagHome.Simulator;
 
 public sealed record MeasurementBatchPayload(
     int SchemaVersion,
-    decimal AppVersion,
+    string AppVersion,
     Guid PatientId,
     IReadOnlyList<MeasurementPayload> Measurements);
 
@@ -17,4 +17,4 @@ public sealed record MeasurementPayload(
 public sealed record MeasurementSourcePayload(
     string DeviceManufacturer,
     string DeviceModel,
-    string Platform);
+    string DeviceId);
