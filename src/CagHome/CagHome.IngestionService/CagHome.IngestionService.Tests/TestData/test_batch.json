@@ -1,0 +1,163 @@
+{
+    "schemaVersion": 1,
+    "appVersion": "1.0.0",
+    "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
+    "measurements": [
+        {
+            "measurementId": "00000001-0000-0000-0000-000000000000",
+            "type": "HeartRate",
+            "value": 68,
+            "unit": "Bpm",
+            "deviceReported": "2024-01-01T10:00:00Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000002-0000-0000-0000-000000000000",
+            "type": "Spo2",
+            "value": 97,
+            "unit": "Percent",
+            "deviceReported": "2024-01-01T10:00:00Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000003-0000-0000-0000-000000000000",
+            "type": "HeartRate",
+            "value": 71,
+            "unit": "Bpm",
+            "deviceReported": "2024-01-01T10:00:05Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000004-0000-0000-0000-000000000000",
+            "type": "HeartRate",
+            "value": 73,
+            "unit": "Bpm",
+            "deviceReported": "2024-01-01T10:00:10Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000005-0000-0000-0000-000000000000",
+            "type": "Spo2",
+            "value": 96,
+            "unit": "Percent",
+            "deviceReported": "2024-01-01T10:00:10Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000006-0000-0000-0000-000000000000",
+            "type": "HeartRate",
+            "value": 70,
+            "unit": "Bpm",
+            "deviceReported": "2024-01-01T10:00:15Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000007-0000-0000-0000-000000000000",
+            "type": "HeartRate",
+            "value": 69,
+            "unit": "Bpm",
+            "deviceReported": "2024-01-01T10:00:20Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000008-0000-0000-0000-000000000000",
+            "type": "Spo2",
+            "value": 97,
+            "unit": "Percent",
+            "deviceReported": "2024-01-01T10:00:20Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000009-0000-0000-0000-000000000000",
+            "type": "HeartRate",
+            "value": 74,
+            "unit": "Bpm",
+            "deviceReported": "2024-01-01T10:00:25Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000010-0000-0000-0000-000000000000",
+            "type": "HeartRate",
+            "value": 76,
+            "unit": "Bpm",
+            "deviceReported": "2024-01-01T10:00:30Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000011-0000-0000-0000-000000000000",
+            "type": "Spo2",
+            "value": 95,
+            "unit": "Percent",
+            "deviceReported": "2024-01-01T10:00:30Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000012-0000-0000-0000-000000000000",
+            "type": "BodyTemperature",
+            "value": 36.7,
+            "unit": "C",
+            "deviceReported": "2024-01-01T10:00:00Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        },
+        {
+            "measurementId": "00000013-0000-0000-0000-000000000000",
+            "type": "BodyTemperature",
+            "value": 36.8,
+            "unit": "C",
+            "deviceReported": "2024-01-01T10:00:30Z",
+            "source": {
+                "deviceId": "garmin-001",
+                "deviceManufacturer": "Garmin",
+                "deviceModel": "Forerunner 255"
+            }
+        }
+    ]
+}

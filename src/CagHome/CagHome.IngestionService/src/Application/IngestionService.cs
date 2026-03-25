@@ -12,10 +12,10 @@ public class IngestionService : IIngestionService
         PipelineRoot = pipelineRoot;
     }
 
-    public async Task ProcessAsync(RawBatch rawBatch)
+    public async Task<IngestionContext> ProcessAsync(RawBatch rawBatch)
     {
         var context = new IngestionContext(rawBatch);
-
         await PipelineRoot.HandleAsync(context);
+        return context;
     }
 }
