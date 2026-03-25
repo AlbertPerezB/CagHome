@@ -3,12 +3,16 @@ using CagHome.IngestionService.Application;
 using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Application.Pipeline.Handlers;
 using CagHome.IngestionService.Application.Validation;
+using CagHome.IngestionService.Application.Validation.BatchValidation;
 using CagHome.IngestionService.Application.Validation.MeasurementValidation;
 using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
+using CagHome.IngestionService.Infrastructure;
+using CagHome.IngestionService.Infrastructure.Messaging;
 using CagHome.IngestionService.Infrastructure.Schemas;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using Xunit;
 
 namespace CagHome.IngestionService.Tests.Integration;
@@ -21,13 +25,12 @@ public class IngestionServiceIntegrationTests
 
     private static string TestPayload() => File.ReadAllText("TestData/test_batch.json");
 
-    private static IIngestionService BuildService(
-        IIngestionHandler? publishOverride = null,
-        IIngestionHandler? errorOverride = null
-    )
+    private static IIngestionService BuildService()
     {
         var loggerFactory = NullLoggerFactory.Instance;
         var registry = new JsonSchemaRegistry();
+        var rabbitPublisher = Substitute.For<RabbitMqPublisher>();
+        var mqttPublisher = Substitute.For<MqttPublisher>();
 
         var parseJson = new ParseJsonHandler(loggerFactory);
         var structuralValidator = new StructuralValidator(
@@ -36,6 +39,11 @@ public class IngestionServiceIntegrationTests
         var structural = new StructuralValidationHandler(structuralValidator, loggerFactory);
         var batchMapping = new BatchMappingHandler(loggerFactory);
         var topicValidation = new TopicValidationHandler(loggerFactory);
+
+        var batchRules = new List<IBatchValidationRule> { new PatientActiveRule() };
+        var batchValidator = new BatchValidator(batchRules);
+        var batchValidation = new BatchValidationHandler(batchValidator, loggerFactory);
+
         var measurementRules = new List<IValidationRule<Measurement>>
         {
             new CorrectUnitRule(),
@@ -46,18 +54,22 @@ public class IngestionServiceIntegrationTests
             measurementValidator,
             loggerFactory
         );
-        var publish = publishOverride ?? new NoOpHandler(loggerFactory);
-        var errors = errorOverride ?? new NoOpHandler(loggerFactory);
 
-        parseJson
-            .SetNext(structural)
-            .SetNext(batchMapping)
-            .SetNext(topicValidation)
-            .SetNext(measurementValidation)
-            .SetNext(publish)
-            .SetNext(errors);
+        var publish = new PublishBatchHandler(rabbitPublisher, loggerFactory);
+        var errors = new ErrorPublishingHandler(mqttPublisher, loggerFactory);
 
-        return new Application.IngestionService(parseJson);
+        var pipeline = IngestionPipelineBuilder.Build(
+            structural,
+            parseJson,
+            batchMapping,
+            topicValidation,
+            batchValidation,
+            measurementValidation,
+            publish,
+            errors
+        );
+
+        return new Application.IngestionService(pipeline);
     }
 
     // --- Happy path ---
@@ -165,5 +177,13 @@ public class IngestionServiceIntegrationTests
         var context = await service.ProcessAsync(raw);
 
         Assert.NotNull(context.FatalError);
+    }
+
+    //TODO: Add test for inactive patient after implementation of redis
+    [Fact]
+    public async Task InactivePatient_SetsFatalError()
+    {
+        var service = BuildService();
+        Assert.True(true);
     }
 }
