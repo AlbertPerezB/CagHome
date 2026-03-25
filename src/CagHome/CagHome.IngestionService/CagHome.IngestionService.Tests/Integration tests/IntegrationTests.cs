@@ -25,12 +25,13 @@ public class IngestionServiceIntegrationTests
 
     private static string TestPayload() => File.ReadAllText("TestData/test_batch.json");
 
-    private static IIngestionService BuildService()
+    private static IIngestionService BuildService(
+        IIngestionHandler? publishOverride = null,
+        IIngestionHandler? errorOverride = null
+    )
     {
         var loggerFactory = NullLoggerFactory.Instance;
         var registry = new JsonSchemaRegistry();
-        var rabbitPublisher = Substitute.For<RabbitMqPublisher>();
-        var mqttPublisher = Substitute.For<MqttPublisher>();
 
         var parseJson = new ParseJsonHandler(loggerFactory);
         var structuralValidator = new StructuralValidator(
@@ -55,8 +56,8 @@ public class IngestionServiceIntegrationTests
             loggerFactory
         );
 
-        var publish = new PublishBatchHandler(rabbitPublisher, loggerFactory);
-        var errors = new ErrorPublishingHandler(mqttPublisher, loggerFactory);
+        var publish = publishOverride ?? new NoOpHandler(loggerFactory);
+        var errors = errorOverride ?? new NoOpHandler(loggerFactory);
 
         var pipeline = IngestionPipelineBuilder.Build(
             structural,
@@ -119,6 +120,8 @@ public class IngestionServiceIntegrationTests
 
         Assert.All(context.Batch!.Measurements, m => Assert.Empty(m.ValidationErrors));
     }
+
+    //TODO: Add test checking a message is published
 
     // --- Fatal error paths ---
 
@@ -186,4 +189,6 @@ public class IngestionServiceIntegrationTests
         var service = BuildService();
         Assert.True(true);
     }
+
+    //TODO: Add test that checks an error message is published.
 }
