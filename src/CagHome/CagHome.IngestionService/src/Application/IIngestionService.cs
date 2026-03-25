@@ -5,5 +5,5 @@ namespace CagHome.IngestionService.Application;
 
 public interface IIngestionService
 {
-    Task ProcessAsync(RawBatch rawBatch);
+    Task<IngestionContext> ProcessAsync(RawBatch rawBatch);
 }

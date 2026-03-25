@@ -1,13 +1,14 @@
 using CagHome.IngestionService.Application.Pipeline.Handlers;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace CagHome.IngestionService.Tests.Pipeline.Handlers;
 
 public class TopicValidationHandlerTests
 {
-    private readonly TopicValidationHandler _handler = new();
+    private readonly TopicValidationHandler _handler = new(NullLoggerFactory.Instance);
 
     private static IngestionContext MakeContext(Guid patientId, string topic)
     {

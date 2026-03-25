@@ -1,15 +1,15 @@
 using System.Text.Json;
-using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Application.Pipeline.Handlers;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace CagHome.IngestionService.Tests.Pipeline.Handlers;
 
 public class ParseJsonHandlerTests
 {
-    private readonly ParseJsonHandler _handler = new();
+    private readonly ParseJsonHandler _handler = new(NullLoggerFactory.Instance);
 
     private static IngestionContext MakeContext(string payload) =>
         new(new RawBatch("patient/123", payload, DateTime.UtcNow));
