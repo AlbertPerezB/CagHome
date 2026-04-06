@@ -1,0 +1,48 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram id="D4k9TWXDNsgWWBmjiR9U" name="Side-1">
+    <mxGraphModel dx="3123" dy="1336" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-107" parent="1" style="text;html=1;strokeColor=#000000;fillColor=#d5e8d4;align=center;verticalAlign=top;spacingTop=4;fontSize=12;whiteSpace=wrap;overflow=hidden;" value="&lt;b&gt;IngestionContext&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="200" x="-460" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-108" parent="1" style="text;html=1;strokeColor=#000000;fillColor=#d5e8d4;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;whiteSpace=wrap;overflow=hidden;" value="+ RawBatch: RawBatch&#xa;+ BatchDto: BatchDto?&#xa;+ Batch: Batch?&#xa;+ Json: JsonDocument?&#xa;+ FatalError: ValidationError?" vertex="1">
+          <mxGeometry height="90" width="200" x="-460" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-109" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;dashed=1;entryX=0;entryY=0.5;" target="hHpn98ENjV_ySkAo2iZ2-107">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-540" y="360" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-110" parent="1" style="text;html=1;strokeColor=#000000;fillColor=#fff2cc;align=center;verticalAlign=top;spacingTop=4;fontSize=12;whiteSpace=wrap;overflow=hidden;" value="&lt;b&gt;RawBatch&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="-460" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-111" parent="1" style="text;html=1;strokeColor=#000000;fillColor=#fff2cc;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;whiteSpace=wrap;overflow=hidden;" value="+ Topic: string&#xa;+ Payload: string&#xa;+ ReceivedAt: DateTime" vertex="1">
+          <mxGeometry height="60" width="160" x="-460" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-112" parent="1" style="text;html=1;strokeColor=#000000;fillColor=#fff2cc;align=center;verticalAlign=top;spacingTop=4;fontSize=12;whiteSpace=wrap;overflow=hidden;" value="&lt;b&gt;Batch&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="180" x="-280" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-113" parent="1" style="text;html=1;strokeColor=#000000;fillColor=#fff2cc;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;whiteSpace=wrap;overflow=hidden;" value="+ BatchId: Guid&#xa;+ PatientId: Guid&#xa;+ SchemaVersion: int&#xa;+ AppVersion: Version&#xa;+ ReceivedAt: DateTime&#xa;+ Measurements: List&lt;Measurement&gt;&#xa;+ ValidationErrors: List&lt;ValidationError&gt;" vertex="1">
+          <mxGeometry height="110" width="180" x="-280" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-114" parent="1" style="text;html=1;strokeColor=#000000;fillColor=#fff2cc;align=center;verticalAlign=top;spacingTop=4;fontSize=12;whiteSpace=wrap;overflow=hidden;" value="&lt;b&gt;Measurement&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="180" x="-280" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-115" parent="1" style="text;html=1;strokeColor=#000000;fillColor=#fff2cc;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;whiteSpace=wrap;overflow=hidden;" value="+ MeasurementId: Guid&#xa;+ MeasurementType: MeasurementType&#xa;+ Value: float&#xa;+ Unit: Unit&#xa;+ DeviceReported: DateTime&#xa;+ Source: DeviceInfo&#xa;+ ValidationErrors: List&lt;ValidationError&gt;" vertex="1">
+          <mxGeometry height="110" width="180" x="-280" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-116" edge="1" parent="1" source="hHpn98ENjV_ySkAo2iZ2-112" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;startArrow=ERmany;startFill=0;" target="hHpn98ENjV_ySkAo2iZ2-114">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-117" edge="1" parent="1" source="hHpn98ENjV_ySkAo2iZ2-107" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;" target="hHpn98ENjV_ySkAo2iZ2-110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hHpn98ENjV_ySkAo2iZ2-118" edge="1" parent="1" source="hHpn98ENjV_ySkAo2iZ2-107" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;" target="hHpn98ENjV_ySkAo2iZ2-112">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
