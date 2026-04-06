@@ -7,6 +7,7 @@ public static class IngestionPipelineBuilder
     public static IIngestionHandler Build(
         StructuralValidationHandler structural,
         ParseJsonHandler jsonParser,
+        DeserializationHandler deserialization,
         BatchMappingHandler batchMapping,
         TopicValidationHandler topicValidation,
         BatchValidationHandler batch,
@@ -17,6 +18,7 @@ public static class IngestionPipelineBuilder
     {
         jsonParser
             .SetNext(structural)
+            .SetNext(deserialization)
             .SetNext(batchMapping)
             .SetNext(topicValidation)
             .SetNext(batch)

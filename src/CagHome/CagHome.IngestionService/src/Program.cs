@@ -49,11 +49,12 @@ builder.Services.AddScoped<IValidationRule<Measurement>, DeviceReportedNotInFutu
 
 builder.Services.AddScoped<IIngestionService, IngestionService>();
 
-builder.Services.AddScoped<IIngestionHandler>(sp =>
+builder.Services.AddScoped(sp =>
 {
     var structural = sp.GetRequiredService<StructuralValidationHandler>();
     var jsonParser = sp.GetRequiredService<ParseJsonHandler>();
     var batchMapping = sp.GetRequiredService<BatchMappingHandler>();
+    var deserialization = sp.GetRequiredService<DeserializationHandler>();
     var topicValidation = sp.GetRequiredService<TopicValidationHandler>();
     var batch = sp.GetRequiredService<BatchValidationHandler>();
     var measurement = sp.GetRequiredService<MeasurementValidationHandler>();
@@ -63,6 +64,7 @@ builder.Services.AddScoped<IIngestionHandler>(sp =>
     return IngestionPipelineBuilder.Build(
         structural,
         jsonParser,
+        deserialization,
         batchMapping,
         topicValidation,
         batch,

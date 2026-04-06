@@ -4,17 +4,25 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class ParseJsonHandler : IngestionHandler
+public class DeserializationHandler : IngestionHandler
 {
-    public ParseJsonHandler(ILoggerFactory loggerFactory)
+    public DeserializationHandler(ILoggerFactory loggerFactory)
         : base(loggerFactory) { }
+
+    private static readonly JsonSerializerOptions _options = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
 
     protected override Task ProcessAsync(IngestionContext context)
     {
         _logger.LogInformation("Parsing json");
         try
         {
-            context.Json = JsonDocument.Parse(context.RawBatch.Payload);
+            if (context.Json != null)
+            {
+                context.BatchDto = context.Json.RootElement.Deserialize<BatchDto>(_options);
+            }
         }
         catch (Exception ex)
         {

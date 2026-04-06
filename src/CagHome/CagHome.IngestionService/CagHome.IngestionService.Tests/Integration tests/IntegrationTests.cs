@@ -8,8 +8,6 @@ using CagHome.IngestionService.Application.Validation.MeasurementValidation;
 using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
-using CagHome.IngestionService.Infrastructure;
-using CagHome.IngestionService.Infrastructure.Messaging;
 using CagHome.IngestionService.Infrastructure.Schemas;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
@@ -34,6 +32,7 @@ public class IngestionServiceIntegrationTests
         var registry = new JsonSchemaRegistry();
 
         var parseJson = new ParseJsonHandler(loggerFactory);
+        var deserialization = new DeserializationHandler(loggerFactory);
         var structuralValidator = new StructuralValidator(
             new List<IValidationRule<JsonDocument>> { new SchemaValidationRule(registry) }
         );
@@ -62,6 +61,7 @@ public class IngestionServiceIntegrationTests
         var pipeline = IngestionPipelineBuilder.Build(
             structural,
             parseJson,
+            deserialization,
             batchMapping,
             topicValidation,
             batchValidation,
