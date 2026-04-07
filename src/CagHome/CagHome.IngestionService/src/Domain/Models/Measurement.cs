@@ -9,7 +9,7 @@ public record Measurement
 
     public required MeasurementType MeasurementType { get; init; }
 
-    public required float Value { get; init; }
+    public required double Value { get; init; }
 
     public required Unit Unit { get; init; }
 
