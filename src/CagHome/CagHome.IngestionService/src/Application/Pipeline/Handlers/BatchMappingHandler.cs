@@ -57,7 +57,7 @@ public class BatchMappingHandler : IngestionHandler
                     MeasurementType = measurementType,
                     Value = (float)(m.Value ?? 0),
                     Unit = unit,
-                    DeviceReported = m.DeviceReported ?? DateTime.UtcNow,
+                    DeviceReported = m.DeviceReported ?? DateTime.MinValue,
                     Source = MapDeviceInfo(m.Source),
                 }
             );
