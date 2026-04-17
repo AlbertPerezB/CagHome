@@ -16,7 +16,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 //                    var mongodb = mongo.AddDatabase("mongodb");
 
-var rabbitmq = builder.AddRabbitMQ("messaging");
+var rabbitmq = builder.AddRabbitMQ("messaging").WithManagementPlugin();
 
 // var apiService = builder.AddProject<Projects.CagHome_ApiService>("apiservice")
 //     .WithHttpHealthCheck("/health");
@@ -38,7 +38,6 @@ builder
     .WithReference(broker)
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq)
-    // .WithReference(mongodb)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort);
 
 // .WithReplicas(3);
@@ -53,5 +52,18 @@ builder
     .AddProject<Projects.RabbitMQBroker>("rabbitmqbroker")
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
+
+var mockEhr = builder.AddProject<Projects.CagHome_MockEhr>("mock-ehr");
+
+builder
+    .AddProject<Projects.CagHome_NotificationService>("notification")
+    .WithReference(rabbitmq)
+    .WithReference(mockEhr)
+    .WaitFor(rabbitmq);
+
+var ehrIntegration = builder
+    .AddProject<Projects.CagHome_EhrIntegrationService>("ehr-integration")
+    .WithReference(rabbitmq)
+    .WithReference(mockEhr);
 
 builder.Build().Run();

@@ -1,4 +1,4 @@
-namespace CagHome.Contracts.Notifications;
+namespace CagHome.Contracts;
 
 public enum Severity
 {

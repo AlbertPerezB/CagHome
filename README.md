@@ -58,3 +58,16 @@ If an invalid profile value is entered, the simulator defaults to `normal`.
 The simulator uses runtime configuration reloading. While it is running, you can change `Simulator:Profile` in `appsettings.json` and save the file.
 
 On the next publish cycle, the simulator picks up the new profile without restarting the process.
+
+
+## Observbility
+### Traces
+In the Aspire web dashboard, navigate to the "Traces" tab to see the traces emitted by the application. You can filter by service name, operation name, or custom attributes to find specific traces.
+
+### RabbitMQ Management 
+The credentials for theRabbitMQ management UI can be found by clicking the *messaging* row in the Aspire resources tab. Scroll down to *Environment Variables*.
+
+Click the URL from the *messaging* row and log in using the values from the variables:
+
+- Username: RABBITMQ_DEFAULT_USER
+- Password: RABBITMQ_DEFAULT_PASS

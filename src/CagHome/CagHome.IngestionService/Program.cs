@@ -10,7 +10,6 @@ using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure;
 using CagHome.IngestionService.Infrastructure.Messaging;
 using CagHome.IngestionService.Infrastructure.Schemas;
-using Microsoft.Extensions.Hosting;
 using Wolverine;
 using Wolverine.RabbitMQ;
 
@@ -78,11 +77,18 @@ builder.AddMongoDBClient(connectionName: "mongodb");
 
 builder.Services.AddWolverine(options =>
 {
-    options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision();
+    options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision().UseConventionalRouting();
+
+    options.Policies.DisableConventionalLocalRouting();
+
     options.ListenToRabbitQueue(PingPongTopology.QueueName);
     options.PublishMessage<PingMessage>().ToRabbitQueue(PingPongTopology.QueueName);
     options.PublishMessage<PongMessage>().ToRabbitQueue(PingPongTopology.QueueName);
 });
+
+builder
+    .Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing.AddSource("Wolverine").AddSource("RabbitMQ.Client"));
 
 var host = builder.Build();
 

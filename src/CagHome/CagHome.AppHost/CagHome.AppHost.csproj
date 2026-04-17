@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.1.0">
+﻿<Project Sdk="Aspire.AppHost.Sdk/13.1.0">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
@@ -10,14 +10,16 @@
   <ItemGroup>
     <ProjectReference Include="..\CagHome.ApiService\CagHome.ApiService.csproj" />
     <ProjectReference Include="..\CagHome.Broker\CagHome.Broker.csproj" />
-    <ProjectReference Include="..\CagHome.IngestionService\src\CagHome.IngestionService.csproj" />
+    <ProjectReference Include="..\CagHome.IngestionService\CagHome.IngestionService.csproj" />
     <ProjectReference Include="..\RabbitMQBroker\RabbitMQBroker.csproj" />
     <ProjectReference Include="..\CagHome.Simulator\CagHome.Simulator.csproj" />
     <ProjectReference Include="..\CagHome.Web\CagHome.Web.csproj" />
+    <ProjectReference Include="..\CagHome.NotificationService\CagHome.NotificationService.csproj" />
+    <ProjectReference Include="..\CagHome.MockEhr\CagHome.MockEhr.csproj" />
+    <ProjectReference Include="..\CagHome.EhrIntegrationService\CagHome.EhrIntegrationService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.MongoDB" Version="13.1.0" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.1.0" />
     <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="13.1.0" />
   </ItemGroup>

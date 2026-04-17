@@ -1,6 +1,6 @@
-namespace CagHome.Contracts.Notifications;
+namespace CagHome.Contracts;
 
-public record PatientNotificationRequested(
+public record PatientAlertRequested(
     Guid PatientId,
     string Message,
     Severity Severity,
