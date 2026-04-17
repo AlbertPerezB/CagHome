@@ -8,4 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\CagHome.Contracts\CagHome.Contracts.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.2" />
+  </ItemGroup>
 </Project>

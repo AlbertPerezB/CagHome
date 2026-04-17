@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="CagHome.IngestionService/CagHome.IngestionService.csproj" />
+    <ProjectReference Include="../CagHome.IngestionService/CagHome.IngestionService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -73,7 +73,6 @@ builder.Services.AddScoped(sp =>
         errors
     );
 });
-builder.AddMongoDBClient(connectionName: "mongodb");
 
 builder.Services.AddWolverine(options =>
 {

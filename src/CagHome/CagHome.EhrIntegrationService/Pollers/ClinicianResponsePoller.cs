@@ -58,8 +58,7 @@ public class ClinicianResponsePoller(
                     PatientId: response.PatientId,
                     Message: response.Message,
                     ReceivedAtUtc: DateTime.UtcNow
-                ),
-                ct
+                )
             );
 
             logger.LogInformation(
