@@ -1,22 +1,11 @@
-using CagHome.AppHost;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
-// var postgres = builder
-//     .AddPostgres("postgres")
-//     .WithHostPort(5432)
-//     .WithImage("postgres", "18")
-//     .WithV18DataVolume()
-//     .WithPgAdmin();
+var mongo = builder.AddMongoDB("mongo").WithLifetime(ContainerLifetime.Persistent);
+var patientregistryDb = mongo.AddDatabase("patient-registry");
+var notificationAuditDb = mongo.AddDatabase("notificiation-audit");
+var monitoringAuditDb = mongo.AddDatabase("monitoring-audit");
 
-// var patientdb = postgres.AddDatabase("patient");
-
-// var mongo = builder.AddMongoDB("mongo")
-//                    .WithLifetime(ContainerLifetime.Persistent);
-
-//                    var mongodb = mongo.AddDatabase("mongodb");
-
-var rabbitmq = builder.AddRabbitMQ("messaging");
+var rabbitmq = builder.AddRabbitMQ("messaging").WithManagementPlugin();
 
 // var apiService = builder.AddProject<Projects.CagHome_ApiService>("apiservice")
 //     .WithHttpHealthCheck("/health");
@@ -38,7 +27,6 @@ builder
     .WithReference(broker)
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq)
-    // .WithReference(mongodb)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort);
 
 // .WithReplicas(3);
@@ -53,5 +41,19 @@ builder
     .AddProject<Projects.RabbitMQBroker>("rabbitmqbroker")
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
+
+var mockEhr = builder.AddProject<Projects.CagHome_MockEhr>("mock-ehr");
+
+builder
+    .AddProject<Projects.CagHome_NotificationService>("notification")
+    .WithReference(rabbitmq)
+    .WithReference(mockEhr)
+    .WithReference(notificationAuditDb)
+    .WaitFor(rabbitmq);
+
+var ehrIntegration = builder
+    .AddProject<Projects.CagHome_EhrIntegrationService>("ehr-integration")
+    .WithReference(rabbitmq)
+    .WithReference(mockEhr);
 
 builder.Build().Run();

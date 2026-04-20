@@ -33,7 +33,7 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /noconfig
 /unsafe-
 /checked-
-/nowarn:1701,1702,1701,1702
+/nowarn:1701,1702,1701,1702,8002
 /fullpaths
 /nostdlib+
 /errorreport:prompt
@@ -63,6 +63,7 @@ obj/Debug/net10.0/
   CagHome_ApiService.ProjectMetadata.g.cs
   CagHome_Broker.ProjectMetadata.g.cs
   CagHome_IngestionService.ProjectMetadata.g.cs
+  CagHome_NotificationService.ProjectMetadata.g.cs
   CagHome_Simulator.ProjectMetadata.g.cs
   CagHome_Web.ProjectMetadata.g.cs
   RabbitMQBroker.ProjectMetadata.g.cs
@@ -72,7 +73,7 @@ obj/Debug/net10.0/
 PostgresExtensions.cs
 
 [metadataReferences]
-../../../../../../../../Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/10.0.3/ref/net10.0/
+<DOTNET>/packs/Microsoft.AspNetCore.App.Ref/10.0.5/ref/net10.0/
  Microsoft.AspNetCore.Antiforgery.dll
  Microsoft.AspNetCore.Authentication.Abstractions.dll
  Microsoft.AspNetCore.Authentication.BearerToken.dll
@@ -213,7 +214,7 @@ PostgresExtensions.cs
  System.Formats.Cbor.dll
  System.Security.Cryptography.Xml.dll
  System.Threading.RateLimiting.dll
-../../../../../../../../Program Files/dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/
+<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.5/ref/net10.0/
  Microsoft.CSharp.dll
  Microsoft.VisualBasic.Core.dll
  Microsoft.VisualBasic.dll
@@ -425,7 +426,7 @@ PostgresExtensions.cs
  zstdsharp.port/0.7.3/lib/net7.0/ZstdSharp.dll
 
 [analyzerReferences]
-../../../../../../../../Program Files/dotnet/packs/Microsoft.AspNetCore.App.Ref/10.0.3/analyzers/dotnet/cs/
+<DOTNET>/packs/Microsoft.AspNetCore.App.Ref/10.0.5/analyzers/dotnet/cs/
  Microsoft.AspNetCore.App.Analyzers.dll
  Microsoft.AspNetCore.App.CodeFixes.dll
  Microsoft.AspNetCore.App.SourceGenerators.dll
@@ -433,20 +434,19 @@ PostgresExtensions.cs
  Microsoft.Extensions.Logging.Generators.dll
  Microsoft.Extensions.Options.SourceGeneration.dll
  Microsoft.Extensions.Validation.ValidationsGenerator.dll
-../../../../../../../../Program Files/dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/analyzers/dotnet/cs/
+<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.5/analyzers/dotnet/cs/
  Microsoft.Interop.ComInterfaceGenerator.dll
  Microsoft.Interop.JavaScript.JSImportGenerator.dll
  Microsoft.Interop.LibraryImportGenerator.dll
  Microsoft.Interop.SourceGeneration.dll
  System.Text.Json.SourceGeneration.dll
  System.Text.RegularExpressions.Generator.dll
-../../../../../../../../Program Files/dotnet/sdk/10.0.103/Sdks/Microsoft.NET.Sdk/analyzers/
+<DOTNET>/sdk/10.0.201/Sdks/Microsoft.NET.Sdk/analyzers/
  Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll
  Microsoft.CodeAnalysis.NetAnalyzers.dll
 <NUGET>/aspire.hosting.apphost/13.1.0/analyzers/dotnet/cs/Aspire.Hosting.Analyzers.dll
 
 [analyzerConfigFiles]
-../
- ../../../../../../../Program Files/dotnet/sdk/10.0.103/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_10_default.globalconfig
- .editorconfig
+../.editorconfig
+<DOTNET>/sdk/10.0.201/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_10_default.globalconfig
 obj/Debug/net10.0/CagHome.AppHost.GeneratedMSBuildEditorConfig.editorconfig

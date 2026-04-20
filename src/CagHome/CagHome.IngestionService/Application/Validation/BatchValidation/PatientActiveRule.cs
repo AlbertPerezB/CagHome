@@ -1,3 +1,4 @@
+using CagHome.Contracts.Enums;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
 

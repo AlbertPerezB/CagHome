@@ -1,4 +1,5 @@
 using System.Text.Json;
+using CagHome.Contracts;
 using CagHome.IngestionService.Application;
 using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Application.Pipeline.Handlers;
@@ -10,7 +11,6 @@ using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure;
 using CagHome.IngestionService.Infrastructure.Messaging;
 using CagHome.IngestionService.Infrastructure.Schemas;
-using Microsoft.Extensions.Hosting;
 using Wolverine;
 using Wolverine.RabbitMQ;
 
@@ -74,15 +74,19 @@ builder.Services.AddScoped(sp =>
         errors
     );
 });
-builder.AddMongoDBClient(connectionName: "mongodb");
 
 builder.Services.AddWolverine(options =>
 {
-    options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision();
-    options.ListenToRabbitQueue(PingPongTopology.QueueName);
-    options.PublishMessage<PingMessage>().ToRabbitQueue(PingPongTopology.QueueName);
-    options.PublishMessage<PongMessage>().ToRabbitQueue(PingPongTopology.QueueName);
+    options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision().UseConventionalRouting();
+
+    options.Policies.DisableConventionalLocalRouting();
+
+    options.PublishMessage<BatchReceived>().ToRabbitQueue("monitoring.batch-received");
 });
+
+builder
+    .Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing.AddSource("Wolverine").AddSource("RabbitMQ.Client"));
 
 var host = builder.Build();
 
