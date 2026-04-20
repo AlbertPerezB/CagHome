@@ -11,10 +11,10 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // var patientdb = postgres.AddDatabase("patient");
 
-// var mongo = builder.AddMongoDB("mongo")
-//                    .WithLifetime(ContainerLifetime.Persistent);
-
-//                    var mongodb = mongo.AddDatabase("mongodb");
+var mongo = builder.AddMongoDB("mongo").WithLifetime(ContainerLifetime.Persistent);
+var patientregistryDb = mongo.AddDatabase("patient-registry");
+var notificationAuditDb = mongo.AddDatabase("notificiation-audit");
+var monitoringAuditDb = mongo.AddDatabase("monitoring-audit");
 
 var rabbitmq = builder.AddRabbitMQ("messaging").WithManagementPlugin();
 
@@ -59,6 +59,7 @@ builder
     .AddProject<Projects.CagHome_NotificationService>("notification")
     .WithReference(rabbitmq)
     .WithReference(mockEhr)
+    .WithReference(notificationAuditDb)
     .WaitFor(rabbitmq);
 
 var ehrIntegration = builder

@@ -56,8 +56,7 @@ public class PatientRegistrationPoller(
                     PatientId: patient.PatientId,
                     Name: patient.Name,
                     RegisteredAtUtc: DateTime.UtcNow
-                ),
-                ct
+                )
             );
 
             logger.LogInformation(

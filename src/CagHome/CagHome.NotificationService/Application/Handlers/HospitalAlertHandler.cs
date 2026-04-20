@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using CagHome.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -5,15 +6,26 @@ namespace CagHome.NotificationService.Application.Handlers;
 
 public class HospitalAlertHandler
 {
-    public Task Handle(HospitalAlertRequested message, ILogger<HospitalAlertHandler> logger)
+    public async Task Handle(
+        HospitalAlertRequested message,
+        IHttpClientFactory httpClientFactory,
+        ILogger<HospitalAlertHandler> logger
+    )
     {
+        var alertId = Guid.NewGuid();
         logger.LogInformation(
-            "Hospital alert received: PatientId={PatientId}, HospitalId={HospitalId}, Severity={Severity}, Message={Message}",
+            "Hospital alert to be sent: AlertID = {alertId}, PatientId={PatientId}, HospitalId={HospitalId}, Severity={Severity}, Message={Message}",
+            alertId,
             message.PatientId,
             message.HospitalId,
             message.Severity,
             message.Message
         );
+
+        var client = httpClientFactory.CreateClient("mock-ehr");
+        var response = await client.PostAsJsonAsync("/alerts", message);
+
+        response.EnsureSuccessStatusCode();
 
         return Task.CompletedTask;
     }

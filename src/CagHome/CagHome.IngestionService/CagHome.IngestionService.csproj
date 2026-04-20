@@ -15,5 +15,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Infrastructure/Schemas/*.json" />
+    <ProjectReference Include="..\CagHome.Contracts\CagHome.Contracts.csproj" />
   </ItemGroup>
 </Project>

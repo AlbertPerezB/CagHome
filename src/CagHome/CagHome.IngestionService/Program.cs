@@ -1,4 +1,5 @@
 using System.Text.Json;
+using CagHome.Contracts;
 using CagHome.IngestionService.Application;
 using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Application.Pipeline.Handlers;
@@ -80,9 +81,7 @@ builder.Services.AddWolverine(options =>
 
     options.Policies.DisableConventionalLocalRouting();
 
-    options.ListenToRabbitQueue(PingPongTopology.QueueName);
-    options.PublishMessage<PingMessage>().ToRabbitQueue(PingPongTopology.QueueName);
-    options.PublishMessage<PongMessage>().ToRabbitQueue(PingPongTopology.QueueName);
+    options.PublishMessage<BatchReceived>().ToRabbitQueue("monitoring.batch-received");
 });
 
 builder

@@ -5,7 +5,6 @@ using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-// HTTP client for calling Mock EHR endpoints
 builder.Services.AddHttpClient(
     "mock-ehr",
     client =>
@@ -18,17 +17,14 @@ builder.Services.AddHttpClient(
 builder.Services.AddHostedService<ClinicianResponsePoller>();
 builder.Services.AddHostedService<PatientRegistrationPoller>();
 
-// OpenTelemetry — match the pattern from Ingestion
 builder.Services.AddOpenTelemetry().WithTracing(tracing => tracing.AddSource("Wolverine"));
 
 builder.Services.AddWolverine(options =>
 {
     options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision();
 
-    // Consume alert requests from Monitoring
     options.ListenToRabbitQueue("ehr.hospital-alerts");
 
-    // Publish events for downstream consumers (Notification, Patient Registry)
     options
         .PublishMessage<ClinicianResponseReceived>()
         .ToRabbitQueue("notification.clinician-response");
