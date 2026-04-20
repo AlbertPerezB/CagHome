@@ -1,6 +1,6 @@
 ﻿namespace CagHome.MockEhr.Domain
 {
-    public enum CarePlan
+    public enum Careplan
     {
         None,
         ValveDisease,

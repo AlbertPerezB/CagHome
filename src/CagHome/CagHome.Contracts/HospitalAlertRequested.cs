@@ -1,4 +1,6 @@
-﻿namespace CagHome.Contracts;
+﻿using CagHome.Contracts.enums;
+
+namespace CagHome.Contracts;
 
 public record HospitalAlertRequested(
     Guid PatientId,

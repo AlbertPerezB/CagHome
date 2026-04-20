@@ -1,8 +1,9 @@
-namespace CagHome.IngestionService.Domain.Enums
+﻿namespace CagHome.Contracts.enums
 {
     public enum PatientStatus
     {
         Active,
         Inactive,
+        Deceased,
     }
 }

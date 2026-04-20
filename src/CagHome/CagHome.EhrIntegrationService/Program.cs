@@ -1,5 +1,5 @@
 using CagHome.Contracts;
-using CagHome.EhrIntegrationService.Infrastructure;
+using CagHome.EhrIntegrationService.Application.Pollers;
 using Wolverine;
 using Wolverine.RabbitMQ;
 

@@ -2,7 +2,7 @@
 using CagHome.Contracts;
 using Wolverine;
 
-namespace CagHome.EhrIntegrationService.Infrastructure;
+namespace CagHome.EhrIntegrationService.Application.Pollers;
 
 public class PatientRegistrationPoller(
     IHttpClientFactory httpClientFactory,

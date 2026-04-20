@@ -1,3 +1,5 @@
+using CagHome.Contracts.enums;
+
 namespace CagHome.Contracts;
 
 public record PatientAlertRequested(

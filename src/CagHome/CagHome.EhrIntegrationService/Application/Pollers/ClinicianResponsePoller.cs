@@ -2,11 +2,10 @@
 using CagHome.Contracts;
 using Wolverine;
 
-namespace CagHome.EhrIntegrationService.Infrastructure;
+namespace CagHome.EhrIntegrationService.Application.Pollers;
 
 public class ClinicianResponsePoller(
     IHttpClientFactory httpClientFactory,
-    IMessageBus messageBus,
     ILogger<ClinicianResponsePoller> logger
 ) : BackgroundService
 {
@@ -48,25 +47,6 @@ public class ClinicianResponsePoller(
             return;
 
         logger.LogInformation("Polled {Count} clinician response(s)", responses.Count);
-
-        foreach (var response in responses)
-        {
-            await messageBus.PublishAsync(
-                new ClinicianResponseReceived(
-                    ResponseId: response.ResponseId,
-                    AlertId: response.AlertId,
-                    PatientId: response.PatientId,
-                    Message: response.Message,
-                    ReceivedAtUtc: DateTime.UtcNow
-                )
-            );
-
-            logger.LogInformation(
-                "Published ClinicianResponseReceived: ResponseId={ResponseId}, AlertId={AlertId}",
-                response.ResponseId,
-                response.AlertId
-            );
-        }
 
         _lastPollTimestamp = responses.Max(r => r.CreatedAtUtc);
     }

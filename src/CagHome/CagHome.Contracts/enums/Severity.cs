@@ -1,4 +1,4 @@
-namespace CagHome.Contracts;
+namespace CagHome.Contracts.enums;
 
 public enum Severity
 {
