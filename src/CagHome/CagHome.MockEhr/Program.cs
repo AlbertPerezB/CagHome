@@ -1,5 +1,5 @@
-using CagHome.Contracts;
 using CagHome.MockEhr;
+using CagHome.MockEhr.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,14 +8,13 @@ builder.Services.AddSingleton<MockEhrStore>();
 var app = builder.Build();
 
 // POST /alerts
-// Receives alerts from our system. A real EHR would route this
-// to a clinician dashboard or pager system.
+// Receives alerts from our system. Returns 202 Accepted.
 app.MapPost(
     "/alerts",
-    (HospitalAlertRequested alert, MockEhrStore store, ILogger<Program> logger) =>
+    (AlertDTO alert, MockEhrStore store, ILogger<Program> logger) =>
     {
         var received = new ReceivedAlert(
-            AlertId: Guid.NewGuid(),
+            AlertId: alert.AlertId,
             PatientId: alert.PatientId,
             HospitalId: alert.HospitalId,
             Message: alert.Message,
@@ -26,10 +25,10 @@ app.MapPost(
         store.Alerts.Add(received);
 
         logger.LogInformation(
-            "Alert received: AlertId={AlertId}, PatientId={PatientId}, Severity={Severity}",
+            "Alert received: AlertId={AlertId}, PatientId={PatientId}, Message={Message}",
             received.AlertId,
             received.PatientId,
-            received.Severity
+            received.Message
         );
 
         return Results.Accepted(value: new { received.AlertId });
@@ -38,7 +37,6 @@ app.MapPost(
 
 // GET /clinician-responses?since={ISO 8601 timestamp}
 // Returns clinician responses created after the given timestamp.
-// Our EHR Integration Service polls this endpoint.
 app.MapGet(
     "/clinician-responses",
     (DateTime? since, MockEhrStore store) =>
@@ -56,7 +54,6 @@ app.MapGet(
 
 // GET /patients?since={ISO 8601 timestamp}
 // Returns patient registrations created after the given timestamp.
-// Our EHR Integration Service polls this endpoint.
 app.MapGet(
     "/patients",
     (DateTime? since, MockEhrStore store) =>
@@ -80,16 +77,8 @@ app.MapGet(
 // Simulates a clinician typing a response to an alert.
 app.MapPost(
     "/mock/clinician-response",
-    (ClinicianResponseRequest request, MockEhrStore store, ILogger<Program> logger) =>
+    (ClinicianResponse response, MockEhrStore store, ILogger<Program> logger) =>
     {
-        var response = new ClinicianResponse(
-            ResponseId: Guid.NewGuid(),
-            AlertId: request.AlertId,
-            PatientId: request.PatientId,
-            Message: request.Message,
-            CreatedAtUtc: DateTime.UtcNow
-        );
-
         store.ClinicianResponses.Enqueue(response);
 
         logger.LogInformation(
@@ -106,28 +95,22 @@ app.MapPost(
 // Simulates a new patient being registered in the hospital system.
 app.MapPost(
     "/mock/patient",
-    (PatientRegistrationRequest request, MockEhrStore store, ILogger<Program> logger) =>
+    (PatientRegistration request, MockEhrStore store, ILogger<Program> logger) =>
     {
-        var patient = new PatientRegistration(
-            PatientId: Guid.NewGuid(),
-            Name: request.Name,
-            RegisteredAtUtc: DateTime.UtcNow
-        );
-
-        store.PatientRegistrations.Enqueue(patient);
+        store.PatientRegistrations.Enqueue(request);
 
         logger.LogInformation(
             "Mock: patient registered: PatientId={PatientId}, Name={Name}",
-            patient.PatientId,
-            patient.Name
+            request.PatientId,
+            request.CarePlan
         );
 
-        return Results.Created($"/patients/{patient.PatientId}", patient);
+        return Results.Created($"/patients/{request.PatientId}", request);
     }
 );
 
 // GET /mock/alerts
-// View all received alerts — useful for verifying that alerts arrived.
+// View all received alerts, useful for verifying that alerts arrived.
 app.MapGet(
     "/mock/alerts",
     (MockEhrStore store) =>
@@ -137,9 +120,3 @@ app.MapGet(
 );
 
 app.Run();
-
-// Request DTOs for mock-only endpoints
-
-public record ClinicianResponseRequest(Guid AlertId, Guid PatientId, string Message);
-
-public record PatientRegistrationRequest(string Name);

@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CagHome.Contracts\CagHome.Contracts.csproj" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.2" />
+    <Folder Include="Application\" />
   </ItemGroup>
 </Project>

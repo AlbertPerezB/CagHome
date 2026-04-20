@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using CagHome.Contracts;
+using CagHome.MockEhr.Domain;
 
 namespace CagHome.MockEhr;
 
@@ -16,31 +16,3 @@ public class MockEhrStore
 
     public ConcurrentQueue<PatientRegistration> PatientRegistrations { get; } = new();
 }
-
-/// <summary>
-/// An alert as received and stored by the mock EHR.
-/// </summary>
-public record ReceivedAlert(
-    Guid AlertId,
-    Guid PatientId,
-    Guid HospitalId,
-    string Message,
-    Severity Severity,
-    DateTime ReceivedAtUtc
-);
-
-/// <summary>
-/// A clinician response waiting to be picked up by polling.
-/// </summary>
-public record ClinicianResponse(
-    Guid ResponseId,
-    Guid AlertId,
-    Guid PatientId,
-    string Message,
-    DateTime CreatedAtUtc
-);
-
-/// <summary>
-/// A new patient registration waiting to be picked up by polling.
-/// </summary>
-public record PatientRegistration(Guid PatientId, string Name, DateTime RegisteredAtUtc);
