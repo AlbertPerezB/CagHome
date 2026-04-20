@@ -61,8 +61,8 @@ app.MapGet(
         var cutoff = since ?? DateTime.MinValue;
 
         var patients = store
-            .PatientRegistrations.Where(p => p.RegisteredAtUtc > cutoff)
-            .OrderBy(p => p.RegisteredAtUtc)
+            .PatientRegistrations.Where(p => p.UpdatedAtUtc > cutoff)
+            .OrderBy(p => p.UpdatedAtUtc)
             .ToList();
 
         return Results.Ok(patients);
@@ -95,7 +95,7 @@ app.MapPost(
 // Simulates a new patient being registered in the hospital system.
 app.MapPost(
     "/mock/patient",
-    (PatientRegistration request, MockEhrStore store, ILogger<Program> logger) =>
+    (PatientRegistrationUpdate request, MockEhrStore store, ILogger<Program> logger) =>
     {
         store.PatientRegistrations.Enqueue(request);
 

@@ -14,5 +14,5 @@ public class MockEhrStore
 
     public ConcurrentQueue<ClinicianResponse> ClinicianResponses { get; } = new();
 
-    public ConcurrentQueue<PatientRegistration> PatientRegistrations { get; } = new();
+    public ConcurrentQueue<PatientRegistrationUpdate> PatientRegistrations { get; } = new();
 }

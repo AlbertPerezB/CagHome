@@ -1,4 +1,4 @@
-﻿using CagHome.Contracts.enums;
+﻿using CagHome.Contracts.Enums;
 
 namespace CagHome.Contracts;
 

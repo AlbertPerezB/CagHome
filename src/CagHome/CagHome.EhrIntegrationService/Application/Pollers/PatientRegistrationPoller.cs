@@ -1,14 +1,14 @@
 ﻿using System.Net.Http.Json;
 using CagHome.Contracts;
-using CagHome.Contracts.enums;
+using CagHome.EhrIntegrationService.Domain;
 using Wolverine;
 
 namespace CagHome.EhrIntegrationService.Application.Pollers;
 
 public class PatientRegistrationPoller(
     IHttpClientFactory httpClientFactory,
-    IMessageBus messageBus,
-    ILogger<PatientRegistrationPoller> logger
+    ILogger<PatientRegistrationPoller> logger,
+    IRabbitMqPublisher publisher
 ) : BackgroundService
 {
     private DateTime _lastPollTimestamp = DateTime.MinValue;
@@ -52,30 +52,30 @@ public class PatientRegistrationPoller(
 
         foreach (var patient in patients)
         {
-            await messageBus.PublishAsync(
+            await publisher.PublishCareplanUpdateRequested(
+                new CareplanUpdateRequested(
+                    patient.PatientId,
+                    patient.UpdatedAtUtc,
+                    patient.Careplan
+                )
+            );
+
+            await publisher.PublishPatientStatusUpdateRequested(
                 new PatientStatusUpdateRequested(
-                    PatientId: patient.PatientId,
-                    RegisteredAtUtc: DateTime.UtcNow,
-                    PatientStatus: patient.PatientStus
+                    patient.PatientId,
+                    patient.UpdatedAtUtc,
+                    patient.Status
                 )
             );
 
             logger.LogInformation(
-                "Published PatientRegistered: PatientId={PatientId}, Name={Name}",
+                "Published PatientRegistered: PatientId={PatientId}, Careplan={Careplan}, Status={Status}",
                 patient.PatientId,
-                patient.Name
+                patient.Careplan,
+                patient.Status
             );
         }
 
-        _lastPollTimestamp = patients.Max(p => p.RegisteredAtUtc);
+        _lastPollTimestamp = patients.Max(p => p.UpdatedAtUtc);
     }
 }
-
-/// <summary>
-/// DTO matching the shape returned by Mock EHR's GET /patients.
-/// </summary>
-public record PatientRegistrationDto(
-    Guid PatientId,
-    DateTime RegisteredAtUtc,
-    PatientStatus status
-);

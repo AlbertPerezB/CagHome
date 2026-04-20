@@ -2,7 +2,7 @@
 {
     public record PatientRegistrationUpdate(
         Guid PatientId,
-        DateTime RegisteredAtUtc,
+        DateTime UpdatedAtUtc,
         Careplan CarePlan,
         PatientStatus Status
     );

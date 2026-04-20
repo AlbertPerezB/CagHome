@@ -1,4 +1,6 @@
-﻿namespace CagHome.Contracts.enums;
+﻿using CagHome.Contracts.Enums;
+
+namespace CagHome.Contracts;
 
 public record PatientStatusUpdateRequested(
     Guid PatientId,

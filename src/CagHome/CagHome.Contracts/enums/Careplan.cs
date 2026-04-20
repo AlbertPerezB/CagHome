@@ -1,4 +1,4 @@
-﻿namespace CagHome.Contracts.enums;
+﻿namespace CagHome.Contracts.Enums;
 
 public enum Careplan
 {

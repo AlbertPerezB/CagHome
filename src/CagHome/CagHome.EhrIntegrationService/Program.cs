@@ -1,5 +1,6 @@
 using CagHome.Contracts;
-using CagHome.Contracts.enums;
+using CagHome.Contracts.Enums;
+using CagHome.EhrIntegrationService.Application;
 using CagHome.EhrIntegrationService.Application.Pollers;
 using Wolverine;
 using Wolverine.RabbitMQ;
@@ -35,6 +36,8 @@ builder.Services.AddWolverine(options =>
         .ToRabbitQueue("patient-registry.patient-status-update");
     options.PublishMessage<CareplanUpdateRequested>().ToRabbitQueue("monitoring.careplan-update");
 });
+
+builder.Services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
 
 var host = builder.Build();
 await host.RunAsync();
