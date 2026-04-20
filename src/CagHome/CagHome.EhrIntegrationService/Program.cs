@@ -1,4 +1,5 @@
 using CagHome.Contracts;
+using CagHome.Contracts.enums;
 using CagHome.EhrIntegrationService.Application.Pollers;
 using Wolverine;
 using Wolverine.RabbitMQ;
@@ -29,7 +30,10 @@ builder.Services.AddWolverine(options =>
         .PublishMessage<ClinicianResponseReceived>()
         .ToRabbitQueue("notification.clinician-response");
 
-    options.PublishMessage<PatientRegistered>().ToRabbitQueue("patient-registry.new-patient");
+    options
+        .PublishMessage<PatientStatusUpdateRequested>()
+        .ToRabbitQueue("patient-registry.patient-status-update");
+    options.PublishMessage<CareplanUpdateRequested>().ToRabbitQueue("monitoring.careplan-update");
 });
 
 var host = builder.Build();

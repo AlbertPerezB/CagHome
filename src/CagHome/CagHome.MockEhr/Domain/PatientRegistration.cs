@@ -1,4 +1,9 @@
 ﻿namespace CagHome.MockEhr.Domain
 {
-    public record PatientRegistration(Guid PatientId, DateTime RegisteredAtUtc, CarePlan CarePlan);
+    public record PatientRegistrationUpdate(
+        Guid PatientId,
+        DateTime RegisteredAtUtc,
+        Careplan CarePlan,
+        PatientStatus Status
+    );
 }

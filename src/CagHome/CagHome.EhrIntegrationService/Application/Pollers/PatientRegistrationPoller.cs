@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using CagHome.Contracts;
+using CagHome.Contracts.enums;
 using Wolverine;
 
 namespace CagHome.EhrIntegrationService.Application.Pollers;
@@ -52,10 +53,10 @@ public class PatientRegistrationPoller(
         foreach (var patient in patients)
         {
             await messageBus.PublishAsync(
-                new PatientRegistered(
+                new PatientStatusUpdateRequested(
                     PatientId: patient.PatientId,
-                    Name: patient.Name,
-                    RegisteredAtUtc: DateTime.UtcNow
+                    RegisteredAtUtc: DateTime.UtcNow,
+                    PatientStatus: patient.PatientStus
                 )
             );
 
@@ -73,4 +74,8 @@ public class PatientRegistrationPoller(
 /// <summary>
 /// DTO matching the shape returned by Mock EHR's GET /patients.
 /// </summary>
-public record PatientRegistrationDto(Guid PatientId, string Name, DateTime RegisteredAtUtc);
+public record PatientRegistrationDto(
+    Guid PatientId,
+    DateTime RegisteredAtUtc,
+    PatientStatus status
+);
