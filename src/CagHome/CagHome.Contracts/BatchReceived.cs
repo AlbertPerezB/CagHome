@@ -10,8 +10,10 @@ public record BatchReceived(
 public record MeasurementItem(
     Guid MeasurementId,
     string MeasurementType,
-    float Value,
+    double Value,
     string Unit,
-    string DeviceId,
-    DateTime DeviceReported
+    DateTime DeviceReported,
+    List<ValidationErrorItem> ValidationErrors
 );
+
+public record ValidationErrorItem(string Message, string Code);

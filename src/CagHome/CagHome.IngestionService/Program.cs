@@ -18,7 +18,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 //Infrastructure
 builder.Services.AddHostedService<MqttConsumerService>();
-builder.Services.AddScoped<RabbitMqPublisher>();
+builder.Services.AddScoped<IRabbitMqPublisher, RabbitMqPublisher>();
 builder.Services.AddScoped<MqttPublisher>();
 builder.Services.AddSingleton<IJsonSchemaRegistry, JsonSchemaRegistry>();
 
@@ -77,7 +77,10 @@ builder.Services.AddScoped(sp =>
 
 builder.Services.AddWolverine(options =>
 {
-    options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision().UseConventionalRouting();
+    options
+        .UseRabbitMqUsingNamedConnection("rabbitmq-broker")
+        .AutoProvision()
+        .UseConventionalRouting();
 
     options.Policies.DisableConventionalLocalRouting();
 

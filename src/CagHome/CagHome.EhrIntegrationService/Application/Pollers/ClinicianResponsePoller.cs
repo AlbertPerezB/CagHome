@@ -1,12 +1,15 @@
 ﻿using System.Net.Http.Json;
 using CagHome.Contracts;
+using CagHome.EhrIntegrationService.Domain;
+using CagHome.EhrIntegrationService.Infrastructure;
 using Wolverine;
 
 namespace CagHome.EhrIntegrationService.Application.Pollers;
 
 public class ClinicianResponsePoller(
     IHttpClientFactory httpClientFactory,
-    ILogger<ClinicianResponsePoller> logger
+    ILogger<ClinicianResponsePoller> logger,
+    IRabbitMqPublisher publisher
 ) : BackgroundService
 {
     private DateTime _lastPollTimestamp = DateTime.MinValue;
@@ -45,22 +48,24 @@ public class ClinicianResponsePoller(
 
         if (responses is null || responses.Count == 0)
             return;
-
-        logger.LogInformation("Polled {Count} clinician response(s)", responses.Count);
+        foreach (var response in responses)
+        {
+            await publisher.PublishClinicianResponseReceived(
+                new ClinicianResponseReceived(
+                    response.ResponseId,
+                    response.AlertId,
+                    response.PatientId,
+                    response.Message,
+                    response.CreatedAtUtc
+                )
+            );
+            logger.LogInformation(
+                $"Received clinician response {response.ResponseId}"
+                    + $" for alert {response.AlertId} and patient {response.PatientId}: {response.Message}"
+            );
+        }
+        logger.LogInformation($"Polled {responses.Count} clinician response(s)");
 
         _lastPollTimestamp = responses.Max(r => r.CreatedAtUtc);
     }
 }
-
-/// <summary>
-/// DTO matching the shape returned by Mock EHR's GET /clinician-responses.
-/// This is deliberately separate from the internal contract — it mirrors
-/// the external API, not our domain.
-/// </summary>
-public record ClinicianResponseDto(
-    Guid ResponseId,
-    Guid AlertId,
-    Guid PatientId,
-    string Message,
-    DateTime CreatedAtUtc
-);

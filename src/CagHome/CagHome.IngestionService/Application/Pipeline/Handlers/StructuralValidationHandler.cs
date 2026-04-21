@@ -3,22 +3,17 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class StructuralValidationHandler : IngestionHandler
+public class StructuralValidationHandler(
+    StructuralValidator validator,
+    ILogger<StructuralValidationHandler> logger
+) : IngestionHandler
 {
-    private readonly StructuralValidator _validator;
-
-    public StructuralValidationHandler(StructuralValidator validator, ILoggerFactory loggerFactory)
-        : base(loggerFactory)
-    {
-        _validator = validator;
-    }
-
     protected override async Task ProcessAsync(IngestionContext context)
     {
-        _logger.LogInformation("Starting structural validation");
+        logger.LogInformation("Starting structural validation");
         if (context.Json != null)
         {
-            var error = await _validator.ValidateAsync(context.Json);
+            var error = await validator.ValidateAsync(context.Json);
             if (error != null)
             {
                 context.FatalError = error;

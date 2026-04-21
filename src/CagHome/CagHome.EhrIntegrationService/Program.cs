@@ -1,7 +1,7 @@
 using CagHome.Contracts;
 using CagHome.Contracts.Enums;
-using CagHome.EhrIntegrationService.Application;
 using CagHome.EhrIntegrationService.Application.Pollers;
+using CagHome.EhrIntegrationService.Infrastructure;
 using Wolverine;
 using Wolverine.RabbitMQ;
 
@@ -19,11 +19,11 @@ builder.Services.AddHttpClient(
 builder.Services.AddHostedService<ClinicianResponsePoller>();
 builder.Services.AddHostedService<PatientRegistrationPoller>();
 
-builder.Services.AddOpenTelemetry().WithTracing(tracing => tracing.AddSource("Wolverine"));
+builder.AddServiceDefaults();
 
 builder.Services.AddWolverine(options =>
 {
-    options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision();
+    options.UseRabbitMqUsingNamedConnection("rabbitmq-broker").AutoProvision();
 
     options.ListenToRabbitQueue("ehr.hospital-alerts");
 
@@ -34,9 +34,11 @@ builder.Services.AddWolverine(options =>
     options
         .PublishMessage<PatientStatusUpdateRequested>()
         .ToRabbitQueue("patient-registry.patient-status-update");
+
     options.PublishMessage<CareplanUpdateRequested>().ToRabbitQueue("monitoring.careplan-update");
 });
 
+builder.Services.AddOpenTelemetry().WithTracing(tracing => tracing.AddSource("Wolverine"));
 builder.Services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
 
 var host = builder.Build();

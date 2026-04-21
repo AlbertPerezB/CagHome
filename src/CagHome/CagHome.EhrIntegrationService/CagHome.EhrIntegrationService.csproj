@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CagHome.Contracts\CagHome.Contracts.csproj" />
+    <ProjectReference Include="..\CagHome.ServiceDefaults\CagHome.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>

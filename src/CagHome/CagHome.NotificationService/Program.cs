@@ -1,4 +1,6 @@
+using CagHome.Contracts;
 using CagHome.NotificationService;
+using CagHome.NotificationService.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Wolverine;
 using Wolverine.ErrorHandling;
@@ -8,7 +10,10 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.UseWolverine(options =>
 {
-    options.UseRabbitMqUsingNamedConnection("messaging").AutoProvision().UseConventionalRouting();
+    options
+        .UseRabbitMqUsingNamedConnection("rabbitmq-broker")
+        .AutoProvision()
+        .UseConventionalRouting();
 
     options.Policies.DisableConventionalLocalRouting();
 
@@ -27,7 +32,13 @@ builder.UseWolverine(options =>
         .Policies.OnAnyException()
         .RetryWithCooldown(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5))
         .Then.MoveToErrorQueue();
+
+    options.ListenToRabbitQueue("notification.hospital-alert");
+    options.ListenToRabbitQueue("notification.patient-alert");
+    options.ListenToRabbitQueue("notification.clinician-response");
 });
+
+builder.AddMongoDBClient(connectionName: "notificiation-audit");
 
 builder
     .Services.AddOpenTelemetry()
@@ -40,6 +51,10 @@ builder.Services.AddHttpClient(
         client.BaseAddress = new Uri("https://mock-ehr");
     }
 );
+
+builder.Services.AddSingleton<MqttConnectionService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<MqttConnectionService>());
+builder.Services.AddSingleton<MqttNotificationPublisher>();
 
 var host = builder.Build();
 host.Run();

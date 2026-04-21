@@ -7,5 +7,6 @@ public record HospitalAlertRequested(
     Guid HospitalId,
     string Message,
     Severity Severity,
-    DateTime DecidedAt
+    DateTime DecidedAt,
+    Guid AlertId
 );
