@@ -57,6 +57,7 @@ builder
 var ehrIntegration = builder
     .AddProject<Projects.CagHome_EhrIntegrationService>("ehr-integration")
     .WithReference(rabbitmqBroker)
-    .WithReference(mockEhr);
+    .WithReference(mockEhr)
+    .WaitFor(rabbitmqBroker);
 
 builder.Build().Run();
