@@ -2,7 +2,7 @@
 using CagHome.Contracts.Enums;
 using Wolverine;
 
-namespace CagHome.EhrIntegrationService.Application
+namespace CagHome.EhrIntegrationService.Infrastructure
 {
     public class RabbitMqPublisher(IServiceScopeFactory serviceScopeFactory) : IRabbitMqPublisher
     {

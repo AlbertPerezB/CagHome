@@ -3,14 +3,11 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class BatchMappingHandler : IngestionHandler
+public class BatchMappingHandler(ILogger<BatchMappingHandler> logger) : IngestionHandler
 {
-    public BatchMappingHandler(ILoggerFactory loggerFactory)
-        : base(loggerFactory) { }
-
     protected override Task ProcessAsync(IngestionContext context)
     {
-        _logger.LogDebug("Starting BatchMapping");
+        logger.LogDebug("Starting BatchMapping");
         var dto = context.BatchDto;
 
         if (

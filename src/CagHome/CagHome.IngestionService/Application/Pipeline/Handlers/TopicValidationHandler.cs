@@ -3,14 +3,11 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class TopicValidationHandler : IngestionHandler
+public class TopicValidationHandler(ILogger<MeasurementValidationHandler> logger) : IngestionHandler
 {
-    public TopicValidationHandler(ILoggerFactory loggerFactory)
-        : base(loggerFactory) { }
-
     protected override Task ProcessAsync(IngestionContext context)
     {
-        _logger.LogInformation("Starting topic validation");
+        logger.LogInformation("Starting topic validation");
         var topic = context.RawBatch.Topic;
         var batch = context.Batch;
         if (!string.IsNullOrWhiteSpace(topic))

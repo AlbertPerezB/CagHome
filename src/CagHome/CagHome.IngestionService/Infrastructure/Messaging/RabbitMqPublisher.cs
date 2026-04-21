@@ -1,32 +1,17 @@
+using CagHome.Contracts;
 using Microsoft.Extensions.Logging;
 using Wolverine;
 
 namespace CagHome.IngestionService.Infrastructure.Messaging;
 
 public sealed class RabbitMqPublisher(ILogger<RabbitMqPublisher> logger, IMessageBus messageBus)
+    : IRabbitMqPublisher
 {
-    public async Task PublishPingAsync(PingMessage message, CancellationToken cancellationToken)
-    {
-        // Implementation of RabbitMQ publisher
-        logger.LogInformation(
-            "Publishing ping: CorrelationId={CorrelationId}, Sequence={Sequence}/{MaxTurns}",
-            message.CorrelationId,
-            message.Sequence,
-            message.MaxTurns
-        );
-
-        await messageBus.PublishAsync(message);
-    }
-
-    public async Task PublishPongAsync(PongMessage message, CancellationToken cancellationToken)
+    public async Task PublishBatchReceived(BatchReceived message)
     {
         logger.LogInformation(
-            "Publishing pong: CorrelationId={CorrelationId}, Sequence={Sequence}/{MaxTurns}",
-            message.CorrelationId,
-            message.Sequence,
-            message.MaxTurns
+            $"Publishing BatchReceived {message.BatchId} for patient {message.PatientId} with {message.Measurements.Count} measurements"
         );
-
         await messageBus.PublishAsync(message);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using CagHome.Contracts;
 using CagHome.Contracts.Enums;
 
-namespace CagHome.EhrIntegrationService.Application
+namespace CagHome.EhrIntegrationService.Infrastructure
 {
     public interface IRabbitMqPublisher
     {

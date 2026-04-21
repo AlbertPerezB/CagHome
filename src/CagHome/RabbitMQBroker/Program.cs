@@ -4,7 +4,7 @@ using RabbitMQBroker;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.AddRabbitMQClient(connectionName: "messaging");
+builder.AddRabbitMQClient(connectionName: "rabbitmq-broker");
 builder.Services.AddHostedService<RabbitMqBrokerWorker>();
 
 var host = builder.Build();

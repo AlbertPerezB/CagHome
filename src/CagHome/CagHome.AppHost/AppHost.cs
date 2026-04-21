@@ -4,8 +4,9 @@ var mongo = builder.AddMongoDB("mongo").WithLifetime(ContainerLifetime.Persisten
 var patientregistryDb = mongo.AddDatabase("patient-registry");
 var notificationAuditDb = mongo.AddDatabase("notificiation-audit");
 var monitoringAuditDb = mongo.AddDatabase("monitoring-audit");
+var monitoringConfigDb = mongo.AddDatabase("monitoring-config");
 
-var rabbitmq = builder.AddRabbitMQ("messaging").WithManagementPlugin();
+var rabbitmqBroker = builder.AddRabbitMQ("rabbitmq-broker").WithManagementPlugin();
 
 // var apiService = builder.AddProject<Projects.CagHome_ApiService>("apiservice")
 //     .WithHttpHealthCheck("/health");
@@ -18,42 +19,44 @@ var rabbitmq = builder.AddRabbitMQ("messaging").WithManagementPlugin();
 var brokerPort = builder.AddParameter("mqtt-broker-port", "1883");
 var brokerHost = builder.AddParameter("mqtt-broker-host", "localhost");
 
-var broker = builder
-    .AddProject<Projects.CagHome_Broker>("broker")
+var mqttBroker = builder
+    .AddProject<Projects.CagHome_Broker>("mqtt-broker")
     .WithEnvironment("MQTT_PORT", brokerPort);
 
 builder
     .AddProject<Projects.CagHome_IngestionService>("ingestionservice")
-    .WithReference(broker)
-    .WithReference(rabbitmq)
-    .WaitFor(rabbitmq)
+    .WithReference(mqttBroker)
+    .WithReference(rabbitmqBroker)
+    .WaitFor(rabbitmqBroker)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort);
 
 // .WithReplicas(3);
 
 builder
     .AddProject<Projects.CagHome_Simulator>("simulator")
-    .WithReference(broker)
+    .WithReference(mqttBroker)
     .WithEnvironment("Simulator__BrokerHost", brokerHost)
     .WithEnvironment("Simulator__BrokerPort", brokerPort);
 
 builder
     .AddProject<Projects.RabbitMQBroker>("rabbitmqbroker")
-    .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
+    .WithReference(rabbitmqBroker)
+    .WaitFor(rabbitmqBroker);
 
 var mockEhr = builder.AddProject<Projects.CagHome_MockEhr>("mock-ehr");
 
 builder
     .AddProject<Projects.CagHome_NotificationService>("notification")
-    .WithReference(rabbitmq)
+    .WithReference(rabbitmqBroker)
     .WithReference(mockEhr)
     .WithReference(notificationAuditDb)
-    .WaitFor(rabbitmq);
+    .WithReference(mqttBroker)
+    .WithEnvironment("MQTT_BROKER_PORT", brokerPort)
+    .WaitFor(rabbitmqBroker);
 
 var ehrIntegration = builder
     .AddProject<Projects.CagHome_EhrIntegrationService>("ehr-integration")
-    .WithReference(rabbitmq)
+    .WithReference(rabbitmqBroker)
     .WithReference(mockEhr);
 
 builder.Build().Run();

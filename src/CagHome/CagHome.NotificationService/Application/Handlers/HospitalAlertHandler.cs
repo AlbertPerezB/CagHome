@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using CagHome.Contracts;
-using Microsoft.Extensions.Logging;
+using CagHome.NotificationService.Domain;
+using CagHome.NotificationService.Infrastructure;
 
 namespace CagHome.NotificationService.Application.Handlers;
 
@@ -15,7 +16,8 @@ public class HospitalAlertHandler
     {
         var alertId = Guid.NewGuid();
         logger.LogInformation(
-            "Hospital alert to be sent: AlertID = {alertId}, PatientId={PatientId}, HospitalId={HospitalId}, Severity={Severity}, Message={Message}",
+            "Hospital alert to be sent: "
+                + "AlertID = {alertId}, PatientId={PatientId}, HospitalId={HospitalId}, Severity={Severity}, Message={Message}",
             alertId,
             message.PatientId,
             message.HospitalId,
@@ -23,18 +25,20 @@ public class HospitalAlertHandler
             message.Message
         );
 
-        await auditStore.RecordAlertAttempted(
-            message.PatientId,
-            message.HospitalId,
-            message.Severity,
-            message.Message,
-            DateTime.UtcNow
-        );
+        await auditStore.RecordAuditEntry(new AuditEntry(message, DeliveryStatus.Attempted));
 
-        var client = httpClientFactory.CreateClient("mock-ehr");
-        var response = await client.PostAsJsonAsync("/alerts", message);
+        try
+        {
+            var client = httpClientFactory.CreateClient("mock-ehr");
+            var response = await client.PostAsJsonAsync("/alerts", message);
 
-        response.EnsureSuccessStatusCode();
-        ;
+            response.EnsureSuccessStatusCode();
+            await auditStore.RecordAuditEntry(new AuditEntry(message, DeliveryStatus.Delivered));
+        }
+        catch (HttpRequestException ex)
+        {
+            await auditStore.RecordAuditEntry(new AuditEntry(message, DeliveryStatus.Failed));
+            throw;
+        }
     }
 }

@@ -4,11 +4,8 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class DeserializationHandler : IngestionHandler
+public class DeserializationHandler(ILogger<DeserializationHandler> logger) : IngestionHandler
 {
-    public DeserializationHandler(ILoggerFactory loggerFactory)
-        : base(loggerFactory) { }
-
     private static readonly JsonSerializerOptions _options = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -16,7 +13,7 @@ public class DeserializationHandler : IngestionHandler
 
     protected override Task ProcessAsync(IngestionContext context)
     {
-        _logger.LogInformation("Parsing json");
+        logger.LogInformation("Parsing json");
         try
         {
             if (context.Json != null)

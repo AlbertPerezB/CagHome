@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using CagHome.Contracts;
 using CagHome.EhrIntegrationService.Domain;
+using CagHome.EhrIntegrationService.Infrastructure;
 using Wolverine;
 
 namespace CagHome.EhrIntegrationService.Application.Pollers;
@@ -48,7 +49,7 @@ public class PatientRegistrationPoller(
         if (patients is null || patients.Count == 0)
             return;
 
-        logger.LogInformation("Polled {Count} new patient registration(s)", patients.Count);
+        logger.LogInformation($"Polled {patients.Count} new patient registration(s)");
 
         foreach (var patient in patients)
         {

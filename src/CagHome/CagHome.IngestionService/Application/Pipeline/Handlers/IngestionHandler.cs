@@ -3,12 +3,6 @@ namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 public abstract class IngestionHandler : IIngestionHandler
 {
     private IIngestionHandler? _next;
-    protected readonly ILogger _logger;
-
-    protected IngestionHandler(ILoggerFactory loggerFactory)
-    {
-        _logger = loggerFactory.CreateLogger(GetType());
-    }
 
     public IIngestionHandler SetNext(IIngestionHandler next)
     {
