@@ -1,4 +1,6 @@
-namespace CagHome.Simulator;
+using CagHome.Simulator.Domain.Models;
+
+namespace CagHome.Simulator.Domain.Profiles;
 
 public interface ISimulationProfile
 {

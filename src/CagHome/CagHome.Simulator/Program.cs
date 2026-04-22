@@ -1,4 +1,6 @@
 using CagHome.Simulator;
+using CagHome.Simulator.Application;
+using CagHome.Simulator.Domain.Profiles;
 
 var builder = Host.CreateApplicationBuilder(args);
 

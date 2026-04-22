@@ -1,20 +1,20 @@
-namespace CagHome.Simulator;
+namespace CagHome.Simulator.Domain.Models;
 
 public sealed record MeasurementBatchPayload(
-    int SchemaVersion,
     string AppVersion,
+    IReadOnlyList<MeasurementPayload> Measurements,
     Guid PatientId,
-    IReadOnlyList<MeasurementPayload> Measurements);
+    int SchemaVersion);
 
 public sealed record MeasurementPayload(
-    Guid MeasurementId,
-    string Type,
-    double Value,
-    string Unit,
     DateTimeOffset DeviceReported,
-    MeasurementSourcePayload Source);
+    Guid MeasurementId,
+    MeasurementSourcePayload Source,
+    string Type,
+    string Unit,
+    double Value);
 
 public sealed record MeasurementSourcePayload(
+    string DeviceId,
     string DeviceManufacturer,
-    string DeviceModel,
-    string DeviceId);
+    string DeviceModel);

@@ -5,7 +5,10 @@ using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Protocol;
 
-namespace CagHome.Simulator;
+using CagHome.Simulator.Domain.Models;
+using CagHome.Simulator.Domain.Profiles;
+
+namespace CagHome.Simulator.Application;
 
 public sealed class BiometricPublisherService(
 	ILogger<BiometricPublisherService> logger,
@@ -17,7 +20,7 @@ public sealed class BiometricPublisherService(
 	private readonly Dictionary<int, Guid> _patientIdsByIndex = [];
 	private readonly Dictionary<Guid, List<MeasurementPayload>> _accumulatedMeasurementsByPatient = [];
 	private static readonly MeasurementSourcePayload DefaultMeasurementSource =
-		new("Apple", "Watch Series 9", "simulator-device");
+		new("simulator-device", "Apple", "Watch Series 9");
 	private readonly FrozenDictionary<string, ISimulationProfile> _profilesByName =
 		profiles.ToFrozenDictionary(profile => profile.Name, StringComparer.OrdinalIgnoreCase);
 	private IMqttClient? _mqttClient;

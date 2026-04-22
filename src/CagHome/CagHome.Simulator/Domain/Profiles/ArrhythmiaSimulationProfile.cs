@@ -1,4 +1,6 @@
-namespace CagHome.Simulator;
+namespace CagHome.Simulator.Domain.Profiles;
+
+using CagHome.Simulator.Domain.Models;
 
 public sealed class ArrhythmiaSimulationProfile : ISimulationProfile
 {
