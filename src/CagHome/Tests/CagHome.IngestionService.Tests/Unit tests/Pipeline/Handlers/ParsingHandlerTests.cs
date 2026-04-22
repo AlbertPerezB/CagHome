@@ -9,7 +9,9 @@ namespace CagHome.IngestionService.Tests.Pipeline.Handlers;
 
 public class ParseJsonHandlerTests
 {
-    private readonly ParseJsonHandler _handler = new(NullLoggerFactory.Instance);
+    private readonly ParseJsonHandler _handler = new ParseJsonHandler(
+        new NullLogger<ParseJsonHandler>()
+    );
 
     private static IngestionContext MakeContext(string payload) =>
         new(new RawBatch("patient/123", payload, DateTime.UtcNow));

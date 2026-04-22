@@ -35,7 +35,7 @@ public class HospitalAlertHandler
             response.EnsureSuccessStatusCode();
             await auditStore.RecordAuditEntry(new AuditEntry(message, DeliveryStatus.Delivered));
         }
-        catch (HttpRequestException ex)
+        catch (HttpRequestException)
         {
             await auditStore.RecordAuditEntry(new AuditEntry(message, DeliveryStatus.Failed));
             throw;

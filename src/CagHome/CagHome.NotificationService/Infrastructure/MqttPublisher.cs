@@ -4,10 +4,8 @@ using MQTTnet;
 
 namespace CagHome.NotificationService.Infrastructure;
 
-public class MqttNotificationPublisher(
-    MqttConnectionService connectionService,
-    ILogger<MqttNotificationPublisher> logger
-)
+public class MqttPublisher(MqttConnectionService connectionService, ILogger<MqttPublisher> logger)
+    : IMqttPublisher
 {
     public async Task Publish(Guid patientId, object payload)
     {

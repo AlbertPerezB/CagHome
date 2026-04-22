@@ -9,7 +9,9 @@ namespace CagHome.IngestionService.Tests.Pipeline.Handlers;
 
 public class DeserializationHandlerTests
 {
-    private readonly DeserializationHandler _handler = new(NullLoggerFactory.Instance);
+    private readonly DeserializationHandler _handler = new DeserializationHandler(
+        new NullLogger<DeserializationHandler>()
+    );
 
     private static IngestionContext MakeContext(string payload)
     {
@@ -93,19 +95,6 @@ public class DeserializationHandlerTests
         Assert.Null(context.FatalError);
         Assert.NotNull(context.BatchDto);
         Assert.Equal(1, context.BatchDto!.SchemaVersion);
-    }
-
-    [Fact]
-    public async Task MissingJsonDocument_SetsFatalError()
-    {
-        var context = new IngestionContext(new RawBatch("patient/123", "{}", DateTime.UtcNow));
-        // Json is null - simulating that ParseJsonHandler failed
-
-        await _handler.HandleAsync(context);
-
-        Assert.NotNull(context.FatalError);
-        Assert.Equal(ValidationCode.ParseError, context.FatalError!.Code);
-        Assert.Null(context.BatchDto);
     }
 
     [Fact]

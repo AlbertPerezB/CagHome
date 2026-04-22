@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.ServiceDefaults", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.ApiService", "CagHome.ApiService\CagHome.ApiService.csproj", "{CA5E5E75-F8DF-4457-A85F-EBA7A2BB9429}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.Tests", "CagHome.Tests\CagHome.Tests.csproj", "{2ABB7844-C68C-4CB9-B3A6-B2ED71491ABB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.Simulator.Tests", "Tests\CagHome.Tests\CagHome.Simulator.Tests.csproj", "{2ABB7844-C68C-4CB9-B3A6-B2ED71491ABB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.Web", "CagHome.Web\CagHome.Web.csproj", "{1D37E31B-CF05-4395-979C-370AF8D43B20}"
 EndProject
@@ -25,11 +25,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.NotificationService
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Contracts", "CagHome.Contracts\CagHome.Contracts.csproj", "{66240655-87CF-4719-82BD-093EF71D394F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.IngestionService.Tests", "CagHome.IngestionService.Tests\CagHome.IngestionService.Tests.csproj", "{835EF328-ECB3-41B1-800B-AB60342DC242}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.IngestionService.Tests", "Tests\CagHome.IngestionService.Tests\CagHome.IngestionService.Tests.csproj", "{835EF328-ECB3-41B1-800B-AB60342DC242}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.MockEhr", "CagHome.MockEhr\CagHome.MockEhr.csproj", "{17848DBD-E66A-41CA-B78D-6E7B4394C823}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.EhrIntegrationService", "CagHome.EhrIntegrationService\CagHome.EhrIntegrationService.csproj", "{DD0A6299-B94F-4062-B19B-5AB143474A5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.NotificationService.Tests", "Tests\CagHome.NotificationServiceTests\CagHome.NotificationService.Tests.csproj", "{B8D4784E-6719-D210-C97D-6EE8469621CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -209,6 +211,18 @@ Global
 		{DD0A6299-B94F-4062-B19B-5AB143474A5C}.Release|x64.Build.0 = Release|Any CPU
 		{DD0A6299-B94F-4062-B19B-5AB143474A5C}.Release|x86.ActiveCfg = Release|Any CPU
 		{DD0A6299-B94F-4062-B19B-5AB143474A5C}.Release|x86.Build.0 = Release|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Debug|x64.Build.0 = Debug|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Debug|x86.Build.0 = Debug|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Release|x64.ActiveCfg = Release|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Release|x64.Build.0 = Release|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Release|x86.ActiveCfg = Release|Any CPU
+		{B8D4784E-6719-D210-C97D-6EE8469621CF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

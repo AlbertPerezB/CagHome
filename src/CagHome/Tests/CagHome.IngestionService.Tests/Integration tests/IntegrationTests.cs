@@ -9,6 +9,7 @@ using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure.Schemas;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Xunit;
@@ -28,22 +29,30 @@ public class IngestionServiceIntegrationTests
         IIngestionHandler? errorOverride = null
     )
     {
-        var loggerFactory = NullLoggerFactory.Instance;
         var registry = new JsonSchemaRegistry();
 
-        var parseJson = new ParseJsonHandler(loggerFactory);
-        var deserialization = new DeserializationHandler(loggerFactory);
+        var parseJson = new ParseJsonHandler(new NullLogger<ParseJsonHandler>());
+        var deserialization = new DeserializationHandler(new NullLogger<DeserializationHandler>());
         var structuralValidator = new StructuralValidator(
             new List<IValidationRule<JsonDocument>> { new SchemaValidationRule(registry) }
         );
-        var structural = new StructuralValidationHandler(structuralValidator, loggerFactory);
-        var batchMapping = new BatchMappingHandler(loggerFactory);
-        var topicValidation = new TopicValidationHandler(loggerFactory);
+        var structuralRules = new List<IValidationRule<JsonDocument>>
+        {
+            new SchemaValidationRule(registry),
+        };
+        var structural = new StructuralValidationHandler(
+            new StructuralValidator(structuralRules),
+            new NullLogger<StructuralValidationHandler>()
+        );
+        var batchMapping = new BatchMappingHandler(new NullLogger<BatchMappingHandler>());
+        var topicValidation = new TopicValidationHandler(new NullLogger<TopicValidationHandler>());
 
         var batchRules = new List<IBatchValidationRule> { new PatientActiveRule() };
         var batchValidator = new BatchValidator(batchRules);
-        var batchValidation = new BatchValidationHandler(batchValidator, loggerFactory);
-
+        var batchValidation = new BatchValidationHandler(
+            batchValidator,
+            new NullLogger<BatchValidationHandler>()
+        );
         var measurementRules = new List<IValidationRule<Measurement>>
         {
             new CorrectUnitRule(),
@@ -52,12 +61,11 @@ public class IngestionServiceIntegrationTests
         var measurementValidator = new MeasurementValidator(measurementRules);
         var measurementValidation = new MeasurementValidationHandler(
             measurementValidator,
-            loggerFactory
+            new NullLogger<MeasurementValidationHandler>()
         );
 
-        var publish = publishOverride ?? new NoOpHandler(loggerFactory);
-        var errors = errorOverride ?? new NoOpHandler(loggerFactory);
-
+        var publish = publishOverride ?? new NoOpHandler();
+        var errors = errorOverride ?? new NoOpHandler();
         var pipeline = IngestionPipelineBuilder.Build(
             structural,
             parseJson,

@@ -9,7 +9,7 @@ public class PatientAlertHandler
 {
     public async Task Handle(
         PatientAlertRequested message,
-        MqttNotificationPublisher mqttPublisher,
+        IMqttPublisher mqttPublisher,
         IAuditStore auditStore,
         ILogger<PatientAlertRequested> logger
     )

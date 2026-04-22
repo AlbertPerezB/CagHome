@@ -54,7 +54,7 @@ builder.Services.AddHttpClient(
 
 builder.Services.AddSingleton<MqttConnectionService>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<MqttConnectionService>());
-builder.Services.AddSingleton<MqttNotificationPublisher>();
+builder.Services.AddSingleton<IMqttPublisher, MqttPublisher>();
 
 var host = builder.Build();
 host.Run();

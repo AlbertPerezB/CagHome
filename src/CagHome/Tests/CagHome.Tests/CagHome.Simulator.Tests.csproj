@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -7,7 +6,6 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.Testing" Version="13.1.0" />
@@ -18,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CagHome.AppHost\CagHome.AppHost.csproj" />
-    <ProjectReference Include="..\CagHome.Simulator\CagHome.Simulator.csproj" />
+    <ProjectReference Include="..\..\CagHome.AppHost\CagHome.AppHost.csproj" />
+    <ProjectReference Include="..\..\CagHome.Simulator\CagHome.Simulator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,5 +27,4 @@
     <Using Include="Aspire.Hosting.Testing" />
     <Using Include="NUnit.Framework" />
   </ItemGroup>
-
 </Project>

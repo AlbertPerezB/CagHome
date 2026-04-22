@@ -3,9 +3,9 @@ using CagHome.Contracts.Enums;
 namespace CagHome.Contracts;
 
 public record PatientAlertRequested(
-    Guid PatientId,
-    string Message,
-    Severity Severity,
+    Guid AlertId,
     DateTime DecidedAt,
-    Guid AlertId
+    string Message,
+    Guid PatientId,
+    Severity Severity
 );

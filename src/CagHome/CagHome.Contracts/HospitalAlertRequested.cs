@@ -3,10 +3,10 @@
 namespace CagHome.Contracts;
 
 public record HospitalAlertRequested(
-    Guid PatientId,
+    Guid AlertId,
+    DateTime DecidedAt,
     Guid HospitalId,
     string Message,
-    Severity Severity,
-    DateTime DecidedAt,
-    Guid AlertId
+    Guid PatientId,
+    Severity Severity
 );

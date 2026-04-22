@@ -11,7 +11,7 @@ namespace CagHome.IngestionService.Tests.Pipeline.Handlers;
 public class BatchMappingHandlerTests
 {
     private readonly BatchMappingHandler _handler = new BatchMappingHandler(
-        NullLoggerFactory.Instance
+        new NullLogger<BatchMappingHandler>()
     );
 
     private static IngestionContext MakeContext(BatchDto? dto = null)

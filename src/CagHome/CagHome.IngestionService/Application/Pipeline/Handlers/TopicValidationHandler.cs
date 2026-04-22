@@ -3,7 +3,7 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class TopicValidationHandler(ILogger<MeasurementValidationHandler> logger) : IngestionHandler
+public class TopicValidationHandler(ILogger<TopicValidationHandler> logger) : IngestionHandler
 {
     protected override Task ProcessAsync(IngestionContext context)
     {

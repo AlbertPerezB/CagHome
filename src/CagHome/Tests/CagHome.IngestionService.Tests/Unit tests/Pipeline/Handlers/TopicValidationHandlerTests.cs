@@ -8,7 +8,9 @@ namespace CagHome.IngestionService.Tests.Pipeline.Handlers;
 
 public class TopicValidationHandlerTests
 {
-    private readonly TopicValidationHandler _handler = new(NullLoggerFactory.Instance);
+    private readonly TopicValidationHandler _handler = new TopicValidationHandler(
+        new NullLogger<TopicValidationHandler>()
+    );
 
     private static IngestionContext MakeContext(Guid patientId, string topic)
     {
