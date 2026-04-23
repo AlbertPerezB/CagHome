@@ -8,14 +8,6 @@ var monitoringConfigDb = mongo.AddDatabase("monitoring-config");
 
 var rabbitmqBroker = builder.AddRabbitMQ("rabbitmq-broker").WithManagementPlugin();
 
-// var apiService = builder.AddProject<Projects.CagHome_ApiService>("apiservice")
-//     .WithHttpHealthCheck("/health");
-
-// builder.AddProject<Projects.CagHome_Web>("webfrontend")
-//     .WithExternalHttpEndpoints()
-//     .WithHttpHealthCheck("/health")
-//     .WithReference(apiService);
-
 var brokerPort = builder.AddParameter("mqtt-broker-port", "1883");
 var brokerHost = builder.AddParameter("mqtt-broker-host", "localhost");
 
