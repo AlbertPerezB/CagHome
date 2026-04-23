@@ -12,7 +12,7 @@ var brokerPort = builder.AddParameter("mqtt-broker-port", "1883");
 var brokerHost = builder.AddParameter("mqtt-broker-host", "localhost");
 
 var mqttBroker = builder
-    .AddProject<Projects.CagHome_Broker>("mqtt-broker")
+    .AddProject<Projects.CagHome_MqttBroker>("mqtt-broker")
     .WithEnvironment("MQTT_PORT", brokerPort);
 
 builder
@@ -31,7 +31,7 @@ builder
     .WithEnvironment("Simulator__BrokerPort", brokerPort);
 
 builder
-    .AddProject<Projects.RabbitMQBroker>("rabbitmqbroker")
+    .AddProject<Projects.CagHome_RabbitMQBroker>("rabbitmqbroker")
     .WithReference(rabbitmqBroker)
     .WaitFor(rabbitmqBroker);
 

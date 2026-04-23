@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CagHome.Broker\CagHome.Broker.csproj" />
+    <ProjectReference Include="..\CagHome.MqttBroker\CagHome.MqttBroker.csproj" />
     <ProjectReference Include="..\CagHome.IngestionService\CagHome.IngestionService.csproj" />
-    <ProjectReference Include="..\RabbitMQBroker\RabbitMQBroker.csproj" />
+    <ProjectReference Include="..\CagHome.RabbitMQBroker\CagHome.RabbitMQBroker.csproj" />
     <ProjectReference Include="..\CagHome.Simulator\CagHome.Simulator.csproj" />
     <ProjectReference Include="..\CagHome.NotificationService\CagHome.NotificationService.csproj" />
     <ProjectReference Include="..\CagHome.MockEhr\CagHome.MockEhr.csproj" />
