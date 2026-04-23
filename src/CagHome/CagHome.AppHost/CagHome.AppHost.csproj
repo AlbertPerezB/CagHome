@@ -8,8 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CagHome.ErrorHandler\CagHome.ErrorHandler.csproj" />
     <ProjectReference Include="..\CagHome.MqttBroker\CagHome.MqttBroker.csproj" />
     <ProjectReference Include="..\CagHome.IngestionService\CagHome.IngestionService.csproj" />
+    <ProjectReference Include="..\CagHome.PatientRegistryService\CagHome.PatientRegistryService.csproj" />
     <ProjectReference Include="..\CagHome.RabbitMQBroker\CagHome.RabbitMQBroker.csproj" />
     <ProjectReference Include="..\CagHome.Simulator\CagHome.Simulator.csproj" />
     <ProjectReference Include="..\CagHome.NotificationService\CagHome.NotificationService.csproj" />

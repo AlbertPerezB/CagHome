@@ -4,16 +4,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 18.4.11626.88
 MinimumVisualStudioVersion = 17.8.0.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.AppHost", "CagHome.AppHost\CagHome.AppHost.csproj", "{A3C8CF28-9F2E-4BD1-A6F7-02CCAAA316DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7B62D4FE-320C-4682-B439-52847DF31A71} = {7B62D4FE-320C-4682-B439-52847DF31A71}
+		{FB8BBAD4-906C-4BE5-B41B-8759886306E8} = {FB8BBAD4-906C-4BE5-B41B-8759886306E8}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CagHome.ServiceDefaults", "CagHome.ServiceDefaults\CagHome.ServiceDefaults.csproj", "{60041136-9CC4-40BE-AEFF-A3662C8996BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.MqttBroker", "CagHome.Broker\CagHome.MqttBroker.csproj", "{7B62D4FE-320C-4682-B439-52847DF31A71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.MqttBroker", "CagHome.MqttBroker\CagHome.MqttBroker.csproj", "{7B62D4FE-320C-4682-B439-52847DF31A71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.IngestionService", "CagHome.IngestionService\CagHome.IngestionService.csproj", "{8C73E4A2-410D-4983-A126-63B8C9D4E892}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Simulator", "CagHome.Simulator\CagHome.Simulator.csproj", "{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.RabbitMQBroker", "RabbitMQBroker\CagHome.RabbitMQBroker.csproj", "{FB8BBAD4-906C-4BE5-B41B-8759886306E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.RabbitMQBroker", "CagHome.RabbitMQBroker\CagHome.RabbitMQBroker.csproj", "{FB8BBAD4-906C-4BE5-B41B-8759886306E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.NotificationService", "CagHome.NotificationService\CagHome.NotificationService.csproj", "{21A863A1-19BF-417F-9F5E-0988B87009BF}"
 EndProject
@@ -28,6 +32,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.NotificationService.Tests", "Tests\CagHome.NotificationServiceTests\CagHome.NotificationService.Tests.csproj", "{F691A555-87FE-0C74-5705-2B16443A5226}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Simulator.Tests", "Tests\CagHome.Simulator.Tests\CagHome.Simulator.Tests.csproj", "{EA078A9D-E121-582A-2A14-A3B00D327B87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.ErrorHandler", "CagHome.ErrorHandler\CagHome.ErrorHandler.csproj", "{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.PatientRegistryService", "CagHome.PatientRegistryService\CagHome.PatientRegistryService.csproj", "{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,6 +203,30 @@ Global
 		{EA078A9D-E121-582A-2A14-A3B00D327B87}.Release|x64.Build.0 = Release|Any CPU
 		{EA078A9D-E121-582A-2A14-A3B00D327B87}.Release|x86.ActiveCfg = Release|Any CPU
 		{EA078A9D-E121-582A-2A14-A3B00D327B87}.Release|x86.Build.0 = Release|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Debug|x64.Build.0 = Debug|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Debug|x86.Build.0 = Debug|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Release|x64.ActiveCfg = Release|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Release|x64.Build.0 = Release|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Release|x86.ActiveCfg = Release|Any CPU
+		{E9FB6954-8AAF-7D8C-50D3-BCB53DA6AFF1}.Release|x86.Build.0 = Release|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Debug|x64.Build.0 = Debug|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Debug|x86.Build.0 = Debug|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|x64.ActiveCfg = Release|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|x64.Build.0 = Release|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|x86.ActiveCfg = Release|Any CPU
+		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -52,4 +52,8 @@ var ehrIntegration = builder
     .WithReference(mockEhr)
     .WaitFor(rabbitmqBroker);
 
+builder.AddProject<Projects.CagHome_ErrorHandler>("caghome-errorhandler");
+
+builder.AddProject<Projects.CagHome_PatientRegistryService>("caghome-patientregistryservice");
+
 builder.Build().Run();

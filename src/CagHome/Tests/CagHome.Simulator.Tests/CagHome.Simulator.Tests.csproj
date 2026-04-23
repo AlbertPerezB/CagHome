@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CagHome.AppHost\CagHome.AppHost.csproj" />
     <ProjectReference Include="..\..\CagHome.Simulator\CagHome.Simulator.csproj" />
   </ItemGroup>
 
