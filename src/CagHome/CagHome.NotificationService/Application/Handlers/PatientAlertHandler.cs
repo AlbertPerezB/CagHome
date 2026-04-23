@@ -25,7 +25,7 @@ public class PatientAlertHandler
 
             await auditStore.RecordAuditEntry(new AuditEntry(message, DeliveryStatus.Delivered));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await auditStore.RecordAuditEntry(new AuditEntry(message, DeliveryStatus.Failed));
             throw;
