@@ -1,9 +1,10 @@
 ﻿namespace CagHome.EhrIntegrationService.Domain;
 
 public record ClinicianResponseDto(
-    Guid ResponseId,
     Guid AlertId,
-    Guid PatientId,
+    DateTime CreatedAtUtc,
+    Guid HospitalId,
     string Message,
-    DateTime CreatedAtUtc
+    Guid PatientId,
+    Guid ResponseId
 );

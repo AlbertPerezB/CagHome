@@ -1,10 +1,11 @@
 ﻿namespace CagHome.MockEhr.Domain
 {
     public record ClinicianResponse(
-        Guid ResponseId,
         Guid AlertId,
-        Guid PatientId,
+        DateTime CreatedAtUtc,
+        Guid HospitalId,
         string Message,
-        DateTime CreatedAtUtc
+        Guid PatientId,
+        Guid ResponseId
     );
 }

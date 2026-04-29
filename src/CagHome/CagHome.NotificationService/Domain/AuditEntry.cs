@@ -43,4 +43,17 @@ public class AuditEntry
         Timestamp = DateTime.UtcNow;
         TraceId = Activity.Current?.TraceId.ToString() ?? string.Empty;
     }
+
+    public AuditEntry(ClinicianResponseReceived message, DeliveryStatus status)
+    {
+        AlertId = message.AlertId;
+        DeliveryStatus = status;
+        HospitalId = message.HospitalId;
+        Message = message.Message;
+        PatientId = message.PatientId;
+        Receiver = Receiver.Patient;
+        StatusCode = string.Empty;
+        Timestamp = DateTime.UtcNow;
+        TraceId = Activity.Current?.TraceId.ToString() ?? string.Empty;
+    }
 }
