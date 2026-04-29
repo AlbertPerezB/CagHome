@@ -25,8 +25,6 @@ builder.Services.AddWolverine(options =>
 {
     options.UseRabbitMqUsingNamedConnection("rabbitmq-broker").AutoProvision();
 
-    options.ListenToRabbitQueue("ehr.hospital-alerts");
-
     options
         .PublishMessage<ClinicianResponseReceived>()
         .ToRabbitQueue("notification.clinician-response");

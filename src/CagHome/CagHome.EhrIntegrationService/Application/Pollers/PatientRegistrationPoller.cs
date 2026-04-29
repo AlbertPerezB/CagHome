@@ -55,24 +55,24 @@ public class PatientRegistrationPoller(
         {
             await publisher.PublishCareplanUpdateRequested(
                 new CareplanUpdateRequested(
+                    patient.Careplan,
                     patient.PatientId,
-                    patient.UpdatedAtUtc,
-                    patient.Careplan
+                    patient.UpdatedAtUtc
                 )
             );
 
             await publisher.PublishPatientStatusUpdateRequested(
                 new PatientStatusUpdateRequested(
                     patient.PatientId,
-                    patient.UpdatedAtUtc,
-                    patient.Status
+                    patient.Status,
+                    patient.UpdatedAtUtc
                 )
             );
 
             logger.LogInformation(
                 "Published PatientRegistered: PatientId={PatientId}, Careplan={Careplan}, Status={Status}",
-                patient.PatientId,
                 patient.Careplan,
+                patient.PatientId,
                 patient.Status
             );
         }

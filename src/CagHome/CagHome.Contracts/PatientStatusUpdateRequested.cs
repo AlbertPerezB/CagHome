@@ -4,6 +4,6 @@ namespace CagHome.Contracts;
 
 public record PatientStatusUpdateRequested(
     Guid PatientId,
-    DateTime UpdatedAtUtc,
-    PatientStatus PatientStatus
+    PatientStatus PatientStatus,
+    DateTime UpdatedAtUtc
 );
