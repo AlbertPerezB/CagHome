@@ -5,6 +5,7 @@ var patientregistryDb = mongo.AddDatabase("patient-registry");
 var notificationAuditDb = mongo.AddDatabase("notificiation-audit");
 var monitoringAuditDb = mongo.AddDatabase("monitoring-audit");
 var monitoringConfigDb = mongo.AddDatabase("monitoring-config");
+var errorDb = mongo.AddDatabase("errors");
 
 var rabbitmqBroker = builder.AddRabbitMQ("rabbitmq-broker").WithManagementPlugin();
 
@@ -52,7 +53,11 @@ var ehrIntegration = builder
     .WithReference(mockEhr)
     .WaitFor(rabbitmqBroker);
 
-builder.AddProject<Projects.CagHome_ErrorHandler>("caghome-errorhandler");
+builder
+    .AddProject<Projects.CagHome_ErrorHandler>("caghome-errorhandler")
+    .WithReference(rabbitmqBroker)
+    .WithReference(errorDb)
+    .WaitFor(rabbitmqBroker);
 
 builder.AddProject<Projects.CagHome_PatientRegistryService>("caghome-patientregistryservice");
 
