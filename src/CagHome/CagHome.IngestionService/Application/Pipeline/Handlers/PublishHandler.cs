@@ -1,19 +1,18 @@
 using System.Text.Json;
 using CagHome.Contracts;
 using CagHome.IngestionService.Domain.Models;
-using CagHome.IngestionService.Infrastructure.Messaging;
+using Wolverine;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class PublishBatchHandler(IRabbitMqPublisher publisher, ILogger<PublishBatchHandler> logger)
-    : IngestionHandler
+public class PublishBatchHandler(IMessageBus messageBus) : IngestionHandler
 {
     protected override async Task ProcessAsync(IngestionContext context)
     {
         if (context.Batch != null)
         {
             var batch = context.Batch;
-            await publisher.PublishBatchReceived(GetBatchReceived(context.Batch));
+            await messageBus.PublishAsync(GetBatchReceived(context.Batch));
         }
     }
 

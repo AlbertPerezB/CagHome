@@ -9,7 +9,7 @@ using CagHome.IngestionService.Application.Validation.MeasurementValidation;
 using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure;
-using CagHome.IngestionService.Infrastructure.Messaging;
+using CagHome.IngestionService.Infrastructure.Cache;
 using CagHome.IngestionService.Infrastructure.Schemas;
 using Wolverine;
 using Wolverine.RabbitMQ;
@@ -18,9 +18,9 @@ var builder = Host.CreateApplicationBuilder(args);
 
 //Infrastructure
 builder.Services.AddHostedService<MqttConsumerService>();
-builder.Services.AddScoped<IRabbitMqPublisher, RabbitMqPublisher>();
-builder.Services.AddScoped<MqttPublisher>();
 builder.Services.AddSingleton<IJsonSchemaRegistry, JsonSchemaRegistry>();
+builder.Services.AddScoped<PatientStatusUpdatedConsumer>();
+builder.Services.AddSingleton<IPatientRegistryCache, PatientRegistryCache>();
 
 //Handlers
 builder.Services.AddScoped<StructuralValidationHandler>();
@@ -83,13 +83,15 @@ builder.Services.AddWolverine(options =>
         .UseConventionalRouting();
 
     options.Policies.DisableConventionalLocalRouting();
-
     options.PublishMessage<BatchReceived>().ToRabbitQueue("monitoring.batch-received");
+    options.ListenToRabbitQueue("ingestion.patient-status-updated");
 });
 
 builder
     .Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing.AddSource("Wolverine").AddSource("RabbitMQ.Client"));
+
+builder.AddRedisClient("patient-cache");
 
 var host = builder.Build();
 

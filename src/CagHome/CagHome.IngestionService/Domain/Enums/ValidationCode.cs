@@ -15,5 +15,6 @@ namespace CagHome.IngestionService.Domain.Enums
         DeviceReportedTooOld,
         InvalidTopic,
         NoMeasurements,
+        PatientNotEnrolled,
     }
 }
