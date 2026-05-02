@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Aspire.StackExchange.Redis" Version="13.2.4" />
     <PackageReference Include="JsonSchema.Net" Version="9.1.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
     <PackageReference Include="MQTTnet" Version="5.1.0.1559" />
@@ -16,5 +17,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Infrastructure/Schemas/*.json" />
     <ProjectReference Include="..\CagHome.Contracts\CagHome.Contracts.csproj" />
+    <ProjectReference Include="..\CagHome.ServiceDefaults\CagHome.ServiceDefaults.csproj" />
   </ItemGroup>
 </Project>

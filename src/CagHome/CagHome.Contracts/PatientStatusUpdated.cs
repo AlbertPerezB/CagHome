@@ -2,7 +2,7 @@
 
 namespace CagHome.Contracts;
 
-public record PatientStatusUpdateRequested(
+public record PatientStatusUpdated(
     Guid PatientId,
     PatientStatus PatientStatus,
     DateTime UpdatedAtUtc

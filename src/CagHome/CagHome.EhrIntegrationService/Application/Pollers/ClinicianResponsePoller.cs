@@ -52,11 +52,12 @@ public class ClinicianResponsePoller(
         {
             await publisher.PublishClinicianResponseReceived(
                 new ClinicianResponseReceived(
-                    response.ResponseId,
                     response.AlertId,
-                    response.PatientId,
+                    response.CreatedAtUtc,
+                    response.HospitalId,
                     response.Message,
-                    response.CreatedAtUtc
+                    response.PatientId,
+                    response.ResponseId
                 )
             );
             logger.LogInformation(

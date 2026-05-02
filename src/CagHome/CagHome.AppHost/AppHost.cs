@@ -2,8 +2,12 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var mongo = builder.AddMongoDB("mongo").WithLifetime(ContainerLifetime.Persistent);
 var patientregistryDb = mongo.AddDatabase("patient-registry");
-var notificationAuditDb = mongo.AddDatabase("notificiation-audit");
+var notificationAuditDb = mongo.AddDatabase("notification-audit");
 var monitoringAuditDb = mongo.AddDatabase("monitoring-audit");
+var monitoringConfigDb = mongo.AddDatabase("monitoring-config");
+var errorDb = mongo.AddDatabase("errors");
+
+var redis = builder.AddRedis("patient-cache");
 
 var rabbitmqBroker = builder.AddRabbitMQ("rabbitmq-broker").WithManagementPlugin();
 
@@ -18,6 +22,7 @@ builder
     .AddProject<Projects.CagHome_IngestionService>("ingestionservice")
     .WithReference(mqttBroker)
     .WithReference(rabbitmqBroker)
+    .WithReference(redis)
     .WaitFor(rabbitmqBroker)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort);
 
@@ -57,8 +62,16 @@ builder
     .WithReference(monitoringAuditDb)
     .WaitFor(rabbitmqBroker);
 
-builder.AddProject<Projects.CagHome_ErrorHandler>("caghome-errorhandler");
+builder
+    .AddProject<Projects.CagHome_ErrorHandler>("caghome-errorhandler")
+    .WithReference(rabbitmqBroker)
+    .WithReference(errorDb)
+    .WaitFor(rabbitmqBroker);
 
-builder.AddProject<Projects.CagHome_PatientRegistryService>("caghome-patientregistryservice");
+builder
+    .AddProject<Projects.CagHome_PatientRegistryService>("caghome-patientregistryservice")
+    .WithReference(rabbitmqBroker)
+    .WithReference(patientregistryDb)
+    .WaitFor(rabbitmqBroker);
 
 builder.Build().Run();

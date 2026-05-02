@@ -3,8 +3,7 @@ using CagHome.IngestionService.Infrastructure;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class ErrorPublishingHandler(MqttPublisher publisher, ILogger<ErrorPublishingHandler> logger)
-    : IngestionHandler
+public class ErrorPublishingHandler(ILogger<ErrorPublishingHandler> logger) : IngestionHandler
 {
     protected override async Task ProcessAsync(IngestionContext context)
     {
@@ -12,7 +11,6 @@ public class ErrorPublishingHandler(MqttPublisher publisher, ILogger<ErrorPublis
         {
             logger.LogError($"FatalError: {context!.FatalError!.Message}");
             var json = JsonSerializer.Serialize(context.FatalError);
-            publisher.PublishAsync(json);
         }
     }
 

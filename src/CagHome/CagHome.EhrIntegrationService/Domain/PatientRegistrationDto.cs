@@ -3,8 +3,8 @@
 namespace CagHome.EhrIntegrationService.Domain;
 
 public record PatientRegistrationDto(
-    Guid PatientId,
-    DateTime UpdatedAtUtc,
     Careplan Careplan,
-    PatientStatus Status
+    Guid PatientId,
+    PatientStatus Status,
+    DateTime UpdatedAtUtc
 );

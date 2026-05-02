@@ -1,3 +1,3 @@
 ﻿using CagHome.Contracts.Enums;
 
-public record CareplanUpdateRequested(Guid PatientId, DateTime UpdatedAtUtc, Careplan Careplan);
+public record CareplanUpdateRequested(Careplan Careplan, Guid PatientId, DateTime UpdatedAtUtc);

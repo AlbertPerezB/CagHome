@@ -38,7 +38,7 @@ builder.UseWolverine(options =>
     options.ListenToRabbitQueue("notification.clinician-response");
 });
 
-builder.AddMongoDBClient(connectionName: "notificiation-audit");
+builder.AddMongoDBClient(connectionName: "notification-audit");
 
 builder
     .Services.AddOpenTelemetry()

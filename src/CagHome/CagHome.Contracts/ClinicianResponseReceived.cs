@@ -1,9 +1,10 @@
 ﻿namespace CagHome.Contracts;
 
 public record ClinicianResponseReceived(
-    Guid ResponseId,
     Guid AlertId,
-    Guid PatientId,
+    DateTime CreatedAtUtc,
+    Guid HospitalId,
     string Message,
-    DateTime ReceivedAtUtc
+    Guid ResponseId,
+    Guid PatientId
 );

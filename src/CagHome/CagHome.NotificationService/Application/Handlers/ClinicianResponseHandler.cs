@@ -1,17 +1,17 @@
-using CagHome.Contracts;
+﻿using CagHome.Contracts;
 using CagHome.NotificationService.Domain;
 using CagHome.NotificationService.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 namespace CagHome.NotificationService.Application.Handlers;
 
-public class PatientAlertHandler
+public class ClinicianResponseHandler
 {
     public async Task Handle(
-        PatientAlertRequested message,
+        ClinicianResponseReceived message,
         IMqttPublisher mqttPublisher,
         IAuditStore auditStore,
-        ILogger<PatientAlertRequested> logger
+        ILogger<ClinicianResponseReceived> logger
     )
     {
         await auditStore.RecordAuditEntry(new AuditEntry(message, DeliveryStatus.Attempted));
