@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.ErrorHandler", "Cag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.PatientRegistryService", "CagHome.PatientRegistryService\CagHome.PatientRegistryService.csproj", "{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.MonitoringService", "CagHome.MonitoringService\CagHome.MonitoringService.csproj", "{E435CCE3-085D-4DAC-921B-3911DA944DFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -227,6 +229,18 @@ Global
 		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|x64.Build.0 = Release|Any CPU
 		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|x86.ActiveCfg = Release|Any CPU
 		{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}.Release|x86.Build.0 = Release|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Debug|x64.Build.0 = Debug|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Debug|x86.Build.0 = Debug|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Release|x64.ActiveCfg = Release|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Release|x64.Build.0 = Release|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Release|x86.ActiveCfg = Release|Any CPU
+		{E435CCE3-085D-4DAC-921B-3911DA944DFE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

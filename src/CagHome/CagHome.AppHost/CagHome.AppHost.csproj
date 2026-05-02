@@ -17,6 +17,7 @@
     <ProjectReference Include="..\CagHome.NotificationService\CagHome.NotificationService.csproj" />
     <ProjectReference Include="..\CagHome.MockEhr\CagHome.MockEhr.csproj" />
     <ProjectReference Include="..\CagHome.EhrIntegrationService\CagHome.EhrIntegrationService.csproj" />
+    <ProjectReference Include="..\CagHome.MonitoringService\CagHome.MonitoringService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

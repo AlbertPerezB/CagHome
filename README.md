@@ -59,8 +59,7 @@ The simulator uses runtime configuration reloading. While it is running, you can
 
 On the next publish cycle, the simulator picks up the new profile without restarting the process.
 
-
-## Observbility
+## Observability
 ### Traces
 In the Aspire web dashboard, navigate to the "Traces" tab to see the traces emitted by the application. You can filter by service name, operation name, or custom attributes to find specific traces.
 
