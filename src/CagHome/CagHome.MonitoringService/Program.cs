@@ -26,6 +26,7 @@ builder.UseWolverine(options =>
 });
 
 builder.AddMongoDBClient(connectionName: "monitoring-audit");
+builder.AddMongoDBClient(connectionName: "monitoring-patientcareplans");
 
 builder
     .Services.AddOpenTelemetry()

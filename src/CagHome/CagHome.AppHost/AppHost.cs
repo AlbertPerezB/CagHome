@@ -4,7 +4,7 @@ var mongo = builder.AddMongoDB("mongo").WithLifetime(ContainerLifetime.Persisten
 var patientregistryDb = mongo.AddDatabase("patient-registry");
 var notificationAuditDb = mongo.AddDatabase("notification-audit");
 var monitoringAuditDb = mongo.AddDatabase("monitoring-audit");
-var monitoringConfigDb = mongo.AddDatabase("monitoring-config");
+var monitoringPatientCareplansDb = mongo.AddDatabase("monitoring-patientcareplans");
 var errorDb = mongo.AddDatabase("errors");
 
 var redis = builder.AddRedis("patient-cache");
@@ -60,6 +60,7 @@ builder
     .AddProject<Projects.CagHome_MonitoringService>("monitoring")
     .WithReference(rabbitmqBroker)
     .WithReference(monitoringAuditDb)
+    .WithReference(monitoringPatientCareplansDb)
     .WaitFor(rabbitmqBroker);
 
 builder
