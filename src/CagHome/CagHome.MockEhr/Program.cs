@@ -100,7 +100,9 @@ app.MapPost(
         store.PatientRegistrations.Enqueue(request);
 
         logger.LogInformation(
-            $"Mock: patient registered: PatientId={request.PatientId}, Careplan={request.Careplan}, Status={request.Status}"
+            "Mock: patient registered: PatientId={PatientId}, Name={Name}",
+            request.PatientId,
+            request.Careplan
         );
 
         return Results.Created($"/patients/{request.PatientId}", request);
