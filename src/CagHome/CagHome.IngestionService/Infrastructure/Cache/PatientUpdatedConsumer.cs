@@ -10,7 +10,7 @@ public class PatientStatusUpdatedConsumer()
         ILogger<PatientStatusUpdatedConsumer> logger
     )
     {
-        logger.LogInformation(
+        logger.LogDebug(
             "Patient status updated message received, updating cache for PatientId: {PatientId}",
             message.PatientId
         );

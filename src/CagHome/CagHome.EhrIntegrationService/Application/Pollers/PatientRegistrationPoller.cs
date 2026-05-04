@@ -69,7 +69,7 @@ public class PatientRegistrationPoller(
                 )
             );
 
-            logger.LogInformation(
+            logger.LogDebug(
                 "Published PatientRegistered: PatientId={PatientId}, Careplan={Careplan}, Status={Status}",
                 patient.Careplan,
                 patient.PatientId,

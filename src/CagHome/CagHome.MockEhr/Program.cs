@@ -102,7 +102,7 @@ app.MapPost(
         logger.LogInformation(
             "Mock: patient registered: PatientId={PatientId}, Name={Name}",
             request.PatientId,
-            request.CarePlan
+            request.Careplan
         );
 
         return Results.Created($"/patients/{request.PatientId}", request);

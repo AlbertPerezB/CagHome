@@ -1,10 +1,16 @@
 ﻿using CagHome.Contracts.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace CagHome.PatientRegistryService.Domain
 {
-    public record PatientRegistryEntry(
-        Guid PatientId,
-        PatientStatus Status,
-        DateTime LastUpdatedUtc
-    );
+    public class PatientRegistryEntry
+    {
+        [BsonGuidRepresentation(GuidRepresentation.Standard)]
+        public Guid PatientId;
+
+        public PatientStatus Status;
+
+        public DateTime LastUpdatedUtc;
+    }
 }
