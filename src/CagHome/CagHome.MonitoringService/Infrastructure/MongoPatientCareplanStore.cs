@@ -8,9 +8,9 @@ public sealed class MongoPatientCareplanStore : IPatientCareplanStore
 {
     private readonly IMongoCollection<PatientCareplanState> _collection;
 
-    public MongoPatientCareplanStore(IMongoClient mongoClient)
+    public MongoPatientCareplanStore([FromKeyedServices("monitoring-patientcareplans")] IMongoClient mongoClient)
     {
-        var database = mongoClient.GetDatabase("MonitoringService");
+        var database = mongoClient.GetDatabase("monitoring-patientcareplans");
         _collection = database.GetCollection<PatientCareplanState>("PatientCareplans");
     }
 

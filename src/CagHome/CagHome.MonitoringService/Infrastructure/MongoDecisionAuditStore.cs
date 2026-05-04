@@ -7,9 +7,9 @@ public sealed class MongoDecisionAuditStore : IDecisionAuditStore
 {
     private readonly IMongoCollection<DecisionAuditEntry> _collection;
 
-    public MongoDecisionAuditStore(IMongoClient mongoClient)
+    public MongoDecisionAuditStore([FromKeyedServices("monitoring-audit")] IMongoClient mongoClient)
     {
-        var database = mongoClient.GetDatabase("MonitoringService");
+        var database = mongoClient.GetDatabase("monitoring-audit");
         _collection = database.GetCollection<DecisionAuditEntry>("DecisionAuditEntries");
     }
 
