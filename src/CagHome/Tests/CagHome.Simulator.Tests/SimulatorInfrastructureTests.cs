@@ -1,4 +1,7 @@
+using Aspire.Hosting.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Xunit;
 
 namespace CagHome.Tests;
 
@@ -6,12 +9,12 @@ public class SimulatorInfrastructureTests
 {
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
-    [Test]
-    [Explicit("Requires local Aspire/Docker infrastructure to be available.")]
+    [Fact(Skip = "Requires local Aspire/Docker infrastructure to be available.")]
     public async Task SimulatorResourceBecomesHealthy()
     {
         // Arrange
-        var cancellationToken = TestContext.CurrentContext.CancellationToken;
+        using var cancellationTokenSource = new CancellationTokenSource(DefaultTimeout);
+        var cancellationToken = cancellationTokenSource.Token;
 
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.CagHome_AppHost>(cancellationToken);
         appHost.Services.AddLogging(logging =>
@@ -30,17 +33,14 @@ public class SimulatorInfrastructureTests
 
         // Act
         await app.ResourceNotifications.WaitForResourceHealthyAsync("simulator", cancellationToken).WaitAsync(DefaultTimeout, cancellationToken);
-
-        // Assert
-        Assert.Pass();
     }
 
-    [Test]
-    [Explicit("Requires local Aspire/Docker infrastructure to be available.")]
+    [Fact(Skip = "Requires local Aspire/Docker infrastructure to be available.")]
     public async Task SimulatorAndBrokerResourcesBecomeHealthy()
     {
         // Arrange
-        var cancellationToken = TestContext.CurrentContext.CancellationToken;
+        using var cancellationTokenSource = new CancellationTokenSource(DefaultTimeout);
+        var cancellationToken = cancellationTokenSource.Token;
 
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.CagHome_AppHost>(cancellationToken);
         appHost.Services.AddLogging(logging =>
@@ -56,8 +56,5 @@ public class SimulatorInfrastructureTests
         // Act
         await app.ResourceNotifications.WaitForResourceHealthyAsync("broker", cancellationToken).WaitAsync(DefaultTimeout, cancellationToken);
         await app.ResourceNotifications.WaitForResourceHealthyAsync("simulator", cancellationToken).WaitAsync(DefaultTimeout, cancellationToken);
-
-        // Assert
-        Assert.Pass();
     }
 }

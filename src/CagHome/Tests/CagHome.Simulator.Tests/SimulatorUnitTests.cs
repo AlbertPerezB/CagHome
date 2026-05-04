@@ -5,12 +5,13 @@ using CagHome.Simulator.Domain.Models;
 using CagHome.Simulator.Domain.Profiles;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Xunit;
 
 namespace CagHome.Tests;
 
 public class SimulatorUnitTests
 {
-    [Test]
+    [Fact]
     public void GetValidatedOptions_ClampsAndNormalizesValues()
     {
         var source = new SimulatorOptions
@@ -26,16 +27,13 @@ public class SimulatorUnitTests
 
         var validated = InvokePrivateStatic<SimulatorOptions>("GetValidatedOptions", source);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(validated.Profile, Is.EqualTo("exercise"));
-            Assert.That(validated.DeviceCount, Is.EqualTo(10));
-            Assert.That(validated.PublishBiometricsIntervalSeconds, Is.EqualTo(1));
-            Assert.That(validated.PublishBatchIntervalSeconds, Is.EqualTo(10));
-        });
+        Assert.Equal("exercise", validated.Profile);
+        Assert.Equal(10, validated.DeviceCount);
+        Assert.Equal(1, validated.PublishBiometricsIntervalSeconds);
+        Assert.Equal(10, validated.PublishBatchIntervalSeconds);
     }
 
-    [Test]
+    [Fact]
     public void ResolveProfile_UnknownNameFallsBackToNormal()
     {
         var service = CreateService();
@@ -46,10 +44,10 @@ public class SimulatorUnitTests
             "this-does-not-exist"
         );
 
-        Assert.That(resolved.Name, Is.EqualTo(SimulationProfiles.Normal));
+        Assert.Equal(SimulationProfiles.Normal, resolved.Name);
     }
 
-    [Test]
+    [Fact]
     public void CreateMeasurements_BuildsExpectedThreeMeasurements()
     {
         var telemetry = new TelemetrySample(
@@ -66,20 +64,14 @@ public class SimulatorUnitTests
             telemetry
         );
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(measurements.Length, Is.EqualTo(3));
-            Assert.That(
-                measurements.Select(m => m.Type),
-                Is.EqualTo(new[] { "HeartRate", "Spo2", "BodyTemperature" })
-            );
-            Assert.That(measurements.Single(m => m.Type == "HeartRate").Value, Is.EqualTo(77));
-            Assert.That(measurements.Single(m => m.Type == "Spo2").Value, Is.EqualTo(97));
-            Assert.That(
-                measurements.Single(m => m.Type == "BodyTemperature").Value,
-                Is.EqualTo(37.2)
-            );
-        });
+        Assert.Equal(3, measurements.Length);
+        Assert.Equal(
+            new[] { "HeartRate", "Spo2", "BodyTemperature" },
+            measurements.Select(m => m.Type)
+        );
+        Assert.Equal(77, measurements.Single(m => m.Type == "HeartRate").Value);
+        Assert.Equal(97, measurements.Single(m => m.Type == "Spo2").Value);
+        Assert.Equal(37.2, measurements.Single(m => m.Type == "BodyTemperature").Value);
     }
 
     private static BiometricPublisherService CreateService()
