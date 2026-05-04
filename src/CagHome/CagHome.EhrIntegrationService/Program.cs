@@ -36,7 +36,9 @@ builder.Services.AddWolverine(options =>
     options.PublishMessage<CareplanUpdateRequested>().ToRabbitQueue("monitoring.careplan-update");
 });
 
-builder.Services.AddOpenTelemetry().WithTracing(tracing => tracing.AddSource("Wolverine"));
+builder
+    .Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing.AddSource("Wolverine").AddSource("RabbitMQ.Client"));
 builder.Services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
 
 var host = builder.Build();

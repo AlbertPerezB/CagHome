@@ -14,11 +14,16 @@ namespace CagHome.PatientRegistryService.Application
             ILogger<PatientStatusUpdateRequested> logger
         )
         {
-            var entry = new PatientRegistryEntry(
-                PatientId: message.PatientId,
-                Status: message.PatientStatus,
-                LastUpdatedUtc: message.UpdatedAtUtc
+            logger.LogDebug(
+                "Patient registration update received for PatientId: {PatientId}",
+                message.PatientId
             );
+            var entry = new PatientRegistryEntry
+            {
+                PatientId = message.PatientId,
+                Status = message.PatientStatus,
+                LastUpdatedUtc = message.UpdatedAtUtc,
+            };
 
             var result = await auditStore.UpdatePatientData(entry);
 
@@ -26,7 +31,7 @@ namespace CagHome.PatientRegistryService.Application
             {
                 if (result.ModifiedCount > 0 || result.UpsertedId != null)
                 {
-                    logger.LogInformation(
+                    logger.LogDebug(
                         "Patient data updated successfully for PatientId: {PatientId}",
                         message.PatientId
                     );
@@ -40,7 +45,7 @@ namespace CagHome.PatientRegistryService.Application
                 }
                 else
                 {
-                    logger.LogInformation(
+                    logger.LogDebug(
                         "No changes made to patient data for PatientId: {PatientId}",
                         message.PatientId
                     );

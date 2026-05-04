@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace CagHome.PatientRegistryService.Infrastructure;
 
-internal class PatientRegistryStore
+internal class PatientRegistryStore : IPatientRegistryStore
 {
     private readonly IMongoCollection<PatientRegistryEntry> _collection;
 

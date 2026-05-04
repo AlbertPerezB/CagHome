@@ -1,3 +1,4 @@
+using CagHome.PatientRegistryService.Infrastructure;
 using Wolverine;
 using Wolverine.ErrorHandling;
 using Wolverine.RabbitMQ;
@@ -19,6 +20,8 @@ builder.UseWolverine(options =>
 });
 
 builder.AddMongoDBClient(connectionName: "patient-registry");
+
+builder.Services.AddSingleton<IPatientRegistryStore, PatientRegistryStore>();
 
 builder
     .Services.AddOpenTelemetry()

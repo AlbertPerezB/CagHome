@@ -1,17 +1,21 @@
 ﻿using System.Diagnostics;
 using CagHome.Contracts;
-using OpenTelemetry.Trace;
-using RabbitMQ.Client.Exceptions;
-using Wolverine.Persistence.Durability;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace CagHome.NotificationService.Domain;
 
 public class AuditEntry
 {
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid AlertId { get; set; }
     public DeliveryStatus DeliveryStatus { get; set; }
+
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid? HospitalId { get; set; }
     public string? Message { get; set; }
+
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid PatientId { get; set; }
     public Receiver Receiver { get; set; }
     public string StatusCode { get; set; } = string.Empty;
