@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.3.0">
   <diagram name="Side-1" id="p0DKx_YEY79ZGSjvGhD0">
-    <mxGraphModel dx="1030" dy="626" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="834" dy="501" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -22,20 +22,13 @@
             <mxPoint x="280" y="281.125" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="sIFEQtR_XuDjreJ3R596-7" edge="1" parent="1" source="sIFEQtR_XuDjreJ3R596-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="sIFEQtR_XuDjreJ3R596-6" value="Biometric data&lt;div&gt;(MQTT)&lt;/div&gt;">
-          <mxGeometry relative="1" x="-0.2136" as="geometry">
-            <mxPoint as="offset" />
-            <Array as="points">
-              <mxPoint x="468" y="230" />
-              <mxPoint x="550" y="230" />
-              <mxPoint x="550" y="256" />
-            </Array>
-          </mxGeometry>
+        <mxCell id="sIFEQtR_XuDjreJ3R596-7" edge="1" parent="1" source="sIFEQtR_XuDjreJ3R596-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="sIFEQtR_XuDjreJ3R596-6" value="JSON (HTTP)">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="sIFEQtR_XuDjreJ3R596-5" parent="1" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=light-dark(#000000, #0089b6);shape=mxgraph.azure.mobile;pointerEvents=1;" value="" vertex="1">
           <mxGeometry height="50" width="35" x="450" y="256.12" as="geometry" />
         </mxCell>
-        <mxCell id="sIFEQtR_XuDjreJ3R596-10" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="Alert (HTTPS)">
+        <mxCell id="sIFEQtR_XuDjreJ3R596-10" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="Alert (HTTP)">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="830" y="269.34" />
@@ -48,17 +41,17 @@
         <mxCell id="sIFEQtR_XuDjreJ3R596-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="CAG HOME Prototype System" vertex="1">
           <mxGeometry height="98.87" width="140" x="590" y="231.20000000000002" as="geometry" />
         </mxCell>
-        <mxCell id="sIFEQtR_XuDjreJ3R596-8" edge="1" parent="1" source="sIFEQtR_XuDjreJ3R596-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.75;exitDx=0;exitDy=0;" target="sIFEQtR_XuDjreJ3R596-5" value="Alert&amp;nbsp;&lt;div&gt;(MQTT)&lt;/div&gt;">
-          <mxGeometry relative="1" x="0.2001" as="geometry">
-            <mxPoint as="offset" />
+        <mxCell id="sIFEQtR_XuDjreJ3R596-8" edge="1" parent="1" source="sIFEQtR_XuDjreJ3R596-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.295;entryY=1.002;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" target="sIFEQtR_XuDjreJ3R596-5" value="Alert (HTTP)">
+          <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="550" y="305" />
-              <mxPoint x="550" y="340" />
-              <mxPoint x="468" y="340" />
+              <mxPoint x="695" y="360" />
+              <mxPoint x="460" y="360" />
+              <mxPoint x="460" y="310" />
+              <mxPoint x="460" y="310" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="sIFEQtR_XuDjreJ3R596-11" edge="1" parent="1" source="sIFEQtR_XuDjreJ3R596-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.002;entryY=0.69;entryDx=0;entryDy=0;entryPerimeter=0;" target="sIFEQtR_XuDjreJ3R596-6" value="Clinitian&amp;nbsp;&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;response&lt;/span&gt;&lt;div&gt;(HTTPS)&lt;/div&gt;">
+        <mxCell id="sIFEQtR_XuDjreJ3R596-11" edge="1" parent="1" source="sIFEQtR_XuDjreJ3R596-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.002;entryY=0.69;entryDx=0;entryDy=0;entryPerimeter=0;" target="sIFEQtR_XuDjreJ3R596-6" value="Clinitian&amp;nbsp;&lt;div&gt;response (HTTP)&lt;/div&gt;">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="810" y="300" />
@@ -78,7 +71,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="sIFEQtR_XuDjreJ3R596-14" parent="1" style="shape=mxgraph.signs.healthcare.care_staff_area;html=1;pointerEvents=1;fillColor=#000000;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Clinician" vertex="1">
+        <mxCell id="sIFEQtR_XuDjreJ3R596-14" parent="1" style="shape=mxgraph.signs.healthcare.care_staff_area;html=1;pointerEvents=1;fillColor=#000000;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Clinitian" vertex="1">
           <mxGeometry height="52.89" width="47" x="874.52" y="100" as="geometry" />
         </mxCell>
         <mxCell id="sIFEQtR_XuDjreJ3R596-15" parent="1" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=data:image/png,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABmJLR0QA/wD/AP+gvaeTAAAITUlEQVR4nO2dSYgeRRTHf99MYiLiBiaiTkBEo6OSIBmXqBeNG4gbCuJBPYkHI57EDVFQXCLiAiJe9BAVEeKaaNSgeFMREcEY4xKjcSFGSeJhZpIZ46FmcBidetXTVfVedfcPHgz0N/P937/fVFdVV3X3KIdlwCXACuBoYAEwT1PQFEaB34EtwPvAG8BnqooaxHKcqfsKiw3AGQn8aA39wL3AGPonc7axF7gH6ItrTfPpAc+gfwJjxXN0RVCJR9E/abFjVVSHGsx5wN/on7DYMQ6cG9GnRtIHfI3+yUoVG+kuBV6uQv8kpY4rornVQF5HNnA9bmhoZQ4AnJYzgXeR9b+qpNE8+wF/4TfvFWw3of3Aa/hz2I3LtWMaQ/iNGwWOVFMXzgCwB38uQ2rqpmHpv+lE4fhHwC85hNRkG06rDynXbFgqgEHh+BdZVMRB0npCFhUBWCoA6b/iqywq4iBp7VqA/0EyZWMWFXGQtJopACvMR77ps1BNXXUOx5/LGC7njgmW4jdsh560WbMDf05L9KT9i5VLgNQBLKn5n0TqB0g5Z6GUAiipAzhJVwAVaNIIYJIiRgKlFECJl4BuJBDIXNw0r6/DNKCmbvYswp/THlzurWcQv1G7cEvESqOH0+7LTX1G0MIlIOT6vy+HkMjsAzYJn1G/DMzRFoDcGz6dMgsgBPWRgIUWQN0ERdRzt1AA6s2gIuq5W+hcDdPeefERYH9NAf2K390DbgMuUtSgzRycDx9qC8nNfOBF8qzCLSFeoEWtYA+XsLbp1uJlbFySk3M3+mZbjdtr+FoEl+O2SIUa8gPwAHA+bkVwCVOnc4GjgAuAB4GthOc7jnsGQiM5ALeqN8SI7cAt2JioqksfcB3wM2G5/wYcqqI0MaFN/5vAQUoaU3IwsI4wD55U0piMhbgdMVLiT2FjcioV/cDTyD4MU8YmmGAeQE56LbrzErnoB95C9uN+LYGx6QN+wp/szzSz2Z+Jg3E7iHyebKUhreHk3Txf3KCmTo9rkX05VU1dRO5AHuo1obdflTnIQ8TbUovI0cRIVfwibqNE2xgDXhI+k3wXcY4CWCwc/yCDBqu8Lxw/PouKxPyBv5lr1HCnIgP4vfldT1o8pBW/bX5axjz83ozoSYuH1NO1wGJgDW6yavfEz9KlKxYl+FML6wkuBv7kv7r+JE8RWPenNtYT9D2ZbH2G77fuT20sJ3gs8u3psxNrsOxPFCwn+ASyvtStgGV/omA1wQOBnR5dU2N5Qh1W/YmG1QRvFnTlagWs+hMNiwn2+HfPYWik6gtY9CcqFhO8KEBXrlbAoj9RsZhg6NKsHK2ARX+iYi3BkKFfzlbAmj/RsZZgyNAvZytgzZ/oWEqwytAvVytgyZ8kWEpwZYCeHwM+E3NewJI/SbCSYMjQbzPuzR85WwEr/iTDSoIhQ7+bJj67PuCzsfoCVvxJhpUE1wo6duL6COCa+NA+wfSoup7Aij/JsJDgcchDv8en/U5IK+CL0PUEFvxJioUEHxc0jOOKZCp1WoHJWBOgzYI/SdFOMGTot3aG363bCuwK0KftT3K0EwwZ+l04w+/WbQW6AkA3wR7uaZ2+79+E/9EsIRs5u0uAB80ELwz4/pXC35hp0agUXSdwAs0Eqwz9fExdNi7l0w0Dp6GVYMhdv8cSfn8oXQEkQrrr9zf5Nn/46AogASFDvzcTfXdVugJIQMiCzwsSfXdVugIIoEonLCSkoV9OugIQmO0wzBfS0C8nXQEIrAn4G1UidOiXi64ABKQXL1WN6Xf9tOkKQCBmAfzfXT9tVAughOfQbYj4t9YB30T8ex0B1K3wWJ3AXA98qEp3CQigzjAw9yNfqqJaADnGwlISVsbjWqj6U0IfoCMhXQG0nK4AWk6OAtgjHG/7gyJ9jKYWkKMA/hKOH5ZBg1UWCMcl72qTowB+FY6fnEGDVU4Sjkve1SZHAWwWjp+bQYNVzhOOb0otIEcBfCocv4b2vjDiauEzkndFcBrybNeNaur0uB7Zl2Vq6iLSh/xqlF9wL1JqC4cgv0hyCw2aJb0fudrX0Z7Xxr2N7Md9WgJTsICw+/pP0+wi6AeeQfZhGDhCSWMy7iLs7t1bNPNycAjhu40tbFiJzgGEv0B5G+69ek1oDebgOnyhuf9KM/8BALiUag9p3Ao8jNvkOYA8dWqBecAi3DOJVhH21LHJGAcuzi85L3cSbkjb4tYavhZDD3gefbOtxeo6ppbGfOAF9E23Eqsp4/IWnVvQN1877kVxwsfCTNMwrkVoIyPA/poCLKwISn7HyzBfaQuwUAAbtQUoop67hQJQ/y9QRD33EgrgY1xfpcT4pGburWAQfy95FzY6q1XpId8AO0FNnSHmIr9ifkBN3exZhD+nPbjcVbFwCdgLfCt85sQcQiIjad6My10VCwUAcm+4iQWgPgKAcgpgMIuKuEiauwKYgtQbbmIBdCOAKSzF32HaoSdt1uzAn9MSPWn2mA+M4TdsoZq66hyOP5cxjNz/sHIJGMEtg/ZRUkdQ0vo9Lmd1rBQANGskUMQIAMoqgJI6gkWMAMBWAUi94pI6TZLWNt8Cn5Eh/B2nUeBINXXhHIWb5vXlMqSmzjD74R6I4DPuVWzvFegH3sCfw27a/VQUL68jr6F7FzgLI8OoCebh3iW8AVn/K0oai+BK8i/KzB2XRXOrgfQhv+ev5PiSMtc2ZGUF1baPlRLjwDkRfWo0j6B/wmLHQ1Edajg9wvbRlxLPYmvOpQj6gHtwq2a0T+BsYy9wN93Jr8XpwHvon8yq8Q5wagI/olJSj/QU4BLccwWPwd0etrKhchTYDnwHfICbDPpcVVEg/wB9IqPyrbm3dgAAAABJRU5ErkJggg==;" value="Wearable &#xa;device" vertex="1">
@@ -93,6 +86,16 @@
             </Array>
             <mxPoint x="941.05" y="306.64240963855417" as="sourcePoint" />
             <mxPoint x="1040" y="306" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sIFEQtR_XuDjreJ3R596-19" edge="1" parent="1" source="sIFEQtR_XuDjreJ3R596-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.743;entryY=0.984;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" target="sIFEQtR_XuDjreJ3R596-5" value="Response (HTTP)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="625" y="340" />
+              <mxPoint x="476" y="340" />
+            </Array>
+            <mxPoint x="670" y="330.57" as="sourcePoint" />
+            <mxPoint x="469.985" y="306.14" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
