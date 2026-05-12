@@ -101,6 +101,7 @@ public class ClinicianResponsePollerTests
                     && m.AlertId == dto.AlertId
                     && m.PatientId == dto.PatientId
                     && m.Message == dto.Message
+                    && m.HospitalId == dto.HospitalId
                 )
             );
     }
