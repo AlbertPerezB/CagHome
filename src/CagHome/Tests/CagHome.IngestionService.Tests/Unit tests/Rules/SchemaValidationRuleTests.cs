@@ -4,7 +4,7 @@ using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Infrastructure.Schemas;
 using Xunit;
 
-namespace CagHome.IngestionService.Tests.Validation.StructuralValidation;
+namespace CagHome.IngestionService.Tests.UnitTests;
 
 public class SchemaValidationRuleTests
 {

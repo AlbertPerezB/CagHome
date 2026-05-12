@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "appVersion": "1.0.0",
-  "patientId": "d9aaf610-c81e-4dd7-8e1e-3fa6c4cf9c18", //Patient active in patient registry
+  "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
   "measurements": [
     {
       "measurementId": "00000001-0000-0000-0000-000000000000",

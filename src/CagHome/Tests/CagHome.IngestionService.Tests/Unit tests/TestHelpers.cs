@@ -1,6 +1,6 @@
 using CagHome.IngestionService.Application.Pipeline.Handlers;
 
-namespace CagHome.IngestionService.Tests.Pipeline;
+namespace CagHome.IngestionService.Tests.UnitTests;
 
 // Lets tests verify the chain halts by injecting a spy as the next handler
 public class DelegateHandler : IngestionHandler

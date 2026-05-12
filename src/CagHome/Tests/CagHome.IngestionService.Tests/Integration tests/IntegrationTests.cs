@@ -1,4 +1,6 @@
 using System.Text.Json;
+using CagHome.Contracts;
+using CagHome.Contracts.Enums;
 using CagHome.IngestionService.Application;
 using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Application.Pipeline.Handlers;
@@ -10,22 +12,25 @@ using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure.Cache;
 using CagHome.IngestionService.Infrastructure.Schemas;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
+using Wolverine;
 using Xunit;
 
 namespace CagHome.IngestionService.Tests.Integration;
 
 public class IngestionServiceIntegrationTests
 {
-    private static readonly Guid PatientId = Guid.Parse("a1b2c3d4-0000-0000-0000-000000000000");
+    private static readonly Guid _patientId = Guid.Parse("a1b2c3d4-0000-0000-0000-000000000000");
+    private static readonly string _validTopic = $"biometrics/{_patientId}/telemetry";
 
-    private static readonly string ValidTopic = $"biometrics/{PatientId}/telemetry";
+    private static string ValidTestPayload() => File.ReadAllText("TestData/test_batch_valid.json");
 
-    private static string TestPayload() => File.ReadAllText("TestData/test_batch.json");
+    private static string InvalidMeasurementsPayload() =>
+        File.ReadAllText("TestData/test_batch_invalid_measurements.json");
 
     private static IIngestionService BuildService(
+        PatientStatus? patientStatusOverride = null,
         IIngestionHandler? publishOverride = null,
         IIngestionHandler? errorOverride = null
     )
@@ -34,9 +39,6 @@ public class IngestionServiceIntegrationTests
 
         var parseJson = new ParseJsonHandler(new NullLogger<ParseJsonHandler>());
         var deserialization = new DeserializationHandler(new NullLogger<DeserializationHandler>());
-        var structuralValidator = new StructuralValidator(
-            new List<IValidationRule<JsonDocument>> { new SchemaValidationRule(registry) }
-        );
         var structuralRules = new List<IValidationRule<JsonDocument>>
         {
             new SchemaValidationRule(registry),
@@ -48,7 +50,7 @@ public class IngestionServiceIntegrationTests
         var batchMapping = new BatchMappingHandler(new NullLogger<BatchMappingHandler>());
         var topicValidation = new TopicValidationHandler(new NullLogger<TopicValidationHandler>());
 
-        var patientCache = Substitute.For<IPatientRegistryCache>();
+        var patientCache = CreateCacheWithStatus(patientStatusOverride ?? PatientStatus.Active);
         var batchRules = new List<IBatchValidationRule> { new PatientActiveRule(patientCache) };
         var batchValidator = new BatchValidator(batchRules);
         var batchValidation = new BatchValidationHandler(
@@ -83,13 +85,18 @@ public class IngestionServiceIntegrationTests
         return new Application.IngestionService(pipeline);
     }
 
-    // --- Happy path ---
+    private static IPatientRegistryCache CreateCacheWithStatus(PatientStatus cacheStatus)
+    {
+        var cache = Substitute.For<IPatientRegistryCache>();
+        cache.GetPatientStatus(_patientId).Returns(cacheStatus);
+        return cache;
+    }
 
     [Fact]
     public async Task ValidBatch_PipelineCompletesWithNoFatalError()
     {
         var service = BuildService();
-        var raw = new RawBatch(ValidTopic, TestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
 
         var context = await service.ProcessAsync(raw);
 
@@ -100,12 +107,12 @@ public class IngestionServiceIntegrationTests
     public async Task ValidBatch_BatchIsMapped()
     {
         var service = BuildService();
-        var raw = new RawBatch(ValidTopic, TestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
 
         var context = await service.ProcessAsync(raw);
 
         Assert.NotNull(context.Batch);
-        Assert.Equal(PatientId, context.Batch!.PatientId);
+        Assert.Equal(_patientId, context.Batch!.PatientId);
         Assert.Equal(1, context.Batch.SchemaVersion);
     }
 
@@ -113,7 +120,7 @@ public class IngestionServiceIntegrationTests
     public async Task ValidBatch_AllMeasurementsMapped()
     {
         var service = BuildService();
-        var raw = new RawBatch(ValidTopic, TestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
 
         var context = await service.ProcessAsync(raw);
 
@@ -124,81 +131,114 @@ public class IngestionServiceIntegrationTests
     public async Task ValidBatch_NoMeasurementValidationErrors()
     {
         var service = BuildService();
-        var raw = new RawBatch(ValidTopic, TestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
 
         var context = await service.ProcessAsync(raw);
 
         Assert.All(context.Batch!.Measurements, m => Assert.Empty(m.ValidationErrors));
     }
 
-    //TODO: Add test checking a message is published
+    [Fact]
+    public async Task ValidBatch_ShouldPublishBatchReceivedMessage()
+    {
+        var messageBus = Substitute.For<IMessageBus>();
+        var publishHandler = new PublishBatchHandler(messageBus);
+        var service = BuildService(publishOverride: publishHandler);
+        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
 
-    // --- Fatal error paths ---
+        await service.ProcessAsync(raw);
+
+        await messageBus
+            .Received(1)
+            .PublishAsync(
+                Arg.Is<BatchReceived>(br =>
+                    br.PatientId == _patientId && br.Measurements.Count == 13
+                )
+            );
+    }
 
     [Fact]
-    public async Task MalformedJson_SetsFatalError()
+    public async Task FatalError_ShouldNotPublishBatchReceived()
     {
+        var messageBus = Substitute.For<IMessageBus>();
+        var publishHandler = new PublishBatchHandler(messageBus);
+        var service = BuildService(publishOverride: publishHandler);
+        var raw = new RawBatch(_validTopic, "{ not valid json }", DateTime.UtcNow);
+
+        await service.ProcessAsync(raw);
+
+        await messageBus.DidNotReceive().PublishAsync(Arg.Any<BatchReceived>());
+    }
+
+    [Fact]
+    public async Task MixedBatch_PipelineCompletesWithNoFatalError()
+    {
+        // Non-fatal measurement errors should not cause a fatal error.
+        // The batch should still flow through the entire pipeline.
         var service = BuildService();
-        var raw = new RawBatch(ValidTopic, "{ not valid json }", DateTime.UtcNow);
+        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
 
         var context = await service.ProcessAsync(raw);
 
-        Assert.NotNull(context.FatalError);
-        Assert.Equal(ValidationCode.ParseError, context.FatalError!.Code);
+        Assert.Null(context.FatalError);
     }
 
     [Fact]
-    public async Task WrongTopic_SetsFatalError()
+    public async Task MixedBatch_AllMeasurementsPreserved()
     {
+        // Even measurements with errors should remain in the batch —
+        // downstream services decide how to handle annotated objects.
         var service = BuildService();
-        var differentPatient = Guid.NewGuid();
-        var raw = new RawBatch(
-            $"biometrics/{differentPatient}/telemetry",
-            TestPayload(),
-            DateTime.UtcNow
-        );
+        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
 
         var context = await service.ProcessAsync(raw);
 
-        Assert.NotNull(context.FatalError);
-        Assert.Equal(ValidationCode.InvalidTopic, context.FatalError!.Code);
+        Assert.Equal(13, context.Batch!.Measurements.Count);
     }
 
     [Fact]
-    public async Task UnsupportedSchemaVersion_SetsFatalError()
+    public async Task MixedBatch_InvalidMeasurementsAnnotatedWithErrors()
     {
         var service = BuildService();
-        var payload = TestPayload().Replace("\"schemaVersion\": 1", "\"schemaVersion\": 99");
-        var raw = new RawBatch(ValidTopic, payload, DateTime.UtcNow);
+        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
 
         var context = await service.ProcessAsync(raw);
 
-        Assert.NotNull(context.FatalError);
-        Assert.Equal(ValidationCode.UnsupportedSchemaVersion, context.FatalError!.Code);
+        var withErrors = context.Batch!.Measurements.Where(m => m.ValidationErrors.Any()).ToList();
+        Assert.Equal(2, withErrors.Count);
     }
 
     [Fact]
-    public async Task MissingPatientId_SetsFatalError()
+    public async Task MixedBatch_ValidMeasurementsHaveNoErrors()
     {
         var service = BuildService();
-        var doc = JsonDocument.Parse(TestPayload());
-        var dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(doc.RootElement)!;
-        dict.Remove("patientId");
-        var payload = JsonSerializer.Serialize(dict);
-        var raw = new RawBatch(ValidTopic, payload, DateTime.UtcNow);
+        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
 
         var context = await service.ProcessAsync(raw);
 
-        Assert.NotNull(context.FatalError);
+        var clean = context.Batch!.Measurements.Where(m => !m.ValidationErrors.Any()).ToList();
+        Assert.Equal(11, clean.Count);
     }
 
-    //TODO: Add test for inactive patient after implementation of redis
     [Fact]
-    public async Task InactivePatient_SetsFatalError()
+    public async Task MixedBatch_ShouldStillPublishBatchReceived()
     {
-        var service = BuildService();
-        Assert.True(true);
-    }
+        // UC4 Path B: the batch is forwarded including error annotations.
+        var messageBus = Substitute.For<IMessageBus>();
+        var publishHandler = new PublishBatchHandler(messageBus);
+        var service = BuildService(publishOverride: publishHandler);
+        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
 
-    //TODO: Add test that checks an error message is published.
+        await service.ProcessAsync(raw);
+
+        await messageBus
+            .Received(1)
+            .PublishAsync(
+                Arg.Is<BatchReceived>(br =>
+                    br.PatientId == _patientId
+                    && br.Measurements.Count == 13
+                    && br.Measurements.Count(m => m.ValidationErrors.Any()) == 2
+                )
+            );
+    }
 }

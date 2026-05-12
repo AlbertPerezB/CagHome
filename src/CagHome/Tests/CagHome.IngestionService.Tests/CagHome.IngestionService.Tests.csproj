@@ -23,7 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="TestData/test_batch.json">
+    <Content Include="TestData\test_batch_invalid_measurements.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\test_batch_valid.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
