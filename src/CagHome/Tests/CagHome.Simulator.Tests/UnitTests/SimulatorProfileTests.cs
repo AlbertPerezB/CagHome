@@ -1,3 +1,4 @@
+using CagHome.Simulator;
 using CagHome.Simulator.Domain.Profiles;
 using Xunit;
 
