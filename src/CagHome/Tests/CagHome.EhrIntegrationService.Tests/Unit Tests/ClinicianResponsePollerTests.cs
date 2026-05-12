@@ -36,6 +36,7 @@ public class ClinicianResponsePollerTests
             {
                 new ClinicianResponseDto(
                     AlertId: Guid.NewGuid(),
+                    HospitalId: Guid.NewGuid(),
                     CreatedAtUtc: DateTime.UtcNow,
                     Message: "Increase dosage",
                     PatientId: Guid.NewGuid(),
@@ -43,6 +44,7 @@ public class ClinicianResponsePollerTests
                 ),
                 new ClinicianResponseDto(
                     AlertId: Guid.NewGuid(),
+                    HospitalId: Guid.NewGuid(),
                     CreatedAtUtc: DateTime.UtcNow,
                     Message: "Monitor closely",
                     PatientId: Guid.NewGuid(),
@@ -73,6 +75,7 @@ public class ClinicianResponsePollerTests
     {
         var dto = new ClinicianResponseDto(
             AlertId: Guid.NewGuid(),
+            HospitalId: Guid.NewGuid(),
             CreatedAtUtc: DateTime.UtcNow,
             Message: "Reduce activity",
             PatientId: Guid.NewGuid(),
@@ -98,6 +101,7 @@ public class ClinicianResponsePollerTests
                     && m.AlertId == dto.AlertId
                     && m.PatientId == dto.PatientId
                     && m.Message == dto.Message
+                    && m.HospitalId == dto.HospitalId
                 )
             );
     }

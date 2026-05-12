@@ -3,6 +3,8 @@ using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
 using Xunit;
 
+namespace CagHome.IngestionService.Tests.UnitTests;
+
 public class CorrectUnitRuleTests
 {
     private readonly CorrectUnitRule _rule = new();

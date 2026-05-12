@@ -12,7 +12,7 @@ public class PatientActiveRule(IPatientRegistryCache patientRegistryCache) : IBa
     public async Task<ValidationError?> ValidateAsync(Batch input)
     {
         var status = await patientRegistryCache.GetPatientStatus(input.PatientId);
-        if (status == PatientStatus.Inactive)
+        if (status == PatientStatus.Inactive || status == PatientStatus.Deceased)
         {
             var error = new ValidationError(
                 ValidationCode.PatientInactive,

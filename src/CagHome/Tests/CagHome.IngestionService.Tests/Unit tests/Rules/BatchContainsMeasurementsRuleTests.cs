@@ -3,7 +3,7 @@ using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
 using Xunit;
 
-namespace CagHome.IngestionService.Tests.Validation.BatchValidation;
+namespace CagHome.IngestionService.Tests.UnitTests;
 
 public class BatchContainsMeasurementsRuleTests
 {

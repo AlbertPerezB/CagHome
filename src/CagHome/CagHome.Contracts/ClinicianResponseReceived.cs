@@ -5,6 +5,6 @@ public record ClinicianResponseReceived(
     DateTime CreatedAtUtc,
     Guid HospitalId,
     string Message,
-    Guid ResponseId,
-    Guid PatientId
+    Guid PatientId,
+    Guid ResponseId
 );
