@@ -8,6 +8,7 @@ using CagHome.IngestionService.Application.Validation.MeasurementValidation;
 using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
+using CagHome.IngestionService.Infrastructure.Cache;
 using CagHome.IngestionService.Infrastructure.Schemas;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -47,7 +48,8 @@ public class IngestionServiceIntegrationTests
         var batchMapping = new BatchMappingHandler(new NullLogger<BatchMappingHandler>());
         var topicValidation = new TopicValidationHandler(new NullLogger<TopicValidationHandler>());
 
-        var batchRules = new List<IBatchValidationRule> { new PatientActiveRule() };
+        var patientCache = Substitute.For<IPatientRegistryCache>();
+        var batchRules = new List<IBatchValidationRule> { new PatientActiveRule(patientCache) };
         var batchValidator = new BatchValidator(batchRules);
         var batchValidation = new BatchValidationHandler(
             batchValidator,
