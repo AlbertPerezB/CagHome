@@ -5,7 +5,8 @@ using Wolverine;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class PublishBatchHandler(IMessageBus messageBus) : IngestionHandler
+public class PublishBatchHandler(IMessageBus messageBus, ILogger<PublishBatchHandler> logger)
+    : IngestionHandler
 {
     protected override async Task ProcessAsync(IngestionContext context)
     {
@@ -13,6 +14,7 @@ public class PublishBatchHandler(IMessageBus messageBus) : IngestionHandler
         {
             var batch = context.Batch;
             await messageBus.PublishAsync(GetBatchReceived(context.Batch));
+            logger.LogInformation($"Batch {batch.BatchId} validated and published");
         }
     }
 
