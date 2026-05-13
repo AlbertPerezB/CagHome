@@ -31,7 +31,7 @@ builder.Services.AddScoped<BatchValidationHandler>();
 builder.Services.AddScoped<TopicValidationHandler>();
 builder.Services.AddScoped<MeasurementValidationHandler>();
 builder.Services.AddScoped<PublishBatchHandler>();
-builder.Services.AddScoped<ErrorPublishingHandler>();
+builder.Services.AddScoped<ErrorHandler>();
 builder.Services.AddScoped<BatchMappingHandler>();
 builder.Services.AddScoped<DeserializationHandler>();
 
@@ -62,7 +62,7 @@ builder.Services.AddScoped(sp =>
     var batch = sp.GetRequiredService<BatchValidationHandler>();
     var measurement = sp.GetRequiredService<MeasurementValidationHandler>();
     var publish = sp.GetRequiredService<PublishBatchHandler>();
-    var errors = sp.GetRequiredService<ErrorPublishingHandler>();
+    var errors = sp.GetRequiredService<ErrorHandler>();
 
     return IngestionPipelineBuilder.Build(
         structural,

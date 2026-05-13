@@ -16,7 +16,7 @@ public sealed class PolicyResolutionStartupCheckService(
             try
             {
                 var policy = policyResolver.Resolve(careplan);
-                logger.LogInformation(
+                logger.LogDebug(
                     "Careplan policy mapping validated: Careplan={Careplan}, Policy={Policy}",
                     careplan,
                     policy.GetType().Name

@@ -25,7 +25,7 @@ public class PatientCacheWarmupService : BackgroundService
         // Give Wolverine time to start — it's also a hosted service
         await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
 
-        _logger.LogInformation("Cache warm-up: requesting all patient statuses");
+        _logger.LogDebug("Cache warm-up: requesting all patient statuses");
         await _messageBus.PublishAsync(new AllPatientStatusesRequested());
 
         var timeout = Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
@@ -39,6 +39,6 @@ public class PatientCacheWarmupService : BackgroundService
             _ready.TrySetResult();
         }
 
-        _logger.LogInformation("Cache warm-up complete");
+        _logger.LogDebug("Cache warm-up complete");
     }
 }

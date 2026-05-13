@@ -54,7 +54,7 @@ namespace CagHome.IngestionService.Infrastructure
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await _warmup.WhenReady; // Wait for cache warmup to be complete before starting.
-            _logger.LogInformation("Starting MQTT Consumer: {ClientId}", _clientId);
+            _logger.LogDebug("Starting MQTT Consumer: {ClientId}", _clientId);
 
             // Setup event handlers
             _mqttClient.ApplicationMessageReceivedAsync += OnMessageReceivedAsync;
@@ -74,7 +74,7 @@ namespace CagHome.IngestionService.Infrastructure
                     .WithCleanSession(false)
                     .Build();
 
-                _logger.LogInformation(
+                _logger.LogDebug(
                     "Connecting to MQTT Broker at {Host}:{Port}",
                     _brokerHost,
                     _brokerPort
@@ -91,7 +91,7 @@ namespace CagHome.IngestionService.Infrastructure
 
         private async Task OnConnectedAsync(MqttClientConnectedEventArgs args)
         {
-            _logger.LogInformation("Connected to MQTT Broker successfully");
+            _logger.LogDebug("Connected to MQTT Broker successfully");
 
             // Subscribe to all topics using wildcard
             var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
@@ -100,7 +100,7 @@ namespace CagHome.IngestionService.Infrastructure
 
             await _mqttClient.SubscribeAsync(subscribeOptions);
 
-            _logger.LogInformation("Subscribed to all topics (#)");
+            _logger.LogDebug("Subscribed to all topics (#)");
         }
 
         private async Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs args)
@@ -110,7 +110,7 @@ namespace CagHome.IngestionService.Infrastructure
             var qos = args.ApplicationMessage.QualityOfServiceLevel;
             var retain = args.ApplicationMessage.Retain;
 
-            _logger.LogInformation(
+            _logger.LogDebug(
                 "Message received - Topic: {Topic}, Payload: {Payload}, QoS: {QoS}, Retain: {Retain}",
                 topic,
                 payload,
@@ -143,7 +143,7 @@ namespace CagHome.IngestionService.Infrastructure
             {
                 try
                 {
-                    _logger.LogInformation(
+                    _logger.LogDebug(
                         "Attempting to reconnect to MQTT Broker (Attempt {Attempt})...",
                         attempt
                     );
@@ -151,7 +151,7 @@ namespace CagHome.IngestionService.Infrastructure
                     await Task.Delay(reconnectDelay, cancellationToken);
                     await ConnectAsync(cancellationToken);
 
-                    _logger.LogInformation("Reconnected successfully");
+                    _logger.LogDebug("Reconnected successfully");
                     break;
                 }
                 catch (Exception ex)
@@ -169,7 +169,7 @@ namespace CagHome.IngestionService.Infrastructure
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Stopping MQTT Consumer");
+            _logger.LogDebug("Stopping MQTT Consumer");
 
             _reconnectCts.Cancel();
 
@@ -183,7 +183,7 @@ namespace CagHome.IngestionService.Infrastructure
                 await _mqttClient.DisconnectAsync(cancellationToken: cancellationToken);
             }
 
-            _logger.LogInformation("MQTT Consumer stopped");
+            _logger.LogDebug("MQTT Consumer stopped");
         }
 
         public void Dispose()

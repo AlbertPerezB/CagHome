@@ -14,7 +14,7 @@ namespace CagHome.PatientRegistryService.Application
             ILogger<PatientStatusUpdateRequested> logger
         )
         {
-            logger.LogDebug(
+            logger.LogInformation(
                 "Patient registration update received for PatientId: {PatientId}",
                 message.PatientId
             );
@@ -31,7 +31,7 @@ namespace CagHome.PatientRegistryService.Application
             {
                 if (result.ModifiedCount > 0 || result.UpsertedId != null)
                 {
-                    logger.LogDebug(
+                    logger.LogInformation(
                         "Patient data updated successfully for PatientId: {PatientId}",
                         message.PatientId
                     );
@@ -45,7 +45,7 @@ namespace CagHome.PatientRegistryService.Application
                 }
                 else
                 {
-                    logger.LogDebug(
+                    logger.LogInformation(
                         "No changes made to patient data for PatientId: {PatientId}",
                         message.PatientId
                     );

@@ -10,7 +10,7 @@ public class StructuralValidationHandler(
 {
     protected override async Task ProcessAsync(IngestionContext context)
     {
-        logger.LogInformation("Starting structural validation");
+        logger.LogDebug("Starting structural validation");
         if (context.Json != null)
         {
             var error = await validator.ValidateAsync(context.Json);

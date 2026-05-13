@@ -11,7 +11,7 @@ public class MeasurementValidationHandler(
     {
         if (context.Batch != null)
         {
-            logger.LogInformation("Starting measurement validation");
+            logger.LogDebug("Starting measurement validation");
             Parallel.ForEach(
                 context.Batch.Measurements,
                 async measurement =>

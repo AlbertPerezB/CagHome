@@ -8,7 +8,7 @@ public class ParseJsonHandler(ILogger<ParseJsonHandler> logger) : IngestionHandl
 {
     protected override Task ProcessAsync(IngestionContext context)
     {
-        logger.LogInformation("Parsing json");
+        logger.LogDebug("Parsing json");
         try
         {
             context.Json = JsonDocument.Parse(context.RawBatch.Payload);

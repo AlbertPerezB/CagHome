@@ -17,7 +17,7 @@ public class AllPatientStatusesRequestedHandler
 
         var patients = entries.Select(e => new PatientStatusEntry(e.PatientId, e.Status)).ToList();
 
-        logger.LogDebug("Returning {Count} patient statuses", patients.Count);
+        logger.LogInformation("Returning {Count} patient statuses (cache-warm-up", patients.Count);
 
         return new AllPatientStatuses(patients);
     }

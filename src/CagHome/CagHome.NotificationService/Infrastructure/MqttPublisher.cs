@@ -28,6 +28,6 @@ public class MqttPublisher(MqttConnectionService connectionService, ILogger<Mqtt
 
         await client.PublishAsync(message);
 
-        logger.LogInformation("Published to {Topic}", topic);
+        logger.LogInformation($"Published message {json} to {topic}");
     }
 }

@@ -3,7 +3,7 @@ using CagHome.IngestionService.Infrastructure;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
-public class ErrorPublishingHandler(ILogger<ErrorPublishingHandler> logger) : IngestionHandler
+public class ErrorHandler(ILogger<ErrorHandler> logger) : IngestionHandler
 {
     protected override async Task ProcessAsync(IngestionContext context)
     {
