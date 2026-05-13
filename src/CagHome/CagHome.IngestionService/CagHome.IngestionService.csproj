@@ -10,8 +10,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
     <PackageReference Include="MQTTnet" Version="5.1.0.1559" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
-    <PackageReference Include="WolverineFx" Version="5.21.0" />
-    <PackageReference Include="WolverineFx.RabbitMQ" Version="5.21.0" />
+    <PackageReference Include="WolverineFx" Version="5.39.0" />
+    <PackageReference Include="WolverineFx.RabbitMQ" Version="5.39.0" />
   </ItemGroup>
 
   <ItemGroup>
