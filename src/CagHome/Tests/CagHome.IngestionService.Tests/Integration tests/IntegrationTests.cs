@@ -31,8 +31,8 @@ public class IngestionServiceIntegrationTests
 
     private static IIngestionService BuildService(
         PatientStatus? patientStatusOverride = null,
-        IIngestionHandler? publishOverride = null,
-        IIngestionHandler? errorOverride = null
+        PublishBatchHandler? publishOverride = null,
+        ErrorHandler? errorOverride = null
     )
     {
         var registry = new JsonSchemaRegistry();
@@ -68,8 +68,9 @@ public class IngestionServiceIntegrationTests
             new NullLogger<MeasurementValidationHandler>()
         );
 
-        var publish = publishOverride ?? new NoOpHandler();
-        var errors = errorOverride ?? new NoOpHandler();
+        var publish = publishOverride ?? Substitute.For<PublishBatchHandler>();
+        var errors = errorOverride ?? new ErrorHandler(new NullLogger<ErrorHandler>());
+
         var pipeline = IngestionPipelineBuilder.Build(
             structural,
             parseJson,
@@ -161,7 +162,10 @@ public class IngestionServiceIntegrationTests
     public async Task FatalError_ShouldNotPublishBatchReceived()
     {
         var messageBus = Substitute.For<IMessageBus>();
-        var publishHandler = new PublishBatchHandler(messageBus);
+        var publishHandler = new PublishBatchHandler(
+            messageBus,
+            new NullLogger<PublishBatchHandler>()
+        );
         var service = BuildService(publishOverride: publishHandler);
         var raw = new RawBatch(_validTopic, "{ not valid json }", DateTime.UtcNow);
 
@@ -225,7 +229,10 @@ public class IngestionServiceIntegrationTests
     {
         // UC4 Path B: the batch is forwarded including error annotations.
         var messageBus = Substitute.For<IMessageBus>();
-        var publishHandler = new PublishBatchHandler(messageBus);
+        var publishHandler = new PublishBatchHandler(
+            messageBus,
+            new NullLogger<PublishBatchHandler>()
+        );
         var service = BuildService(publishOverride: publishHandler);
         var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
 
