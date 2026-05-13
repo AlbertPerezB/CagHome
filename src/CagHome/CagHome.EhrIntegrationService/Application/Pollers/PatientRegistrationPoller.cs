@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Diagnostics;
+using System.Net.Http.Json;
 using CagHome.Contracts;
 using CagHome.EhrIntegrationService.Domain;
 using CagHome.EhrIntegrationService.Infrastructure;
@@ -13,6 +14,7 @@ public class PatientRegistrationPoller(
 ) : BackgroundService
 {
     private DateTime _lastPollTimestamp = DateTime.MinValue;
+    private static readonly ActivitySource ActivitySource = new("CagHome.EhrIntegrationService");
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -38,6 +40,8 @@ public class PatientRegistrationPoller(
 
     private async Task PollForPatients(CancellationToken ct)
     {
+        using var activity = ActivitySource.StartActivity("PollPatientRegistrations");
+
         var client = httpClientFactory.CreateClient("mock-ehr");
         var sinceParam = _lastPollTimestamp.ToString("O");
 
@@ -67,13 +71,6 @@ public class PatientRegistrationPoller(
                     patient.Status,
                     patient.UpdatedAtUtc
                 )
-            );
-
-            logger.LogInformation(
-                "Published PatientRegistered: PatientId={PatientId}, Careplan={Careplan}, Status={Status}",
-                patient.Careplan,
-                patient.PatientId,
-                patient.Status
             );
         }
 

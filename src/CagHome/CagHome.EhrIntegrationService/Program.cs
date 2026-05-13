@@ -14,12 +14,19 @@ builder.Services.AddHttpClient(
         client.BaseAddress = new Uri("https://mock-ehr");
     }
 );
+builder.AddServiceDefaults();
+builder
+    .Services.AddOpenTelemetry()
+    .WithTracing(tracing =>
+        tracing
+            .AddSource("Wolverine")
+            .AddSource("RabbitMQ.Client")
+            .AddSource("CagHome.EhrIntegrationService")
+    );
 
 // Polling background services
 builder.Services.AddHostedService<ClinicianResponsePoller>();
 builder.Services.AddHostedService<PatientRegistrationPoller>();
-
-builder.AddServiceDefaults();
 
 builder.Services.AddWolverine(options =>
 {
