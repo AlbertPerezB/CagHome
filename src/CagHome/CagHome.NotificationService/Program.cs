@@ -9,7 +9,7 @@ using Wolverine.RabbitMQ;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
-
+builder.Services.AddSingleton<IAuditStore, AuditStore>();
 builder.UseWolverine(options =>
 {
     options

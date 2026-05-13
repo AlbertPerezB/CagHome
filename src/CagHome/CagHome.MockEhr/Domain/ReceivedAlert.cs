@@ -5,7 +5,7 @@
         Guid PatientId,
         Guid HospitalId,
         string Message,
-        string Severity,
+        Severity Severity,
         DateTime ReceivedAtUtc
     );
 }

@@ -184,7 +184,7 @@ public sealed class BiometricPublisherService(
             _accumulatedMeasurementsByPatient[patientId].AddRange(measurements);
         }
 
-        logger.LogInformation(
+        logger.LogDebug(
             "Sampled {Count} biometric measurements from profile '{Profile}'",
             options.DeviceCount,
             profile.Name
@@ -206,21 +206,22 @@ public sealed class BiometricPublisherService(
             return;
         }
 
-		foreach (var (patientId, measurements) in _accumulatedMeasurementsByPatient)
-		{
-			if (measurements.Count == 0)
-			{
-				continue;
-			}
+        foreach (var (patientId, measurements) in _accumulatedMeasurementsByPatient)
+        {
+            if (measurements.Count == 0)
+            {
+                continue;
+            }
 
-			var correlationId = Guid.NewGuid();
+            var correlationId = Guid.NewGuid();
 
-			var accumulatedBatch = new MeasurementBatchPayload(
-				SchemaVersion: 1,
-				AppVersion: "2.0.0",
-				CorrelationId: correlationId,
-				PatientId: patientId,
-				Measurements: measurements.ToArray());
+            var accumulatedBatch = new MeasurementBatchPayload(
+                SchemaVersion: 1,
+                AppVersion: "2.0.0",
+                CorrelationId: correlationId,
+                PatientId: patientId,
+                Measurements: measurements.ToArray()
+            );
 
             var payload = JsonSerializer.Serialize(accumulatedBatch, _jsonOptions);
             var topic = $"{options.TopicPrefix}/{patientId:D}/telemetry";
@@ -250,11 +251,11 @@ public sealed class BiometricPublisherService(
             return patientId;
         }
 
-		// patientId = Guid.NewGuid();
-		patientId = Guid.Parse("12345678-47ef-42c3-9a7a-123456789123");
-		_patientIdsByIndex[index] = patientId;
-		return patientId;
-	}
+        // patientId = Guid.NewGuid();
+        patientId = Guid.Parse("12345678-47ef-42c3-9a7a-123456789123");
+        _patientIdsByIndex[index] = patientId;
+        return patientId;
+    }
 
     private static MeasurementPayload[] CreateMeasurements(TelemetrySample telemetry)
     {

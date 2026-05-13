@@ -18,7 +18,7 @@ var mqttBroker = builder
     .WithEnvironment("MQTT_PORT", brokerPort);
 
 builder
-    .AddProject<Projects.CagHome_IngestionService>("ingestionservice")
+    .AddProject<Projects.CagHome_IngestionService>("ingestion-service")
     .WithReference(mqttBroker)
     .WithReference(rabbitmqBroker)
     .WithReference(redis)

@@ -2,9 +2,11 @@
 {
     public record AlertDTO(
         Guid AlertId,
-        Guid PatientId,
+        Guid CorrelationId,
+        DateTime DecidedAt,
         Guid HospitalId,
-        string Severity,
-        string Message
+        string Message,
+        Guid PatientId,
+        int Severity
     );
 }

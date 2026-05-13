@@ -27,7 +27,7 @@ public class SystemBootstrapTests
 
         // Act & Assert — wait for key services to be running
         await app.ResourceNotifications.WaitForResourceAsync(
-            "ingestionservice",
+            "ingestion-service",
             KnownResourceStates.Running,
             ct
         );

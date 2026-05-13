@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace CagHome.NotificationService.Infrastructure;
 
-internal class AuditStore
+internal class AuditStore : IAuditStore
 {
     private readonly IMongoCollection<AuditEntry> _collection;
 

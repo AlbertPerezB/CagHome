@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.Services.AddOpenTelemetry();
 builder.Services.AddSingleton<MockEhrStore>();
 
 var app = builder.Build();
@@ -20,7 +21,7 @@ app.MapPost(
             PatientId: alert.PatientId,
             HospitalId: alert.HospitalId,
             Message: alert.Message,
-            Severity: alert.Severity,
+            Severity: (Severity)alert.Severity,
             ReceivedAtUtc: DateTime.UtcNow
         );
 

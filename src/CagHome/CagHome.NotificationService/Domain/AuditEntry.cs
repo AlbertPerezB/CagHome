@@ -9,6 +9,9 @@ public class AuditEntry
 {
     [BsonId]
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid AlertId { get; set; }
     public DeliveryStatus DeliveryStatus { get; set; }
 

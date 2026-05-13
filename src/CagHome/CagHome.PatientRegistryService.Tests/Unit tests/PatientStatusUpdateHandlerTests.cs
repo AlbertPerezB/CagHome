@@ -17,14 +17,14 @@ public class PatientStatusUpdateHandlerTests
     private readonly IPatientRegistryStore _store;
     private readonly IMessageBus _messageBus;
     private readonly ILogger<PatientStatusUpdateRequested> _logger;
-    private readonly PatientStatusUpdateHandler _sut;
+    private readonly PatientStatusUpdateHandler _handler;
 
     public PatientStatusUpdateHandlerTests()
     {
         _store = Substitute.For<IPatientRegistryStore>();
         _messageBus = Substitute.For<IMessageBus>();
         _logger = Substitute.For<ILogger<PatientStatusUpdateRequested>>();
-        _sut = new PatientStatusUpdateHandler();
+        _handler = new PatientStatusUpdateHandler();
     }
 
     public static PatientStatusUpdateRequested CreateUpdateRequest(
@@ -53,7 +53,7 @@ public class PatientStatusUpdateHandlerTests
             .UpdatePatientData(Arg.Any<PatientRegistryEntry>())
             .Returns(FakeUpdateResult.Modified());
 
-        await _sut.Handle(message, _store, _messageBus, _logger);
+        await _handler.Handle(message, _store, _messageBus, _logger);
 
         await _store
             .Received(1)
@@ -74,7 +74,7 @@ public class PatientStatusUpdateHandlerTests
             .UpdatePatientData(Arg.Any<PatientRegistryEntry>())
             .Returns(FakeUpdateResult.Modified());
 
-        await _sut.Handle(message, _store, _messageBus, _logger);
+        await _handler.Handle(message, _store, _messageBus, _logger);
 
         await _messageBus.Received(1).PublishAsync(Arg.Any<PatientStatusUpdated>());
     }
@@ -87,7 +87,7 @@ public class PatientStatusUpdateHandlerTests
             .UpdatePatientData(Arg.Any<PatientRegistryEntry>())
             .Returns(FakeUpdateResult.Upserted());
 
-        await _sut.Handle(message, _store, _messageBus, _logger);
+        await _handler.Handle(message, _store, _messageBus, _logger);
 
         await _messageBus.Received(1).PublishAsync(Arg.Any<PatientStatusUpdated>());
     }
@@ -100,7 +100,7 @@ public class PatientStatusUpdateHandlerTests
             .UpdatePatientData(Arg.Any<PatientRegistryEntry>())
             .Returns(FakeUpdateResult.NoChange());
 
-        await _sut.Handle(message, _store, _messageBus, _logger);
+        await _handler.Handle(message, _store, _messageBus, _logger);
 
         await _messageBus.DidNotReceive().PublishAsync(Arg.Any<PatientStatusUpdated>());
     }
@@ -113,7 +113,7 @@ public class PatientStatusUpdateHandlerTests
             .UpdatePatientData(Arg.Any<PatientRegistryEntry>())
             .Returns(FakeUpdateResult.Unacknowledged());
 
-        await _sut.Handle(message, _store, _messageBus, _logger);
+        await _handler.Handle(message, _store, _messageBus, _logger);
 
         await _messageBus.DidNotReceive().PublishAsync(Arg.Any<PatientStatusUpdated>());
     }
@@ -136,7 +136,7 @@ public class PatientStatusUpdateHandlerTests
         PatientStatusUpdated? captured = null;
         await _messageBus.PublishAsync(Arg.Do<PatientStatusUpdated>(m => captured = m));
 
-        await _sut.Handle(message, _store, _messageBus, _logger);
+        await _handler.Handle(message, _store, _messageBus, _logger);
 
         Assert.NotNull(captured);
         Assert.Equal(patientId, captured!.PatientId);
@@ -153,7 +153,7 @@ public class PatientStatusUpdateHandlerTests
             .ThrowsAsync(new MongoException("connection lost"));
 
         await Assert.ThrowsAsync<MongoException>(() =>
-            _sut.Handle(message, _store, _messageBus, _logger)
+            _handler.Handle(message, _store, _messageBus, _logger)
         );
 
         await _messageBus.DidNotReceive().PublishAsync(Arg.Any<PatientStatusUpdated>());
