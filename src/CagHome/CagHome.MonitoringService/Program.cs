@@ -6,8 +6,8 @@ using CagHome.MonitoringService.Infrastructure;
 using Wolverine;
 using Wolverine.RabbitMQ;
 
-
 var builder = Host.CreateApplicationBuilder(args);
+builder.AddServiceDefaults();
 
 builder.UseWolverine(options =>
 {

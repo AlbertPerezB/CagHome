@@ -8,4 +8,8 @@
   <ItemGroup>
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CagHome.ServiceDefaults\CagHome.ServiceDefaults.csproj" />
+  </ItemGroup>
 </Project>

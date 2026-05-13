@@ -11,6 +11,7 @@ public sealed class AspireAppFixture : IAsyncLifetime
 
     private DistributedApplication _app = null!;
     public HttpClient Simulator = null!;
+    public HttpClient MockEhr = null!;
     public IMongoDatabase MonitoringAuditDb = null!;
     public IMongoDatabase NotificationAuditDb = null!;
     public IMongoDatabase PatientRegistryDb = null!;
@@ -50,6 +51,7 @@ public sealed class AspireAppFixture : IAsyncLifetime
         );
 
         Simulator = _app.CreateHttpClient("simulator");
+        MockEhr = _app.CreateHttpClient("mock-ehr");
 
         var mongoConnection = await _app.GetConnectionStringAsync("mongo");
         var mongoClient = new MongoClient(mongoConnection);
@@ -65,6 +67,7 @@ public sealed class AspireAppFixture : IAsyncLifetime
     {
         Redis?.Dispose();
         Simulator?.Dispose();
+        MockEhr?.Dispose();
         if (_app != null)
             await _app.DisposeAsync();
     }

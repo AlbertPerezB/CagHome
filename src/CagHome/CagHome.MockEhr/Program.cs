@@ -3,6 +3,8 @@ using CagHome.MockEhr.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddSingleton<MockEhrStore>();
 
 var app = builder.Build();

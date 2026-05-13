@@ -8,6 +8,8 @@ using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.UseWolverine(options =>
 {
     options
@@ -57,4 +59,5 @@ builder.Services.AddHostedService(sp => sp.GetRequiredService<MqttConnectionServ
 builder.Services.AddSingleton<IMqttPublisher, MqttPublisher>();
 
 var host = builder.Build();
+
 host.Run();

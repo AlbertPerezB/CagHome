@@ -1,10 +1,14 @@
 using CagHome.Contracts;
 using CagHome.PatientRegistryService.Infrastructure;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using Wolverine;
 using Wolverine.ErrorHandling;
 using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
+builder.AddServiceDefaults();
 
 builder.UseWolverine(options =>
 {

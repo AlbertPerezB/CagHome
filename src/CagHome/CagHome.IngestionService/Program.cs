@@ -16,6 +16,8 @@ using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+builder.AddServiceDefaults();
+
 //Infrastructure
 builder.Services.AddSingleton<PatientCacheWarmupService>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<PatientCacheWarmupService>());

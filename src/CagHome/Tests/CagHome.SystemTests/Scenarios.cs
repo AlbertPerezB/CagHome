@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using System.Net.Http.Json;
+using MongoDB.Driver;
 using Xunit.Abstractions;
 
 namespace CagHome.SystemTests;
@@ -192,5 +193,62 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
 
         Assert.NotNull(patient);
         _output.WriteLine($"UC5 — active patient found in registry: {patient["Status"]}");
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  UC5: New patient registration via Mock EHR
+    //  POST to EHR → EHR Integration polls → Patient Registry
+    //  persists → Redis cache updated
+    // ═══════════════════════════════════════════════════════
+
+    [Fact]
+    public async Task UC5_NewPatient_RegisteredViaEhr_AppearsInRegistryAndCache()
+    {
+        // Arrange — a brand new patient ID that doesn't exist yet
+        var newPatientId = Guid.NewGuid();
+
+        // Act — register the patient in the Mock EHR
+        var response = await _fixture.MockEhr.PostAsJsonAsync(
+            "/mock/patient",
+            new
+            {
+                PatientId = newPatientId,
+                UpdatedAtUtc = DateTime.UtcNow.ToString("O"),
+                Careplan = 1, // CoronaryArteryDisease
+                Status = 0, // Active
+            }
+        );
+        response.EnsureSuccessStatusCode();
+        _output.WriteLine($"Posted new patient {newPatientId} to Mock EHR");
+
+        // Assert — wait for the patient to appear in the Patient Registry (MongoDB)
+        var registryCollection =
+            _fixture.PatientRegistryDb.GetCollection<MongoDB.Bson.BsonDocument>("PatientData");
+        var deadline = DateTime.UtcNow.AddSeconds(30);
+        MongoDB.Bson.BsonDocument? registryEntry = null;
+
+        while (DateTime.UtcNow < deadline)
+        {
+            var filter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq(
+                "PatientId",
+                newPatientId
+            );
+            registryEntry = await registryCollection.Find(filter).FirstOrDefaultAsync();
+
+            if (registryEntry != null)
+                break;
+            await Task.Delay(1000);
+        }
+
+        Assert.NotNull(registryEntry);
+        _output.WriteLine($"New patient found in registry: {registryEntry!["Status"]}");
+
+        // Assert — patient should also appear in Redis cache
+        var db = _fixture.Redis.GetDatabase();
+        var cachedStatus = await db.StringGetAsync($"patient:{newPatientId}:status");
+
+        Assert.False(cachedStatus.IsNullOrEmpty);
+        Assert.Equal("Active", cachedStatus.ToString());
+        _output.WriteLine($"New patient cached in Redis as: {cachedStatus}");
     }
 }
