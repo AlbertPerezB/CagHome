@@ -184,7 +184,7 @@ public sealed class BiometricPublisherService(
             _accumulatedMeasurementsByPatient[patientId].AddRange(measurements);
         }
 
-        logger.LogDebug(
+        logger.LogInformation(
             "Sampled {Count} biometric measurements from profile '{Profile}'",
             options.DeviceCount,
             profile.Name
