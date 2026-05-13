@@ -8,7 +8,7 @@ public class InMemoryCooldownServiceTests
     [Fact]
     public void Evaluate_WarningWithinWindow_SuppressesSecondAlert()
     {
-        var service = new InMemoryCooldownService();
+        var service = new CooldownService();
         var patientId = Guid.NewGuid();
         var first = new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Utc);
         var second = first.AddMinutes(10);
@@ -24,7 +24,7 @@ public class InMemoryCooldownServiceTests
     [Fact]
     public void Evaluate_CriticalAfterWindow_DoesNotSuppressSecondAlert()
     {
-        var service = new InMemoryCooldownService();
+        var service = new CooldownService();
         var patientId = Guid.NewGuid();
         var first = new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Utc);
         var second = first.AddMinutes(6);
@@ -40,7 +40,7 @@ public class InMemoryCooldownServiceTests
     [Fact]
     public void Evaluate_InfoSeverity_NeverSuppresses()
     {
-        var service = new InMemoryCooldownService();
+        var service = new CooldownService();
         var patientId = Guid.NewGuid();
 
         var firstResult = service.Evaluate(patientId, Severity.Info, DateTime.UtcNow);

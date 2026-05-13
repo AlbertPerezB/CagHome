@@ -9,6 +9,7 @@ internal static class MonitoringTestDataFactory
     internal static BatchReceived CreateBatch() =>
         new(
             BatchId: Guid.NewGuid(),
+            CorrelationId: Guid.NewGuid(),
             PatientId: Guid.NewGuid(),
             Measurements:
             [
@@ -42,5 +43,24 @@ internal static class MonitoringTestDataFactory
             Reasons: [],
             PolicyName: "TestPolicy",
             EvaluatedAtUtc: DateTime.UtcNow
+        );
+
+    internal static BatchReceived CreateBatch(Guid patientId, double heartRate) =>
+        new(
+            BatchId: Guid.NewGuid(),
+            CorrelationId: Guid.NewGuid(),
+            PatientId: patientId,
+            Measurements:
+            [
+                new MeasurementItem(
+                    MeasurementId: Guid.NewGuid(),
+                    MeasurementType: "HeartRate",
+                    Value: heartRate,
+                    Unit: "bpm",
+                    DeviceReported: DateTime.UtcNow,
+                    ValidationErrors: []
+                )
+            ],
+            ReceivedAtUtc: DateTime.UtcNow
         );
 }

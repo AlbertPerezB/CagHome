@@ -7,6 +7,7 @@ namespace CagHome.MonitoringService.Domain;
 
 public sealed class DecisionAuditEntry
 {
+    [BsonId]
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid AuditId { get; init; } = Guid.NewGuid();
 
@@ -15,6 +16,9 @@ public sealed class DecisionAuditEntry
 
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid BatchId { get; init; }
+
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
+    public Guid CorrelationId { get; init; }
     public Careplan Careplan { get; init; }
     public string PolicyName { get; init; } = string.Empty;
     public Severity? Severity { get; init; }

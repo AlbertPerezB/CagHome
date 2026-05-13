@@ -7,6 +7,7 @@ namespace CagHome.NotificationService.Domain;
 
 public class AuditEntry
 {
+    [BsonId]
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid AlertId { get; set; }
     public DeliveryStatus DeliveryStatus { get; set; }
@@ -14,6 +15,9 @@ public class AuditEntry
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid? HospitalId { get; set; }
     public string? Message { get; set; }
+
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
+    public Guid CorrelationId { get; set; }
 
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid PatientId { get; set; }
@@ -27,6 +31,7 @@ public class AuditEntry
         AlertId = message.AlertId;
         DeliveryStatus = status;
         HospitalId = message.HospitalId;
+        CorrelationId = message.CorrelationId;
         Message = message.Message;
         PatientId = message.PatientId;
         Receiver = Receiver.Hospital;
@@ -40,6 +45,7 @@ public class AuditEntry
         AlertId = message.AlertId;
         DeliveryStatus = status;
         HospitalId = null;
+        CorrelationId = message.CorrelationId;
         Message = message.Message;
         PatientId = message.PatientId;
         Receiver = Receiver.Patient;
@@ -53,6 +59,7 @@ public class AuditEntry
         AlertId = message.AlertId;
         DeliveryStatus = status;
         HospitalId = message.HospitalId;
+        CorrelationId = message.ResponseId;
         Message = message.Message;
         PatientId = message.PatientId;
         Receiver = Receiver.Patient;

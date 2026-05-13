@@ -4,6 +4,8 @@ public record Batch
 {
     public required Guid BatchId { get; init; } = new Guid();
 
+    public Guid CorrelationId { get; init; }
+
     public required Guid PatientId { get; init; }
 
     public required int SchemaVersion { get; init; }

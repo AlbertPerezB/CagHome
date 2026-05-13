@@ -6,6 +6,7 @@ namespace CagHome.MonitoringService.Domain;
 
 public sealed class PatientCareplanState
 {
+    [BsonId]
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid PatientId { get; init; }
     public Careplan Careplan { get; init; }

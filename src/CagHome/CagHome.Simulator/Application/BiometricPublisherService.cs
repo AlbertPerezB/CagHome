@@ -182,9 +182,12 @@ public sealed class BiometricPublisherService(
 				continue;
 			}
 
+			var correlationId = Guid.NewGuid();
+
 			var accumulatedBatch = new MeasurementBatchPayload(
 				SchemaVersion: 1,
 				AppVersion: "2.0.0",
+				CorrelationId: correlationId,
 				PatientId: patientId,
 				Measurements: measurements.ToArray());
 
@@ -215,7 +218,8 @@ public sealed class BiometricPublisherService(
 			return patientId;
 		}
 
-		patientId = Guid.NewGuid();
+		// patientId = Guid.NewGuid();
+		patientId = Guid.Parse("12345678-47ef-42c3-9a7a-123456789123");
 		_patientIdsByIndex[index] = patientId;
 		return patientId;
 	}

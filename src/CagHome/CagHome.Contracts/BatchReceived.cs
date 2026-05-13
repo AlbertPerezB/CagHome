@@ -2,6 +2,7 @@
 
 public record BatchReceived(
     Guid BatchId,
+    Guid CorrelationId,
     Guid PatientId,
     List<MeasurementItem> Measurements,
     DateTime ReceivedAtUtc

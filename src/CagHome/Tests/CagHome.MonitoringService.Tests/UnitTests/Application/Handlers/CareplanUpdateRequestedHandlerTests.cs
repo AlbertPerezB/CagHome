@@ -9,14 +9,12 @@ namespace CagHome.MonitoringService.Tests.Application.Handlers;
 public class CareplanUpdateRequestedHandlerTests
 {
     private readonly IPatientCareplanStore _patientCareplanStore;
-    private readonly ILogger<CareplanUpdateRequestedHandler> _logger;
-    private readonly CareplanUpdateRequestedHandler _handler;
+    private readonly ILogger<CareplanUpdateRequested> _logger;
 
     public CareplanUpdateRequestedHandlerTests()
     {
         _patientCareplanStore = Substitute.For<IPatientCareplanStore>();
-        _logger = Substitute.For<ILogger<CareplanUpdateRequestedHandler>>();
-        _handler = new CareplanUpdateRequestedHandler();
+        _logger = Substitute.For<ILogger<CareplanUpdateRequested>>();
     }
 
     [Fact]
@@ -28,7 +26,7 @@ public class CareplanUpdateRequestedHandlerTests
             UpdatedAtUtc: DateTime.UtcNow
         );
 
-        await _handler.Handle(message, _patientCareplanStore, _logger);
+        await CareplanUpdateRequestedHandler.Handle(message, _patientCareplanStore, _logger);
 
         await _patientCareplanStore
             .Received(1)

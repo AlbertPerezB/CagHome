@@ -5,7 +5,7 @@ using CagHome.MonitoringService.Domain;
 
 namespace CagHome.MonitoringService.Application.Decision;
 
-public sealed class InMemoryCooldownService : ICooldownService
+public sealed class CooldownService : ICooldownService
 {
     private readonly ConcurrentDictionary<string, DateTime> _lastAlertByPatientAndSeverity = new();
 

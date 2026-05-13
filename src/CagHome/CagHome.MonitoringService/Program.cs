@@ -25,8 +25,8 @@ builder.UseWolverine(options =>
     options.PublishMessage<HospitalAlertRequested>().ToRabbitQueue("notification.hospital-alert");
 });
 
-builder.AddMongoDBClient(connectionName: "monitoring-audit");
-builder.AddMongoDBClient(connectionName: "monitoring-patientcareplans");
+builder.AddKeyedMongoDBClient(name: "monitoring-audit");
+builder.AddKeyedMongoDBClient(name: "monitoring-patientcareplans");
 
 builder
     .Services.AddOpenTelemetry()
@@ -37,7 +37,7 @@ builder.Services.AddSingleton<ICareplanDecisionPolicy, ValveDiseaseCareplanPolic
 builder.Services.AddSingleton<ICareplanDecisionPolicy, CoronaryArteryDiseaseCareplanPolicy>();
 builder.Services.AddSingleton<ICareplanDecisionPolicy, CardiomyopathyCareplanPolicy>();
 builder.Services.AddSingleton<ICareplanPolicyResolver, CareplanPolicyResolver>();
-builder.Services.AddSingleton<ICooldownService, InMemoryCooldownService>();
+builder.Services.AddSingleton<ICooldownService, CooldownService>();
 builder.Services.AddSingleton<IPatientCareplanStore, MongoPatientCareplanStore>();
 builder.Services.AddSingleton<IDecisionAuditStore, MongoDecisionAuditStore>();
 builder.Services.AddHostedService<PolicyResolutionStartupCheckService>();

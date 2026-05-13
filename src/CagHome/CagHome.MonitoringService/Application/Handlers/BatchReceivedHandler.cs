@@ -4,21 +4,17 @@ using CagHome.MonitoringService.Application.Decision.Interfaces;
 using CagHome.MonitoringService.Domain;
 using CagHome.MonitoringService.Infrastructure;
 using Wolverine;
-using Microsoft.Extensions.Logging;
 
 namespace CagHome.MonitoringService.Application.Handlers;
 
-public sealed class BatchReceivedHandler
+public class BatchReceivedHandler(
+    IPatientCareplanStore patientCareplanStore,
+    ICareplanPolicyResolver policyResolver,
+    ICooldownService cooldownService,
+    IDecisionAuditStore decisionAuditStore,
+    ILogger<BatchReceivedHandler> logger)
 {
-    public async Task Handle(
-        BatchReceived message,
-        IPatientCareplanStore patientCareplanStore,
-        ICareplanPolicyResolver policyResolver,
-        ICooldownService cooldownService,
-        IDecisionAuditStore decisionAuditStore,
-        IMessageBus messageBus,
-        ILogger<BatchReceivedHandler> logger
-    )
+    public async Task Handle(BatchReceived message, IMessageBus messageBus)
     {
         var careplan = await patientCareplanStore.TryGet(message.PatientId) ?? Careplan.None;
         var context = new BatchEvaluationContext(message, careplan);
@@ -54,6 +50,7 @@ public sealed class BatchReceivedHandler
                             Message: policyResult.Message,
                             Severity: severity,
                             DecidedAt: DateTime.UtcNow,
+                            CorrelationId: message.CorrelationId,
                             AlertId: alertId
                         )
                     );
@@ -70,6 +67,7 @@ public sealed class BatchReceivedHandler
                             Message: policyResult.Message,
                             Severity: severity,
                             DecidedAt: DateTime.UtcNow,
+                            CorrelationId: message.CorrelationId,
                             AlertId: alertId
                         )
                     );
@@ -82,6 +80,7 @@ public sealed class BatchReceivedHandler
         {
             PatientId = message.PatientId,
             BatchId = message.BatchId,
+            CorrelationId = message.CorrelationId,
             Careplan = careplan,
             PolicyName = policyResult.PolicyName,
             Severity = policyResult.Severity,

@@ -6,6 +6,7 @@ namespace CagHome.PatientRegistryService.Domain
 {
     public class PatientRegistryEntry
     {
+        [BsonId]
         [BsonGuidRepresentation(GuidRepresentation.Standard)]
         public Guid PatientId;
 

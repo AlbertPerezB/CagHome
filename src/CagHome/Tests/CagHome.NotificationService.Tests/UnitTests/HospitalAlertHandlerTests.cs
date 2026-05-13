@@ -26,6 +26,7 @@ public class HospitalAlertHandlerTests
     private static HospitalAlertRequested CreateMessage() =>
         new HospitalAlertRequested(
             AlertId: Guid.NewGuid(),
+            CorrelationId: Guid.NewGuid(),
             DecidedAt: DateTime.UtcNow,
             HospitalId: Guid.NewGuid(),
             Message: "High heart rate. Patient risks going into SVT",

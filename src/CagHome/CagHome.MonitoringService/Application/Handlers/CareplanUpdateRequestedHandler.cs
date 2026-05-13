@@ -2,12 +2,12 @@ using CagHome.MonitoringService.Infrastructure;
 
 namespace CagHome.MonitoringService.Application.Handlers;
 
-public sealed class CareplanUpdateRequestedHandler
+public static class CareplanUpdateRequestedHandler
 {
-    public async Task Handle(
+    public static async Task Handle(
         CareplanUpdateRequested message,
         IPatientCareplanStore patientCareplanStore,
-        ILogger<CareplanUpdateRequestedHandler> logger
+        ILogger<CareplanUpdateRequested> logger
     )
     {
         await patientCareplanStore.Upsert(message.PatientId, message.Careplan, message.UpdatedAtUtc);

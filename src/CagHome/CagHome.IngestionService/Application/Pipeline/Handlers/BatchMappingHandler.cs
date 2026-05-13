@@ -12,6 +12,7 @@ public class BatchMappingHandler(ILogger<BatchMappingHandler> logger) : Ingestio
 
         if (
             dto is null
+            || dto.CorrelationId is null
             || dto.PatientId is null
             || dto.SchemaVersion is null
             || dto.AppVersion is null
@@ -63,6 +64,7 @@ public class BatchMappingHandler(ILogger<BatchMappingHandler> logger) : Ingestio
         context.Batch = new Batch
         {
             BatchId = Guid.NewGuid(),
+            CorrelationId = dto.CorrelationId.Value,
             PatientId = dto.PatientId.Value,
             SchemaVersion = dto.SchemaVersion.Value,
             AppVersion = dto.AppVersion,

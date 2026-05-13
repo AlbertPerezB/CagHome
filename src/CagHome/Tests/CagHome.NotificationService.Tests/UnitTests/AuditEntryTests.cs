@@ -11,6 +11,7 @@ public class AuditEntryTests
     {
         var message = new HospitalAlertRequested(
             AlertId: Guid.NewGuid(),
+            CorrelationId: Guid.NewGuid(),
             DecidedAt: DateTime.UtcNow,
             HospitalId: Guid.NewGuid(),
             Message: "High heart rate. Patient risks going into SVT",
@@ -24,6 +25,7 @@ public class AuditEntryTests
         Assert.Equal(message.AlertId, entry.AlertId);
         Assert.Equal(message.PatientId, entry.PatientId);
         Assert.Equal(message.HospitalId, entry.HospitalId);
+        Assert.Equal(message.CorrelationId, entry.CorrelationId);
         Assert.Equal(message.Message, entry.Message);
         Assert.Equal(DeliveryStatus.Attempted, entry.DeliveryStatus);
         Assert.Equal("200", entry.StatusCode);
@@ -34,6 +36,7 @@ public class AuditEntryTests
     {
         var message = new HospitalAlertRequested(
             AlertId: Guid.NewGuid(),
+            CorrelationId: Guid.NewGuid(),
             DecidedAt: DateTime.UtcNow,
             HospitalId: Guid.NewGuid(),
             Message: "High heart rate. Patient risks going into SVT",
@@ -47,6 +50,7 @@ public class AuditEntryTests
         Assert.Equal(message.AlertId, entry.AlertId);
         Assert.Equal(message.PatientId, entry.PatientId);
         Assert.Equal(message.HospitalId, entry.HospitalId);
+        Assert.Equal(message.CorrelationId, entry.CorrelationId);
         Assert.Equal(message.Message, entry.Message);
         Assert.Equal(DeliveryStatus.Attempted, entry.DeliveryStatus);
         Assert.Empty(entry.StatusCode);
@@ -57,6 +61,7 @@ public class AuditEntryTests
     {
         var message = new PatientAlertRequested(
             AlertId: Guid.NewGuid(),
+            CorrelationId: Guid.NewGuid(),
             DecidedAt: DateTime.UtcNow,
             Message: "High heart rate. Patient risks going into SVT",
             PatientId: Guid.NewGuid(),
@@ -67,6 +72,7 @@ public class AuditEntryTests
 
         Assert.Equal(Receiver.Patient, entry.Receiver);
         Assert.Equal(message.AlertId, entry.AlertId);
+        Assert.Equal(message.CorrelationId, entry.CorrelationId);
         Assert.Equal(message.PatientId, entry.PatientId);
         Assert.Null(entry.HospitalId);
         Assert.Empty(entry.StatusCode);

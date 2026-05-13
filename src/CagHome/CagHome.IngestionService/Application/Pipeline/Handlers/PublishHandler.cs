@@ -19,6 +19,7 @@ public class PublishBatchHandler(IMessageBus messageBus) : IngestionHandler
     private BatchReceived GetBatchReceived(Batch b) =>
         new BatchReceived(
             b.BatchId,
+            b.CorrelationId,
             b.PatientId,
             b.Measurements.Select(GetMeasurementItem).ToList(),
             b.ReceivedAt

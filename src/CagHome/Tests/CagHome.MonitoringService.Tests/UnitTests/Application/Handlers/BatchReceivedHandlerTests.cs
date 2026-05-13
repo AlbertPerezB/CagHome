@@ -31,7 +31,7 @@ public class BatchReceivedHandlerTests
         _messageBus = Substitute.For<IMessageBus>();
         _logger = Substitute.For<ILogger<BatchReceivedHandler>>();
         _policy = Substitute.For<ICareplanDecisionPolicy>();
-        _handler = new BatchReceivedHandler();
+        _handler = new BatchReceivedHandler(_patientCareplanStore, _policyResolver, _cooldownService, _decisionAuditStore, _logger);
     }
 
     [Fact]
@@ -55,15 +55,7 @@ public class BatchReceivedHandlerTests
         _cooldownService.Evaluate(message.PatientId, Severity.Warning, Arg.Any<DateTime>())
             .Returns(new CooldownCheckResult(IsSuppressed: false, RemainingCooldown: null));
 
-        await _handler.Handle(
-            message,
-            _patientCareplanStore,
-            _policyResolver,
-            _cooldownService,
-            _decisionAuditStore,
-            _messageBus,
-            _logger
-        );
+        await _handler.Handle(message, _messageBus);
 
         await _messageBus
             .Received(1)
@@ -76,6 +68,7 @@ public class BatchReceivedHandlerTests
                 Arg.Is<DecisionAuditEntry>(e =>
                     e.PatientId == message.PatientId
                     && e.BatchId == message.BatchId
+                    && e.CorrelationId == message.CorrelationId
                     && e.Severity == Severity.Warning
                     && e.SuppressedByCooldown == false
                     && e.PatientAlertPublished
@@ -106,15 +99,7 @@ public class BatchReceivedHandlerTests
         _cooldownService.Evaluate(message.PatientId, Severity.Critical, Arg.Any<DateTime>())
             .Returns(new CooldownCheckResult(IsSuppressed: true, RemainingCooldown: remaining));
 
-        await _handler.Handle(
-            message,
-            _patientCareplanStore,
-            _policyResolver,
-            _cooldownService,
-            _decisionAuditStore,
-            _messageBus,
-            _logger
-        );
+        await _handler.Handle(message, _messageBus);
 
         await _messageBus.DidNotReceive().PublishAsync(Arg.Any<PatientAlertRequested>());
         await _messageBus.DidNotReceive().PublishAsync(Arg.Any<HospitalAlertRequested>());
@@ -142,15 +127,7 @@ public class BatchReceivedHandlerTests
         _policy.Evaluate(Arg.Any<BatchEvaluationContext>())
             .Returns(MonitoringTestDataFactory.CreatePolicyResult(message, Careplan.None, null, false, false));
 
-        await _handler.Handle(
-            message,
-            _patientCareplanStore,
-            _policyResolver,
-            _cooldownService,
-            _decisionAuditStore,
-            _messageBus,
-            _logger
-        );
+        await _handler.Handle(message, _messageBus);
 
         _cooldownService
             .DidNotReceive()
