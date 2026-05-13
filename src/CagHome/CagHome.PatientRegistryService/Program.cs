@@ -1,3 +1,4 @@
+using CagHome.Contracts;
 using CagHome.PatientRegistryService.Infrastructure;
 using Wolverine;
 using Wolverine.ErrorHandling;
@@ -17,6 +18,13 @@ builder.UseWolverine(options =>
     options.Policies.OnAnyException().MoveToErrorQueue();
 
     options.ListenToRabbitQueue("patient-registry.patient-status-update");
+    options.ListenToRabbitQueue("patient-registry.all-patient-statuses-requested");
+
+    options.PublishMessage<AllPatientStatuses>().ToRabbitQueue("ingestion.all-patient-statuses");
+
+    options
+        .PublishMessage<PatientStatusUpdated>()
+        .ToRabbitQueue("ingestion.patient-status-updated");
 });
 
 builder.AddMongoDBClient(connectionName: "patient-registry");

@@ -6,10 +6,11 @@ using CagHome.IngestionService.Domain.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
+using Spectre.Console;
 
 namespace CagHome.IngestionService.Infrastructure
 {
-    public class MqttConsumerService : IHostedService, IDisposable
+    public class MqttConsumerService : BackgroundService, IDisposable
     {
         private readonly ILogger<MqttConsumerService> _logger;
         private readonly IMqttClient _mqttClient;
@@ -19,10 +20,12 @@ namespace CagHome.IngestionService.Infrastructure
         private readonly CancellationTokenSource _reconnectCts;
         private Task? _reconnectTask;
         private readonly IIngestionService _ingestionService;
+        private readonly PatientCacheWarmupService _warmup;
 
         public MqttConsumerService(
             ILogger<MqttConsumerService> logger,
-            IIngestionService ingestionService
+            IIngestionService ingestionService,
+            PatientCacheWarmupService warmup
         )
         {
             _ingestionService = ingestionService;
@@ -45,10 +48,12 @@ namespace CagHome.IngestionService.Infrastructure
 
             var mqttFactory = new MqttClientFactory();
             _mqttClient = mqttFactory.CreateMqttClient();
+            _warmup = warmup;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            await _warmup.WhenReady; // Wait for cache warmup to be complete before starting.
             _logger.LogInformation("Starting MQTT Consumer: {ClientId}", _clientId);
 
             // Setup event handlers

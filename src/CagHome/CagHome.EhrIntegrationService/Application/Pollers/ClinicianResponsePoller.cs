@@ -16,7 +16,7 @@ public class ClinicianResponsePoller(
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("Clinician response poller started");
+        logger.LogDebug("Clinician response poller started");
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -60,7 +60,7 @@ public class ClinicianResponsePoller(
                     response.ResponseId
                 )
             );
-            logger.LogInformation(
+            logger.LogDebug(
                 $"Received clinician response {response.ResponseId}"
                     + $" for alert {response.AlertId} and patient {response.PatientId}: {response.Message}"
             );

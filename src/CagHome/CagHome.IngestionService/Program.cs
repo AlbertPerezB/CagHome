@@ -17,6 +17,8 @@ using Wolverine.RabbitMQ;
 var builder = Host.CreateApplicationBuilder(args);
 
 //Infrastructure
+builder.Services.AddSingleton<PatientCacheWarmupService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<PatientCacheWarmupService>());
 builder.Services.AddHostedService<MqttConsumerService>();
 builder.Services.AddSingleton<IJsonSchemaRegistry, JsonSchemaRegistry>();
 builder.Services.AddScoped<PatientStatusUpdatedConsumer>();
@@ -84,7 +86,12 @@ builder.Services.AddWolverine(options =>
 
     options.Policies.DisableConventionalLocalRouting();
     options.PublishMessage<BatchReceived>().ToRabbitQueue("monitoring.batch-received");
+    options
+        .PublishMessage<AllPatientStatusesRequested>()
+        .ToRabbitQueue("patient-registry.all-patient-statuses-requested");
+
     options.ListenToRabbitQueue("ingestion.patient-status-updated");
+    options.ListenToRabbitQueue("ingestion.all-patient-statuses");
 });
 
 builder
