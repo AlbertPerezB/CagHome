@@ -2,7 +2,7 @@
 
 namespace CagHome.NotificationService.Infrastructure;
 
-public class MqttConnectionService : IHostedService, IAsyncDisposable
+public class MqttConnectionService : BackgroundService, IAsyncDisposable
 {
     private readonly IMqttClient _client;
     private readonly MqttClientOptions _options;
@@ -35,7 +35,7 @@ public class MqttConnectionService : IHostedService, IAsyncDisposable
             try
             {
                 await _client.ConnectAsync(_options);
-                _logger.LogInformation("MQTT reconnected");
+                _logger.LogDebug("MQTT reconnected");
             }
             catch (Exception ex)
             {
@@ -44,11 +44,11 @@ public class MqttConnectionService : IHostedService, IAsyncDisposable
         };
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Connecting to MQTT broker...");
+        _logger.LogDebug("Connecting to MQTT broker...");
         await _client.ConnectAsync(_options, cancellationToken);
-        _logger.LogInformation("MQTT connected");
+        _logger.LogDebug("MQTT connected");
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ public class MqttConnectionService : IHostedService, IAsyncDisposable
         if (_client.IsConnected)
         {
             await _client.DisconnectAsync();
-            _logger.LogInformation("MQTT disconnected cleanly");
+            _logger.LogDebug("MQTT disconnected cleanly");
         }
     }
 

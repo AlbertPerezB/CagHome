@@ -13,7 +13,7 @@ public class DeserializationHandler(ILogger<DeserializationHandler> logger) : In
 
     protected override Task ProcessAsync(IngestionContext context)
     {
-        logger.LogInformation("Parsing json");
+        logger.LogDebug("Parsing json");
         try
         {
             if (context.Json != null)

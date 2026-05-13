@@ -17,6 +17,8 @@ using Wolverine.RabbitMQ;
 var builder = Host.CreateApplicationBuilder(args);
 
 //Infrastructure
+builder.Services.AddSingleton<PatientCacheWarmupService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<PatientCacheWarmupService>());
 builder.Services.AddHostedService<MqttConsumerService>();
 builder.Services.AddSingleton<IJsonSchemaRegistry, JsonSchemaRegistry>();
 builder.Services.AddScoped<PatientStatusUpdatedConsumer>();
@@ -29,7 +31,7 @@ builder.Services.AddScoped<BatchValidationHandler>();
 builder.Services.AddScoped<TopicValidationHandler>();
 builder.Services.AddScoped<MeasurementValidationHandler>();
 builder.Services.AddScoped<PublishBatchHandler>();
-builder.Services.AddScoped<ErrorPublishingHandler>();
+builder.Services.AddScoped<ErrorHandler>();
 builder.Services.AddScoped<BatchMappingHandler>();
 builder.Services.AddScoped<DeserializationHandler>();
 
@@ -60,7 +62,7 @@ builder.Services.AddScoped(sp =>
     var batch = sp.GetRequiredService<BatchValidationHandler>();
     var measurement = sp.GetRequiredService<MeasurementValidationHandler>();
     var publish = sp.GetRequiredService<PublishBatchHandler>();
-    var errors = sp.GetRequiredService<ErrorPublishingHandler>();
+    var errors = sp.GetRequiredService<ErrorHandler>();
 
     return IngestionPipelineBuilder.Build(
         structural,
@@ -84,7 +86,12 @@ builder.Services.AddWolverine(options =>
 
     options.Policies.DisableConventionalLocalRouting();
     options.PublishMessage<BatchReceived>().ToRabbitQueue("monitoring.batch-received");
+    options
+        .PublishMessage<AllPatientStatusesRequested>()
+        .ToRabbitQueue("patient-registry.all-patient-statuses-requested");
+
     options.ListenToRabbitQueue("ingestion.patient-status-updated");
+    options.ListenToRabbitQueue("ingestion.all-patient-statuses");
 });
 
 builder

@@ -27,4 +27,9 @@ internal class PatientRegistryStore : IPatientRegistryStore
         );
         return result;
     }
+
+    public async Task<List<PatientRegistryEntry>> GetAllPatients()
+    {
+        return await _collection.Find(_ => true).ToListAsync();
+    }
 }

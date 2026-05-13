@@ -12,8 +12,8 @@ public static class IngestionPipelineBuilder
         TopicValidationHandler topicValidation,
         BatchValidationHandler batch,
         MeasurementValidationHandler measurement,
-        IIngestionHandler publish, //TODO: implement for real
-        IIngestionHandler errors //TODO: implement for real
+        PublishBatchHandler publish,
+        ErrorHandler errors
     )
     {
         jsonParser

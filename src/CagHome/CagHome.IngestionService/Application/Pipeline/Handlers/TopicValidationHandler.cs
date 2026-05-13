@@ -7,7 +7,7 @@ public class TopicValidationHandler(ILogger<TopicValidationHandler> logger) : In
 {
     protected override Task ProcessAsync(IngestionContext context)
     {
-        logger.LogInformation("Starting topic validation");
+        logger.LogDebug("Starting topic validation");
         var topic = context.RawBatch.Topic;
         var batch = context.Batch;
         if (!string.IsNullOrWhiteSpace(topic))

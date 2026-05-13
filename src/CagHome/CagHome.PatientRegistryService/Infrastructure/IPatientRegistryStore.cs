@@ -6,5 +6,7 @@ namespace CagHome.PatientRegistryService.Infrastructure
     public interface IPatientRegistryStore
     {
         Task<UpdateResult> UpdatePatientData(PatientRegistryEntry entry);
+
+        Task<List<PatientRegistryEntry>> GetAllPatients();
     }
 }

@@ -16,7 +16,7 @@ public class PatientRegistrationPoller(
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("Patient registration poller started");
+        logger.LogDebug("Patient registration poller started");
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -69,7 +69,7 @@ public class PatientRegistrationPoller(
                 )
             );
 
-            logger.LogDebug(
+            logger.LogInformation(
                 "Published PatientRegistered: PatientId={PatientId}, Careplan={Careplan}, Status={Status}",
                 patient.Careplan,
                 patient.PatientId,
