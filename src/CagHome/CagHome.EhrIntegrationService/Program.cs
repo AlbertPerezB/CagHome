@@ -3,6 +3,7 @@ using CagHome.Contracts.Enums;
 using CagHome.EhrIntegrationService.Application.Pollers;
 using CagHome.EhrIntegrationService.Infrastructure;
 using Wolverine;
+using Wolverine.ErrorHandling;
 using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -41,6 +42,8 @@ builder.Services.AddWolverine(options =>
         .ToRabbitQueue("patient-registry.patient-status-update");
 
     options.PublishMessage<CareplanUpdateRequested>().ToRabbitQueue("monitoring.careplan-update");
+
+    options.Policies.OnAnyException().MoveToErrorQueue();
 });
 
 builder

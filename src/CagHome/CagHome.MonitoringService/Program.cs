@@ -9,6 +9,9 @@ using Wolverine.RabbitMQ;
 var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
+builder.AddKeyedMongoDBClient(name: "monitoring-audit");
+builder.AddKeyedMongoDBClient(name: "monitoring-patient-careplans");
+
 builder.UseWolverine(options =>
 {
     options
@@ -24,9 +27,6 @@ builder.UseWolverine(options =>
     options.PublishMessage<PatientAlertRequested>().ToRabbitQueue("notification.patient-alert");
     options.PublishMessage<HospitalAlertRequested>().ToRabbitQueue("notification.hospital-alert");
 });
-
-builder.AddKeyedMongoDBClient(name: "monitoring-audit");
-builder.AddKeyedMongoDBClient(name: "monitoring-patientcareplans");
 
 builder
     .Services.AddOpenTelemetry()

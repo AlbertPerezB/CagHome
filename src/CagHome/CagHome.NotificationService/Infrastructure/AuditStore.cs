@@ -10,8 +10,8 @@ internal class AuditStore : IAuditStore
 
     public AuditStore(IMongoClient mongoClient)
     {
-        var database = mongoClient.GetDatabase("NotificationService");
-        _collection = database.GetCollection<AuditEntry>("AuditEntries");
+        var database = mongoClient.GetDatabase("notification-audit");
+        _collection = database.GetCollection<AuditEntry>("NotificationAuditEntries");
     }
 
     public async Task RecordAuditEntry(AuditEntry entry)

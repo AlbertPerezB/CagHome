@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CagHome.AppHost\CagHome.AppHost.csproj" />
+    <ProjectReference Include="..\..\CagHome.Contracts\CagHome.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

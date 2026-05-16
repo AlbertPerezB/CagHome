@@ -6,6 +6,7 @@ public class PatientCacheWarmupService : BackgroundService
     private readonly IMessageBus _messageBus;
     private readonly TaskCompletionSource _ready = new();
     private readonly ILogger<PatientCacheWarmupService> _logger;
+    private readonly int _maxRetries = 5;
 
     public Task WhenReady => _ready.Task;
 
@@ -22,23 +23,37 @@ public class PatientCacheWarmupService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // Give Wolverine time to start — it's also a hosted service
-        await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
-
-        _logger.LogDebug("Cache warm-up: requesting all patient statuses");
-        await _messageBus.PublishAsync(new AllPatientStatusesRequested());
-
-        var timeout = Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
-        var completed = await Task.WhenAny(WhenReady, timeout);
-
-        if (completed == timeout)
         {
-            _logger.LogWarning(
-                "Cache warm-up timed out after 30 seconds — starting with empty cache"
-            );
-            _ready.TrySetResult();
-        }
+            for (int i = 0; i < _maxRetries; i++)
+            {
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
+                    _logger.LogInformation(
+                        "Cache warm-up: requesting all patient statuses (attempt {Attempt})",
+                        i + 1
+                    );
+                    await _messageBus.PublishAsync(new AllPatientStatusesRequested());
+                    break;
+                }
+                catch (InvalidOperationException) when (i < _maxRetries - 1)
+                {
+                    _logger.LogWarning("RabbitMQ not ready yet, retrying...");
+                }
+            }
 
-        _logger.LogDebug("Cache warm-up complete");
+            var timeout = Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+            var completed = await Task.WhenAny(WhenReady, timeout);
+
+            if (completed == timeout)
+            {
+                _logger.LogWarning(
+                    "Cache warm-up timed out after 30 seconds — starting with empty cache"
+                );
+                _ready.TrySetResult();
+            }
+
+            _logger.LogInformation("Cache warm-up complete");
+        }
     }
 }

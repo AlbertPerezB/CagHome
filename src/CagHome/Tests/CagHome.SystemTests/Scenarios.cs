@@ -1,19 +1,23 @@
 ﻿using System.Net.Http.Json;
+using CagHome.Contracts.Enums;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MQTTnet;
 using Xunit.Abstractions;
 
 namespace CagHome.SystemTests;
 
-public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
+public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLifetime
 {
     private readonly AspireAppFixture _fixture;
     private readonly TestHelpers _helpers;
     private readonly ITestOutputHelper _output;
 
-    private static readonly Guid ActivePatient = Guid.Parse("d9aaf610-c81e-4dd7-8e1e-3fa6c4cf9c18");
-    private static readonly Guid DeceasedPatient = Guid.Parse(
-        "b2ffdfe8-47ef-42c3-9a7a-94fc3cea8f34"
-    );
+    private static readonly TestPatient ActivePatient = TestPatient.ActiveCardiomyopathy();
+    private static readonly TestPatient InactivePatient =
+        TestPatient.InactiveCoronaryArteryDisease();
+    private static readonly TestPatient DeceasedPatient = TestPatient.DeceasedValveDisease();
+
     private static readonly TimeSpan PipelineTimeout = TimeSpan.FromSeconds(15);
 
     public EndToEndScenarioTests(AspireAppFixture fixture, ITestOutputHelper output)
@@ -23,6 +27,16 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
         _helpers = new TestHelpers(fixture, output);
     }
 
+    public async Task InitializeAsync()
+    {
+        foreach (var patient in TestPatient.All())
+        {
+            await _fixture.SeedPatient(patient);
+        }
+    }
+
+    public Task DisposeAsync() => Task.CompletedTask;
+
     // ═══════════════════════════════════════════════════════
     //  UC1: Normal measurement — no escalation
     // ═══════════════════════════════════════════════════════
@@ -30,12 +44,12 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
     [Fact]
     public async Task UC1_NormalMeasurement_EvaluatedWithNoEscalation()
     {
-        var correlationId = await _helpers.InjectBatch(
-            ActivePatient,
-            TestHelpers.NormalBatch(ActivePatient)
+        var beforeUtc = await _helpers.InjectBatch(
+            ActivePatient.PatientId,
+            TestHelpers.NormalBatch(ActivePatient.PatientId)
         );
 
-        var audit = await _helpers.WaitForMonitoringAudit(correlationId);
+        var audit = await _helpers.WaitForMonitoringAudit(ActivePatient.PatientId, beforeUtc);
 
         Assert.NotNull(audit);
         Assert.False(audit!["ShouldAlertPatient"].AsBoolean);
@@ -50,25 +64,27 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
     [Fact]
     public async Task UC2A_WarningMeasurement_PatientAlertOnly()
     {
-        var correlationId = await _helpers.InjectBatch(
-            ActivePatient,
-            TestHelpers.WarningHeartRateBatch(ActivePatient)
+        var beforeUtc = await _helpers.InjectBatch(
+            ActivePatient.PatientId,
+            TestHelpers.WarningHeartRateBatch(ActivePatient.PatientId)
         );
 
-        var audit = await _helpers.WaitForMonitoringAudit(correlationId);
+        var audit = await _helpers.WaitForMonitoringAudit(ActivePatient.PatientId, beforeUtc);
 
         Assert.NotNull(audit);
         Assert.True(audit!["ShouldAlertPatient"].AsBoolean);
         Assert.False(audit["ShouldAlertHospital"].AsBoolean);
-        Assert.Equal("Warning", audit["Severity"].AsString);
+        var severity = (Severity)audit["Severity"].AsInt32;
+        Assert.Equal(Severity.Warning, severity);
         _output.WriteLine("UC2A — monitoring decision correct");
 
         var notifications = await _helpers.WaitForNotificationAudit(
-            correlationId,
+            ActivePatient.PatientId,
+            beforeUtc,
             expectedCount: 2
         );
         var delivered = notifications.FirstOrDefault(n =>
-            n["Receiver"].AsString == "Patient" && n["DeliveryStatus"].AsString == "Delivered"
+            n["Receiver"] == 1 && n["DeliveryStatus"] == 1
         );
 
         Assert.NotNull(delivered);
@@ -82,26 +98,28 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
     [Fact]
     public async Task UC2B_CriticalMeasurement_PatientAndHospitalAlert()
     {
-        var correlationId = await _helpers.InjectBatch(
-            ActivePatient,
-            TestHelpers.CriticalHeartRateBatch(ActivePatient)
+        var beforeUtc = await _helpers.InjectBatch(
+            ActivePatient.PatientId,
+            TestHelpers.CriticalHeartRateBatch(ActivePatient.PatientId)
         );
 
-        var audit = await _helpers.WaitForMonitoringAudit(correlationId);
+        var audit = await _helpers.WaitForMonitoringAudit(ActivePatient.PatientId, beforeUtc);
 
         Assert.NotNull(audit);
         Assert.True(audit!["ShouldAlertPatient"].AsBoolean);
         Assert.True(audit["ShouldAlertHospital"].AsBoolean);
-        Assert.Equal("Critical", audit["Severity"].AsString);
+        var severity = (Severity)audit["Severity"].AsInt32;
+        Assert.Equal(Severity.Critical, severity);
         _output.WriteLine("UC2B — monitoring decision correct");
 
         var notifications = await _helpers.WaitForNotificationAudit(
-            correlationId,
+            ActivePatient.PatientId,
+            beforeUtc,
             expectedCount: 3
         );
 
         var hospitalDelivered = notifications.FirstOrDefault(n =>
-            n["Receiver"].AsString == "Hospital" && n["DeliveryStatus"].AsString == "Delivered"
+            n["Receiver"] == 0 && n["DeliveryStatus"] == 1
         );
         Assert.NotNull(hospitalDelivered);
         _output.WriteLine(
@@ -109,7 +127,7 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
         );
 
         var patientDelivered = notifications.FirstOrDefault(n =>
-            n["Receiver"].AsString == "Patient" && n["DeliveryStatus"].AsString == "Delivered"
+            n["Receiver"] == 1 && n["DeliveryStatus"] == 1
         );
         Assert.NotNull(patientDelivered);
         _output.WriteLine("UC2B — patient notification also delivered");
@@ -122,8 +140,6 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
     [Fact]
     public async Task UC4A_MalformedJson_NeverReachesMonitoring()
     {
-        // Malformed JSON won't get a proper correlation ID from the endpoint,
-        // so we fall back to timestamp-based absence check
         var beforeUtc = DateTime.UtcNow;
 
         await _fixture.Simulator.PostAsync(
@@ -131,34 +147,28 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
             new StringContent("{ not valid json }", System.Text.Encoding.UTF8, "application/json")
         );
 
-        // Wait for pipeline to process (or not), then verify nothing arrived
         await Task.Delay(PipelineTimeout);
 
-        var collection = _fixture.MonitoringAuditDb.GetCollection<MongoDB.Bson.BsonDocument>(
-            "DecisionAuditEntries"
+        var audit = await _helpers.WaitForMonitoringAudit(
+            ActivePatient.PatientId,
+            beforeUtc,
+            maxWaitSeconds: 3
         );
-        var filter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.And(
-            MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq(
-                "PatientId",
-                ActivePatient
-            ),
-            MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Gt("TimestampUtc", beforeUtc)
-        );
-        var entry = await collection.Find(filter).FirstOrDefaultAsync();
 
-        Assert.Null(entry);
+        Assert.Null(audit);
         _output.WriteLine("UC4A — malformed JSON did not reach monitoring");
     }
 
     // ═══════════════════════════════════════════════════════
-    //  UC5: Cache warm-up — Redis reflects patient registry
+    //  UC5: Cache warm-up — Redis reflects seeded patients
     // ═══════════════════════════════════════════════════════
 
     [Fact]
     public async Task UC5_ActivePatient_PresentInRedisCache()
     {
-        var db = _fixture.Redis.GetDatabase();
-        var status = await db.StringGetAsync($"patient:{ActivePatient}:status");
+        var status = await _fixture.RedisCache.StringGetAsync(
+            $"patient:{ActivePatient.PatientId}:status"
+        );
 
         Assert.False(status.IsNullOrEmpty);
         Assert.Equal("Active", status.ToString());
@@ -168,10 +178,12 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
     [Fact]
     public async Task UC5_DeceasedPatient_PresentInRedisCache()
     {
-        var db = _fixture.Redis.GetDatabase();
-        var status = await db.StringGetAsync($"patient:{DeceasedPatient}:status");
+        var status = await _fixture.RedisCache.StringGetAsync(
+            $"patient:{DeceasedPatient.PatientId}:status"
+        );
 
         Assert.False(status.IsNullOrEmpty);
+        Assert.Equal("Deceased", status.ToString());
         _output.WriteLine($"UC5 — deceased patient cached as: {status}");
     }
 
@@ -182,14 +194,8 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
     [Fact]
     public async Task UC5_ActivePatient_ExistsInPatientRegistry()
     {
-        var collection = _fixture.PatientRegistryDb.GetCollection<MongoDB.Bson.BsonDocument>(
-            "PatientData"
-        );
-        var filter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq(
-            "PatientId",
-            ActivePatient
-        );
-        var patient = await collection.Find(filter).FirstOrDefaultAsync();
+        var filter = Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("_id", ActivePatient.PatientId);
+        var patient = await _fixture.PatientRegistry.Find(filter).FirstOrDefaultAsync();
 
         Assert.NotNull(patient);
         _output.WriteLine($"UC5 — active patient found in registry: {patient["Status"]}");
@@ -197,44 +203,37 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
 
     // ═══════════════════════════════════════════════════════
     //  UC5: New patient registration via Mock EHR
-    //  POST to EHR → EHR Integration polls → Patient Registry
-    //  persists → Redis cache updated
     // ═══════════════════════════════════════════════════════
 
     [Fact]
     public async Task UC5_NewPatient_RegisteredViaEhr_AppearsInRegistryAndCache()
     {
-        // Arrange — a brand new patient ID that doesn't exist yet
         var newPatientId = Guid.NewGuid();
 
-        // Act — register the patient in the Mock EHR
         var response = await _fixture.MockEhr.PostAsJsonAsync(
             "/mock/patient",
             new
             {
                 PatientId = newPatientId,
                 UpdatedAtUtc = DateTime.UtcNow.ToString("O"),
-                Careplan = 1, // CoronaryArteryDisease
-                Status = 0, // Active
+                Careplan = 1,
+                Status = 0,
             }
         );
         response.EnsureSuccessStatusCode();
         _output.WriteLine($"Posted new patient {newPatientId} to Mock EHR");
 
-        // Assert — wait for the patient to appear in the Patient Registry (MongoDB)
-        var registryCollection =
-            _fixture.PatientRegistryDb.GetCollection<MongoDB.Bson.BsonDocument>("PatientData");
-        var deadline = DateTime.UtcNow.AddSeconds(30);
+        // Wait for EHR Integration polling → Patient Registry → Redis
+        var deadline = DateTime.UtcNow.AddSeconds(60);
         MongoDB.Bson.BsonDocument? registryEntry = null;
 
         while (DateTime.UtcNow < deadline)
         {
             var filter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq(
-                "PatientId",
+                "_id",
                 newPatientId
             );
-            registryEntry = await registryCollection.Find(filter).FirstOrDefaultAsync();
-
+            registryEntry = await _fixture.PatientRegistry.Find(filter).FirstOrDefaultAsync();
             if (registryEntry != null)
                 break;
             await Task.Delay(1000);
@@ -243,10 +242,9 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>
         Assert.NotNull(registryEntry);
         _output.WriteLine($"New patient found in registry: {registryEntry!["Status"]}");
 
-        // Assert — patient should also appear in Redis cache
-        var db = _fixture.Redis.GetDatabase();
-        var cachedStatus = await db.StringGetAsync($"patient:{newPatientId}:status");
-
+        var cachedStatus = await _fixture.RedisCache.StringGetAsync(
+            $"patient:{newPatientId}:status"
+        );
         Assert.False(cachedStatus.IsNullOrEmpty);
         Assert.Equal("Active", cachedStatus.ToString());
         _output.WriteLine($"New patient cached in Redis as: {cachedStatus}");

@@ -57,7 +57,6 @@ public sealed class BiometricPublisherService(
 
                 await EnsureConnectedAsync(options, stoppingToken);
 
-                // Sample biometrics and accumulate for batch publishing
                 SampleAndAccumulateBiometrics(options, profile);
 
                 // Check if it's time to publish accumulated batch

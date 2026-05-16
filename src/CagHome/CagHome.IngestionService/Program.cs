@@ -12,6 +12,7 @@ using CagHome.IngestionService.Infrastructure;
 using CagHome.IngestionService.Infrastructure.Cache;
 using CagHome.IngestionService.Infrastructure.Schemas;
 using Wolverine;
+using Wolverine.ErrorHandling;
 using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -94,6 +95,7 @@ builder.Services.AddWolverine(options =>
 
     options.ListenToRabbitQueue("ingestion.patient-status-updated");
     options.ListenToRabbitQueue("ingestion.all-patient-statuses");
+    options.Policies.OnAnyException().MoveToErrorQueue();
 });
 
 builder

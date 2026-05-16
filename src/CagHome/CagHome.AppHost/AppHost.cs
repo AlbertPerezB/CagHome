@@ -4,7 +4,7 @@ var mongo = builder.AddMongoDB("mongo").WithLifetime(ContainerLifetime.Persisten
 var patientregistryDb = mongo.AddDatabase("patient-registry");
 var notificationAuditDb = mongo.AddDatabase("notification-audit");
 var monitoringAuditDb = mongo.AddDatabase("monitoring-audit");
-var monitoringPatientCareplansDb = mongo.AddDatabase("monitoring-patientcareplans");
+var monitoringPatientCareplansDb = mongo.AddDatabase("monitoring-patient-careplans");
 
 var redis = builder.AddRedis("patient-cache");
 

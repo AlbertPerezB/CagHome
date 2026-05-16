@@ -9,7 +9,7 @@ internal class PatientRegistryStore : IPatientRegistryStore
 
     public PatientRegistryStore(IMongoClient mongoClient)
     {
-        var database = mongoClient.GetDatabase("PatientRegistry");
+        var database = mongoClient.GetDatabase("patient-registry");
         _collection = database.GetCollection<PatientRegistryEntry>("PatientData");
     }
 

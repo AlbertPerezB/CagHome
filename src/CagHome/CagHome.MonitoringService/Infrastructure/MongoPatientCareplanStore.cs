@@ -1,6 +1,6 @@
-using MongoDB.Driver;
 using CagHome.Contracts.Enums;
 using CagHome.MonitoringService.Domain;
+using MongoDB.Driver;
 
 namespace CagHome.MonitoringService.Infrastructure;
 
@@ -8,9 +8,11 @@ public sealed class MongoPatientCareplanStore : IPatientCareplanStore
 {
     private readonly IMongoCollection<PatientCareplanState> _collection;
 
-    public MongoPatientCareplanStore([FromKeyedServices("monitoring-patientcareplans")] IMongoClient mongoClient)
+    public MongoPatientCareplanStore(
+        [FromKeyedServices("monitoring-patient-careplans")] IMongoClient mongoClient
+    )
     {
-        var database = mongoClient.GetDatabase("monitoring-patientcareplans");
+        var database = mongoClient.GetDatabase("monitoring-patient-careplans");
         _collection = database.GetCollection<PatientCareplanState>("PatientCareplans");
     }
 
