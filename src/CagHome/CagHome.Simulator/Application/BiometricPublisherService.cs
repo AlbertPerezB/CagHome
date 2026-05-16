@@ -28,6 +28,7 @@ public sealed class BiometricPublisherService(
     private readonly FrozenDictionary<string, ISimulationProfile> _profilesByName =
         profiles.ToFrozenDictionary(profile => profile.Name, StringComparer.OrdinalIgnoreCase);
     private IMqttClient? _mqttClient;
+    private bool _notificationTopicSubscribed;
     private DateTime _lastBatchPublishTime = DateTime.UtcNow;
 
     // Make sure a default profile called "normal" is registered
@@ -47,6 +48,7 @@ public sealed class BiometricPublisherService(
     {
         var factory = new MqttClientFactory();
         _mqttClient = factory.CreateMqttClient();
+        _mqttClient.ApplicationMessageReceivedAsync += OnMessageReceivedAsync;
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -160,6 +162,23 @@ public sealed class BiometricPublisherService(
             options.BrokerPort
         );
         await _mqttClient.ConnectAsync(mqttOptions, cancellationToken);
+
+        if (!_notificationTopicSubscribed)
+        {
+            var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+                .WithTopicFilter("patients/+/notifications")
+                .Build();
+
+            await _mqttClient.SubscribeAsync(subscribeOptions, cancellationToken);
+            _notificationTopicSubscribed = true;
+            logger.LogInformation("Simulator subscribed to topic patients/+/notifications");
+        }
+    }
+
+    private Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs args)
+    {
+        logger.LogInformation("Yes hello, patient received the alert");
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -289,6 +308,11 @@ public sealed class BiometricPublisherService(
     /// <param name="cancellationToken">A token used to cancel the stop operation.</param>
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
+        if (_mqttClient is not null)
+        {
+            _mqttClient.ApplicationMessageReceivedAsync -= OnMessageReceivedAsync;
+        }
+
         if (_mqttClient is { IsConnected: true })
         {
             await _mqttClient.DisconnectAsync(cancellationToken: cancellationToken);
