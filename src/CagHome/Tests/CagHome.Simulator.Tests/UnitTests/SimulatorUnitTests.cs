@@ -1,4 +1,5 @@
 using CagHome.Simulator;
+using CagHome.Simulator.Application;
 using CagHome.Simulator.Domain.Models;
 using CagHome.Simulator.Domain.Profiles;
 using Xunit;
@@ -21,10 +22,7 @@ public class SimulatorUnitTests
             PublishBatchIntervalSeconds = 1,
         };
 
-        var validated = SimulatorTestHelpers.InvokePrivateStatic<SimulatorOptions>(
-            "GetValidatedOptions",
-            source
-        );
+        var validated = BiometricPublisherService.GetValidatedOptions(source);
 
         Assert.Equal("exercise", validated.Profile);
         Assert.Equal(10, validated.DeviceCount);
@@ -37,11 +35,7 @@ public class SimulatorUnitTests
     {
         var service = SimulatorTestHelpers.CreateService();
 
-        var resolved = SimulatorTestHelpers.InvokePrivateInstance<ISimulationProfile>(
-            service,
-            "ResolveProfile",
-            "this-does-not-exist"
-        );
+        var resolved = service.ResolveProfile("this-does-not-exist");
 
         Assert.Equal(SimulationProfiles.Normal, resolved.Name);
     }
@@ -58,10 +52,7 @@ public class SimulatorUnitTests
             TemperatureC: 37.2
         );
 
-        var measurements = SimulatorTestHelpers.InvokePrivateStatic<MeasurementPayload[]>(
-            "CreateMeasurements",
-            telemetry
-        );
+        var measurements = BiometricPublisherService.CreateMeasurements(telemetry);
 
         Assert.Equal(3, measurements.Length);
         Assert.Equal(

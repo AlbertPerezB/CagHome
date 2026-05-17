@@ -3,7 +3,7 @@ using CagHome.MonitoringService.Application.Decision;
 
 namespace CagHome.MonitoringService.Tests.Application.Decision;
 
-public class InMemoryCooldownServiceTests
+public class CooldownServiceTests
 {
     [Fact]
     public void Evaluate_WarningWithinWindow_SuppressesSecondAlert()

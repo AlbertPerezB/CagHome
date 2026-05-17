@@ -92,7 +92,7 @@ public sealed class BiometricPublisherService(
     /// Returns configured simulator options after applying value normalization and guardrails.
     /// </summary>
     /// <returns>A validated <see cref="SimulatorOptions"/> instance.</returns>
-    private static SimulatorOptions GetValidatedOptions(SimulatorOptions source)
+    public static SimulatorOptions GetValidatedOptions(SimulatorOptions source)
     {
         var profile = string.IsNullOrWhiteSpace(source.Profile)
             ? SimulationProfiles.Normal
@@ -119,7 +119,7 @@ public sealed class BiometricPublisherService(
     /// </summary>
     /// <param name="profileName">Configured profile name.</param>
     /// <returns>The resolved profile strategy, falling back to normal when unknown.</returns>
-    private ISimulationProfile ResolveProfile(string profileName)
+    public ISimulationProfile ResolveProfile(string profileName)
     {
         if (_profilesByName.TryGetValue(profileName, out var profile))
         {
@@ -275,7 +275,7 @@ public sealed class BiometricPublisherService(
         return patientId;
     }
 
-    private static MeasurementPayload[] CreateMeasurements(TelemetrySample telemetry)
+    public static MeasurementPayload[] CreateMeasurements(TelemetrySample telemetry)
     {
         return
         [

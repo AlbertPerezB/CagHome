@@ -36,42 +36,7 @@ internal static class SimulatorTestHelpers
         );
     }
 
-    internal static T InvokePrivateStatic<T>(string methodName, params object[] args)
-    {
-        var method =
-            typeof(BiometricPublisherService).GetMethod(
-                methodName,
-                BindingFlags.NonPublic | BindingFlags.Static
-            )
-            ?? throw new InvalidOperationException(
-                $"Expected static method '{methodName}' was not found."
-            );
-
-        return (T)(
-            method.Invoke(null, args)
-            ?? throw new InvalidOperationException($"Method '{methodName}' returned null.")
-        );
-    }
-
-    internal static T InvokePrivateInstance<T>(
-        object instance,
-        string methodName,
-        params object[] args
-    )
-    {
-        var method =
-            instance.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance)
-            ?? throw new InvalidOperationException(
-                $"Expected instance method '{methodName}' was not found."
-            );
-
-        return (T)(
-            method.Invoke(instance, args)
-            ?? throw new InvalidOperationException($"Method '{methodName}' returned null.")
-        );
-    }
-
-    private sealed class TestOptionsMonitor(SimulatorOptions currentValue)
+    private class TestOptionsMonitor(SimulatorOptions currentValue)
         : IOptionsMonitor<SimulatorOptions>
     {
         public SimulatorOptions CurrentValue => currentValue;
