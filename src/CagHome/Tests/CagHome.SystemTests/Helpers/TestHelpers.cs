@@ -3,7 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit.Abstractions;
 
-namespace CagHome.SystemTests;
+namespace CagHome.SystemTests.Helpers;
 
 public class TestHelpers{
     private readonly AspireAppFixture _fixture;
@@ -35,6 +35,45 @@ public class TestHelpers{
         var responseBody = await response.Content.ReadFromJsonAsync<InjectResponse>();
         _output.WriteLine($"Injected batch for patient {patientId} with correlation id {responseBody!.CorrelationId}");
         return responseBody.CorrelationId;
+    }
+
+    public async Task PostClinicianResponse(
+        Guid alertId,
+        Guid patientId,
+        Guid hospitalId,
+        string message
+    )
+    {
+        var payload = new
+        {
+            AlertId = alertId,
+            CreatedAtUtc = DateTime.UtcNow,
+            HospitalId = hospitalId,
+            Message = message,
+            PatientId = patientId,
+            ResponseId = Guid.NewGuid(),
+        };
+
+        var responseMessage = await _fixture.MockEhr.PostAsJsonAsync(
+            "/mock/clinician-response",
+            payload
+        );
+        responseMessage.EnsureSuccessStatusCode();
+        _output.WriteLine($"Posted clinician response for alert {alertId}");
+    }
+
+    public async Task RegisterPatientInMockEHR(Guid patientId, int careplan, int status)
+    {
+        var payload = new
+        {
+            PatientId = patientId,
+            UpdatedAtUtc = DateTime.UtcNow.ToString("O"),
+            Careplan = careplan,
+            Status = status,
+        };
+        var responseMessage = await _fixture.MockEhr.PostAsJsonAsync("/mock/patient", payload);
+        responseMessage.EnsureSuccessStatusCode();
+        _output.WriteLine($"Registered patient {patientId} in mock EHR");
     }
 
     public async Task<BsonDocument?> WaitForMonitoringAudit(
@@ -189,6 +228,45 @@ public class TestHelpers{
                     type = "HeartRate",
                     value = 130.0,
                     unit = "Bpm",
+                    deviceReported = DateTime.UtcNow.AddMinutes(-1).ToString("O"),
+                    source = new
+                    {
+                        deviceId = "test-001",
+                        deviceManufacturer = "TestHarness",
+                        deviceModel = "v1",
+                    },
+                },
+                new
+                {
+                    measurementId = Guid.NewGuid().ToString(),
+                    type = "Spo2",
+                    value = 97.0,
+                    unit = "Percent",
+                    deviceReported = DateTime.UtcNow.AddMinutes(-1).ToString("O"),
+                    source = new
+                    {
+                        deviceId = "test-001",
+                        deviceManufacturer = "TestHarness",
+                        deviceModel = "v1",
+                    },
+                },
+            },
+        };
+
+    public static object MalformedBatch(Guid patientId) =>
+        new
+        {
+            schemaVersion = 1,
+            appVersion = "1.0.0",
+            patientId = patientId.ToString(),
+            measurements = new object[]
+            {
+                new
+                {
+                    measurementId = Guid.NewGuid().ToString(),
+                    type = "HeartRate",
+                    value = 130.0,
+                    unit = "ThisISNotAUnit",
                     deviceReported = DateTime.UtcNow.AddMinutes(-1).ToString("O"),
                     source = new
                     {
