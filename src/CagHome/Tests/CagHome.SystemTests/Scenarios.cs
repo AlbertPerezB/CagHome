@@ -2,7 +2,6 @@
 using CagHome.Contracts.Enums;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MQTTnet;
 using Xunit.Abstractions;
 
 namespace CagHome.SystemTests;
@@ -44,12 +43,12 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLife
     [Fact]
     public async Task UC1_NormalMeasurement_EvaluatedWithNoEscalation()
     {
-        var beforeUtc = await _helpers.InjectBatch(
+        var correlationId = await _helpers.InjectBatch(
             ActivePatient.PatientId,
             TestHelpers.NormalBatch(ActivePatient.PatientId)
         );
 
-        var audit = await _helpers.WaitForMonitoringAudit(ActivePatient.PatientId, beforeUtc);
+        var audit = await _helpers.WaitForMonitoringAudit(correlationId);
 
         Assert.NotNull(audit);
         Assert.False(audit!["ShouldAlertPatient"].AsBoolean);
@@ -64,12 +63,12 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLife
     [Fact]
     public async Task UC2A_WarningMeasurement_PatientAlertOnly()
     {
-        var beforeUtc = await _helpers.InjectBatch(
+        var correlationId = await _helpers.InjectBatch(
             ActivePatient.PatientId,
             TestHelpers.WarningHeartRateBatch(ActivePatient.PatientId)
         );
 
-        var audit = await _helpers.WaitForMonitoringAudit(ActivePatient.PatientId, beforeUtc);
+        var audit = await _helpers.WaitForMonitoringAudit(correlationId);
 
         Assert.NotNull(audit);
         Assert.True(audit!["ShouldAlertPatient"].AsBoolean);
@@ -79,8 +78,7 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLife
         _output.WriteLine("UC2A — monitoring decision correct");
 
         var notifications = await _helpers.WaitForNotificationAudit(
-            ActivePatient.PatientId,
-            beforeUtc,
+            correlationId,
             expectedCount: 2
         );
         var delivered = notifications.FirstOrDefault(n =>
@@ -98,12 +96,12 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLife
     [Fact]
     public async Task UC2B_CriticalMeasurement_PatientAndHospitalAlert()
     {
-        var beforeUtc = await _helpers.InjectBatch(
+        var correlationId = await _helpers.InjectBatch(
             ActivePatient.PatientId,
             TestHelpers.CriticalHeartRateBatch(ActivePatient.PatientId)
         );
 
-        var audit = await _helpers.WaitForMonitoringAudit(ActivePatient.PatientId, beforeUtc);
+        var audit = await _helpers.WaitForMonitoringAudit(correlationId);
 
         Assert.NotNull(audit);
         Assert.True(audit!["ShouldAlertPatient"].AsBoolean);
@@ -113,8 +111,7 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLife
         _output.WriteLine("UC2B — monitoring decision correct");
 
         var notifications = await _helpers.WaitForNotificationAudit(
-            ActivePatient.PatientId,
-            beforeUtc,
+            correlationId,
             expectedCount: 3
         );
 
@@ -140,23 +137,24 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLife
     [Fact]
     public async Task UC4A_MalformedJson_NeverReachesMonitoring()
     {
-        var beforeUtc = DateTime.UtcNow;
+        // Count audit entries before
+        var auditCountBefore = await _helpers.GetMonitoringAuditCount();
 
-        await _fixture.Simulator.PostAsync(
+        // Post malformed JSON and assert 400 Bad Request
+        var response = await _fixture.Simulator.PostAsync(
             "/simulator/inject",
             new StringContent("{ not valid json }", System.Text.Encoding.UTF8, "application/json")
         );
+        Assert.False(response.IsSuccessStatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         await Task.Delay(PipelineTimeout);
 
-        var audit = await _helpers.WaitForMonitoringAudit(
-            ActivePatient.PatientId,
-            beforeUtc,
-            maxWaitSeconds: 3
-        );
+        // Count audit entries after
+        var auditCountAfter = await _helpers.GetMonitoringAuditCount();
+        Assert.Equal(auditCountBefore, auditCountAfter);
 
-        Assert.Null(audit);
-        _output.WriteLine("UC4A — malformed JSON did not reach monitoring");
+        _output.WriteLine("UC4A — malformed JSON did not reach monitoring and returned 400");
     }
 
     // ═══════════════════════════════════════════════════════
@@ -194,7 +192,7 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLife
     [Fact]
     public async Task UC5_ActivePatient_ExistsInPatientRegistry()
     {
-        var filter = Builders<MongoDB.Bson.BsonDocument>.Filter.Eq("_id", ActivePatient.PatientId);
+        var filter = Builders<BsonDocument>.Filter.Eq("_id", ActivePatient.PatientId);
         var patient = await _fixture.PatientRegistry.Find(filter).FirstOrDefaultAsync();
 
         Assert.NotNull(patient);
@@ -225,11 +223,11 @@ public class EndToEndScenarioTests : IClassFixture<AspireAppFixture>, IAsyncLife
 
         // Wait for EHR Integration polling → Patient Registry → Redis
         var deadline = DateTime.UtcNow.AddSeconds(60);
-        MongoDB.Bson.BsonDocument? registryEntry = null;
+        BsonDocument? registryEntry = null;
 
         while (DateTime.UtcNow < deadline)
         {
-            var filter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Eq(
+            var filter = Builders<BsonDocument>.Filter.Eq(
                 "_id",
                 newPatientId
             );

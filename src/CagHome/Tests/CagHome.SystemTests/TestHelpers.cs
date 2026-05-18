@@ -5,8 +5,7 @@ using Xunit.Abstractions;
 
 namespace CagHome.SystemTests;
 
-public class TestHelpers
-{
+public class TestHelpers{
     private readonly AspireAppFixture _fixture;
     private readonly ITestOutputHelper _output;
 
@@ -17,24 +16,29 @@ public class TestHelpers
     }
 
     /// <summary>
-    /// Injects a batch via the simulator endpoint.
-    /// Returns the timestamp from just before injection (used to filter audit entries).
-    /// TODO: Return correlationId once MQTT trace propagation is implemented.
+    /// Returns the total count of monitoring audit entries.
     /// </summary>
-    public async Task<DateTime> InjectBatch(Guid patientId, object payload)
+    public async Task<long> GetMonitoringAuditCount()
     {
-        var beforeUtc = DateTime.UtcNow;
+        return await _fixture.MonitoringAudit.CountDocumentsAsync(FilterDefinition<BsonDocument>.Empty);
+    }
 
+    /// <summary>
+    /// Injects a batch via the simulator endpoint.
+    /// Returns the correlationId to use for filtering audit entries.
+    /// </summary>
+    public async Task<Guid> InjectBatch(Guid patientId, object payload)
+    {
         var response = await _fixture.Simulator.PostAsJsonAsync("/simulator/inject", payload);
         response.EnsureSuccessStatusCode();
 
-        _output.WriteLine($"Injected batch for patient {patientId}");
-        return beforeUtc;
+        var responseBody = await response.Content.ReadFromJsonAsync<InjectResponse>();
+        _output.WriteLine($"Injected batch for patient {patientId} with correlation id {responseBody!.CorrelationId}");
+        return responseBody.CorrelationId;
     }
 
     public async Task<BsonDocument?> WaitForMonitoringAudit(
-        Guid patientId,
-        DateTime afterUtc,
+        Guid correlationId,
         int maxWaitSeconds = 30
     )
     {
@@ -42,10 +46,7 @@ public class TestHelpers
 
         while (DateTime.UtcNow < deadline)
         {
-            var filter = Builders<BsonDocument>.Filter.And(
-                Builders<BsonDocument>.Filter.Eq("PatientId", patientId),
-                Builders<BsonDocument>.Filter.Gt("TimestampUtc", afterUtc)
-            );
+            var filter = Builders<BsonDocument>.Filter.Eq("CorrelationId", correlationId);
             var entry = await _fixture
                 .MonitoringAudit.Find(filter)
                 .SortByDescending(d => d["TimestampUtc"])
@@ -60,8 +61,7 @@ public class TestHelpers
     }
 
     public async Task<List<BsonDocument>> WaitForNotificationAudit(
-        Guid patientId,
-        DateTime afterUtc,
+        Guid correlationId,
         int expectedCount = 1,
         int maxWaitSeconds = 15
     )
@@ -70,10 +70,7 @@ public class TestHelpers
 
         while (DateTime.UtcNow < deadline)
         {
-            var filter = Builders<BsonDocument>.Filter.And(
-                Builders<BsonDocument>.Filter.Eq("PatientId", patientId),
-                Builders<BsonDocument>.Filter.Gt("Timestamp", afterUtc)
-            );
+            var filter = Builders<BsonDocument>.Filter.Eq("CorrelationId", correlationId);
             var entries = await _fixture.NotificationAudit.Find(filter).ToListAsync();
 
             if (entries.Count >= expectedCount)
@@ -217,3 +214,5 @@ public class TestHelpers
             },
         };
 }
+
+public record InjectResponse(Guid CorrelationId);
