@@ -1,14 +1,14 @@
 ﻿using System.Net.Http.Json;
 using Aspire.Hosting;
+using CagHome.SystemTests.TestClasses;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using StackExchange.Redis;
 
-namespace CagHome.SystemTests;
+namespace CagHome.SystemTests.Helpers;
 
 public sealed class AspireAppFixture : IAsyncLifetime
 {
@@ -50,6 +50,11 @@ public sealed class AspireAppFixture : IAsyncLifetime
         await CleanTestData();
 
         await WaitForSystemReady(ct);
+
+        foreach (var patient in TestPatient.All())
+        {
+            await SeedPatient(patient);
+        }
     }
 
     /// <summary>
