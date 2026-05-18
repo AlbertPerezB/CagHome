@@ -17,12 +17,12 @@ namespace CagHome.SystemTests.UCTests
         [Fact]
         public async Task UC1_NormalMeasurement_EvaluatedWithNoEscalation()
         {
-            var beforeUtc = await _helpers.InjectBatch(
+            var correlationId = await _helpers.InjectBatch(
                 ActivePatient.PatientId,
                 TestHelpers.NormalBatch(ActivePatient.PatientId)
             );
             //TODO: Check ingestion checkpoints?
-            var audit = await _helpers.WaitForMonitoringAudit(ActivePatient.PatientId, beforeUtc);
+            var audit = await _helpers.WaitForMonitoringAudit(correlationId);
 
             Assert.NotNull(audit);
             Assert.False(audit!["ShouldAlertPatient"].AsBoolean);

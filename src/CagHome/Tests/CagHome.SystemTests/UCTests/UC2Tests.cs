@@ -22,12 +22,11 @@ namespace CagHome.SystemTests.UCTests
         [Fact]
         public async Task UC2A_WarningMeasurement_PatientAlertOnly()
         {
-            var beforeUtc = await _helpers.InjectBatch(
+            var correlationId = await _helpers.InjectBatch(
                 ActivePatient1.PatientId,
                 TestHelpers.WarningHeartRateBatch(ActivePatient1.PatientId)
             );
-            //TODO: Check ingestion checkpoints?
-            var audit = await _helpers.WaitForMonitoringAudit(ActivePatient1.PatientId, beforeUtc);
+            var audit = await _helpers.WaitForMonitoringAudit(correlationId);
 
             Assert.NotNull(audit);
             Assert.True(audit!["ShouldAlertPatient"].AsBoolean);
@@ -37,9 +36,8 @@ namespace CagHome.SystemTests.UCTests
             _output.WriteLine("UC2A — monitoring decision correct");
 
             var notifications = await _helpers.WaitForNotificationAudit(
-                ActivePatient1.PatientId,
-                beforeUtc,
-                expectedCount: 2
+                correlationId,
+                2
             );
             var delivered = notifications.FirstOrDefault(n =>
                 n["Receiver"] == 1 && n["DeliveryStatus"] == 1
@@ -54,12 +52,13 @@ namespace CagHome.SystemTests.UCTests
         [Fact]
         public async Task UC2B_CriticalMeasurement_PatientAndHospitalAlert()
         {
-            var beforeUtc = await _helpers.InjectBatch(
+
+            var correlationId = await _helpers.InjectBatch(
                 ActivePatient2.PatientId,
                 TestHelpers.CriticalHeartRateBatch(ActivePatient2.PatientId)
             );
 
-            var audit = await _helpers.WaitForMonitoringAudit(ActivePatient2.PatientId, beforeUtc);
+            var audit = await _helpers.WaitForMonitoringAudit(correlationId);
 
             Assert.NotNull(audit);
             Assert.True(audit!["ShouldAlertPatient"].AsBoolean);
@@ -69,9 +68,8 @@ namespace CagHome.SystemTests.UCTests
             _output.WriteLine("UC2B — monitoring decision correct");
 
             var notifications = await _helpers.WaitForNotificationAudit(
-                ActivePatient2.PatientId,
-                beforeUtc,
-                expectedCount: 3
+                correlationId,
+                3
             );
 
             var hospitalDelivered = notifications.FirstOrDefault(n =>
