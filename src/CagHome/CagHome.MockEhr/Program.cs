@@ -92,7 +92,10 @@ app.MapPost(
             response.AlertId
         );
 
-        return Results.Created($"/clinician-responses/{response.ResponseId}", response);
+        return Results.Created(
+            $"/clinician-responses/{response.ResponseId}",
+            response.CorrelationId
+        );
     }
 );
 
