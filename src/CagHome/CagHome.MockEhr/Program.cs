@@ -83,19 +83,42 @@ app.MapGet(
 // Simulates a clinician typing a response to an alert.
 app.MapPost(
     "/mock/clinician-response",
-    (ClinicianResponse response, MockEhrStore store, ILogger<Program> logger) =>
+    (ClinicianResponseDto response, MockEhrStore store, ILogger<Program> logger) =>
     {
-        var alert = store.Alerts.FirstOrDefault(a => a.AlertId == response.AlertId);
-        store.ClinicianResponses.Enqueue(response);
+        try
+        {
+            var alert = store.Alerts.FirstOrDefault(a => a.AlertId == response.AlertId);
+            if (alert == null)
+            {
+                return Results.NotFound("No alert found with the given AlertId");
+            }
 
-        var correlationId = (alert != null) ? alert.CorrelationId : Guid.Empty;
-        logger.LogInformation(
-            "Mock: clinician response created: ResponseId={ResponseId}, AlertId={AlertId}",
-            response.ResponseId,
-            response.AlertId
-        );
+            var responseId = Guid.NewGuid();
+            var clinicianResponse = new ClinicianResponse(
+                AlertId: response.AlertId,
+                CreatedAtUtc: response.CreatedAtUtc,
+                CorrelationId: alert.CorrelationId,
+                HospitalId: response.HospitalId,
+                Message: response.Message,
+                PatientId: response.PatientId,
+                ResponseId: responseId
+            );
+            store.ClinicianResponses.Enqueue(clinicianResponse);
 
-        return Results.Created($"/clinician-responses/{response.ResponseId}", correlationId);
+            logger.LogInformation(
+                "Mock: clinician response created: ResponseId={ResponseId}, AlertId={AlertId}",
+                response.AlertId,
+                responseId
+            );
+            return Results.Created(
+                $"/clinician-responses/{clinicianResponse.ResponseId}",
+                new CorrelationIdResponse(alert.CorrelationId)
+            );
+        }
+        catch (Exception ex)
+        {
+            return Results.InternalServerError(ex.Message);
+        }
     }
 );
 

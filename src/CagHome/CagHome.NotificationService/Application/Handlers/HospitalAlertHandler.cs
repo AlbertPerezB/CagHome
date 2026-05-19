@@ -15,11 +15,10 @@ public class HospitalAlertHandler
         IAuditStore auditStore
     )
     {
-        var alertId = Guid.NewGuid();
         logger.LogInformation(
             "Hospital alert to be sent: "
                 + "AlertID = {alertId}, PatientId={PatientId}, HospitalId={HospitalId}, Severity={Severity}, Message={Message}",
-            alertId,
+            message.AlertId,
             message.PatientId,
             message.HospitalId,
             message.Severity,

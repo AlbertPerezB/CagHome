@@ -3,6 +3,7 @@ using CagHome.Contracts.Enums;
 using CagHome.NotificationService.Application.Handlers;
 using CagHome.NotificationService.Domain;
 using CagHome.NotificationService.Infrastructure;
+using CagHome.NotificationService.Tests.Helpers;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -23,20 +24,10 @@ public class PatientAlertHandlerTests
         _handler = new PatientAlertHandler();
     }
 
-    private static PatientAlertRequested CreateMessage() =>
-        new PatientAlertRequested(
-            AlertId: Guid.NewGuid(),
-            CorrelationId: Guid.NewGuid(),
-            DecidedAt: DateTime.UtcNow,
-            Message: "High heart rate. Patient risks going into SVT",
-            PatientId: Guid.NewGuid(),
-            Severity: Severity.Critical
-        );
-
     [Fact]
     public async Task Handle_OnSuccess_RecordsAttemptedThenDelivered()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreatePatientAlertRequested();
 
         await _handler.Handle(message, _mqttPublisher, _auditStore, _logger);
 
@@ -54,7 +45,7 @@ public class PatientAlertHandlerTests
     [Fact]
     public async Task Handle_OnSuccess_PublishesToCorrectPatient()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreatePatientAlertRequested();
 
         await _handler.Handle(message, _mqttPublisher, _auditStore, _logger);
 
@@ -64,7 +55,7 @@ public class PatientAlertHandlerTests
     [Fact]
     public async Task Handle_OnMqttFailure_RecordsFailedAndThrows()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreatePatientAlertRequested();
         _mqttPublisher
             .When(x => x.Publish(Arg.Any<Guid>(), Arg.Any<object>()))
             .Throw(new Exception("MQTT connection lost"));

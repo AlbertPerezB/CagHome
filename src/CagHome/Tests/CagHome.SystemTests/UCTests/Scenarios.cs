@@ -107,7 +107,10 @@ namespace CagHome.SystemTests.UCTests
         public async Task UC3_ClinicianResponse_PickedUpAndDeliveredToPatient()
         {
             var beforeUtc = DateTime.UtcNow;
+            var correlationId = Guid.NewGuid();
             var alertId = Guid.NewGuid();
+
+            await _helpers.PostAlertToHospital(correlationId, alertId);
 
             await _helpers.PostClinicianResponse(
                 alertId,
@@ -115,11 +118,11 @@ namespace CagHome.SystemTests.UCTests
                 ActivePatient1.HospitalId,
                 "Take 2mg adenosine and lay down"
             );
-            _output.WriteLine("Clinician response posted, waiting for notification audit...");
 
             var audits = await _helpers.WaitForNotificationAudit(
-                ActivePatient1.PatientId,
-                expectedCount: 2
+                correlationId,
+                expectedCount: 2,
+                maxWaitSeconds: 60
             );
 
             var delivered = audits.FirstOrDefault(a => a["DeliveryStatus"] == 1);

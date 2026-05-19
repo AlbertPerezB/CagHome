@@ -16,20 +16,10 @@ public class PatientAlertIntegrationTests : IClassFixture<NotificationServiceFix
         _fixture.Reset();
     }
 
-    private static PatientAlertRequested CreateMessage() =>
-        new PatientAlertRequested(
-            AlertId: Guid.NewGuid(),
-            CorrelationId: Guid.NewGuid(),
-            DecidedAt: DateTime.UtcNow,
-            Message: "High heart rate. Patient risks going into SVT",
-            PatientId: Guid.NewGuid(),
-            Severity: Severity.Critical
-        );
-
     [Fact]
     public async Task Message_IsRoutedToHandler_AndExecutesSuccessfully()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreatePatientAlertRequested();
 
         var session = await _fixture
             .Host.TrackActivity()

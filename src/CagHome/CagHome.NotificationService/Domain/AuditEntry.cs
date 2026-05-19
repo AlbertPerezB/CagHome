@@ -16,7 +16,7 @@ public class AuditEntry
     public DeliveryStatus DeliveryStatus { get; set; }
 
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
-    public Guid? HospitalId { get; set; }
+    public Guid? HospitalId { get; set; } = null;
     public string? Message { get; set; }
 
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
@@ -25,6 +25,9 @@ public class AuditEntry
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid PatientId { get; set; }
     public Receiver Receiver { get; set; }
+
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
+    public Guid? ResponseId { get; set; } = null;
     public string StatusCode { get; set; } = string.Empty;
     public DateTime Timestamp { get; set; }
     public string TraceId { get; set; } = string.Empty;
@@ -47,7 +50,6 @@ public class AuditEntry
     {
         AlertId = message.AlertId;
         DeliveryStatus = status;
-        HospitalId = null;
         CorrelationId = message.CorrelationId;
         Message = message.Message;
         PatientId = message.PatientId;
@@ -62,10 +64,11 @@ public class AuditEntry
         AlertId = message.AlertId;
         DeliveryStatus = status;
         HospitalId = message.HospitalId;
-        CorrelationId = message.ResponseId;
+        CorrelationId = message.CorrelationId;
         Message = message.Message;
         PatientId = message.PatientId;
         Receiver = Receiver.Patient;
+        ResponseId = message.ResponseId;
         StatusCode = string.Empty;
         Timestamp = DateTime.UtcNow;
         TraceId = Activity.Current?.TraceId.ToString() ?? string.Empty;
