@@ -47,7 +47,8 @@ builder
     .WithReference(notificationAuditDb)
     .WithReference(mqttBroker)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort)
-    .WaitFor(rabbitmqBroker);
+    .WaitFor(rabbitmqBroker)
+    .WaitFor(mongo);
 
 var ehrIntegration = builder
     .AddProject<Projects.CagHome_EhrIntegrationService>("ehr-integration")
@@ -60,12 +61,14 @@ builder
     .WithReference(rabbitmqBroker)
     .WithReference(monitoringAuditDb)
     .WithReference(monitoringPatientCareplansDb)
+    .WaitFor(mongo)
     .WaitFor(rabbitmqBroker);
 
 builder
     .AddProject<Projects.CagHome_PatientRegistryService>("patient-registry-service")
     .WithReference(rabbitmqBroker)
     .WithReference(patientregistryDb)
-    .WaitFor(rabbitmqBroker);
+    .WaitFor(rabbitmqBroker)
+    .WaitFor(mongo);
 
 builder.Build().Run();
