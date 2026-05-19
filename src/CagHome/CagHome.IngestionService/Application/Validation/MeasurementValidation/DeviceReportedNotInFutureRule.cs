@@ -3,6 +3,9 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation.MeasurementValidation;
 
+/// <summary>
+/// Validation rule to ensure that the device reported time of a measurement is not in the future.
+/// </summary>
 public class DeviceReportedNotInFutureRule : IValidationRule<Measurement>
 {
     public async Task<ValidationError?> ValidateAsync(Measurement input)

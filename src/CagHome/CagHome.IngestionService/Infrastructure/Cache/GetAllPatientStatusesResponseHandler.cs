@@ -2,6 +2,10 @@
 
 namespace CagHome.IngestionService.Infrastructure.Cache;
 
+/// <summary>
+/// Handles invoked by Wolverine when an <see cref="AllPatientStatuses"/> message is received.
+/// It populates the <see cref="IPatientRegistryCache"/> with the patient statuses and marks the warmup as complete.
+/// </summary>
 public class AllPatientStatusesHandler
 {
     public async Task Handle(

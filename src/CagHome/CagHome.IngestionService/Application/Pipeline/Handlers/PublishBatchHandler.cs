@@ -4,6 +4,9 @@ using Wolverine;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
+/// <summary>
+/// Handler responsible for publishing the batch to a <see cref="IMessageBus"/> for downstream processing by other services.
+/// </summary>
 public class PublishBatchHandler(IMessageBus messageBus, ILogger<PublishBatchHandler> logger)
     : IngestionHandler
 {

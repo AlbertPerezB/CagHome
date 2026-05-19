@@ -5,6 +5,9 @@ using MQTTnet;
 
 namespace CagHome.IngestionService.Infrastructure.Messaging
 {
+    /// <summary>
+    /// Background service that connects to an MQTT broker, subscribes to all topics, and processes incoming messages.
+    /// </summary>
     public class MqttConsumerService : BackgroundService, IDisposable
     {
         private readonly ILogger<MqttConsumerService> _logger;

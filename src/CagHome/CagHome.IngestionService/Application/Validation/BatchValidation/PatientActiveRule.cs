@@ -5,6 +5,10 @@ using CagHome.IngestionService.Infrastructure.Cache;
 
 namespace CagHome.IngestionService.Application.Validation.BatchValidation;
 
+/// <summary>
+/// Validation rule to check if the patient associated with the batch is active in the patient registry cache.
+/// </summary>
+/// <param name="patientRegistryCache">The patient registry cache to check the patient's status.</param>
 public class PatientActiveRule(IPatientRegistryCache patientRegistryCache) : IBatchValidationRule
 {
     public bool IsFatal => true;

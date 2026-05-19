@@ -5,6 +5,10 @@ using CagHome.IngestionService.Domain.Models.DataTransferObjects;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
+/// <summary>
+/// Handler responsible for deserializing the incoming json into a \<see cref="BatchDto"/>.
+/// Any errors during deserialization are considered fatal, as it means the data cannot be processed at all.
+/// </summary>
 public class DeserializationHandler(ILogger<DeserializationHandler> logger) : IngestionHandler
 {
     private static readonly JsonSerializerOptions _options = new()
