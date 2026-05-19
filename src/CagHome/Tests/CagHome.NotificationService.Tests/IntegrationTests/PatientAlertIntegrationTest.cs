@@ -1,11 +1,10 @@
 ﻿using CagHome.Contracts;
 using CagHome.Contracts.Enums;
+using CagHome.NotificationService.Tests.Helpers;
 using JasperFx.Core;
-using NSubstitute;
 using Wolverine.Tracking;
-using Xunit;
 
-namespace CagHome.NotificationService.Tests.Integration;
+namespace CagHome.NotificationService.Tests.IntegrationTests;
 
 public class PatientAlertIntegrationTests : IClassFixture<NotificationServiceFixture>
 {

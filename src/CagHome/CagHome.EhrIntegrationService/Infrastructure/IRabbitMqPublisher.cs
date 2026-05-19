@@ -1,5 +1,4 @@
 ﻿using CagHome.Contracts;
-using CagHome.Contracts.Enums;
 
 namespace CagHome.EhrIntegrationService.Infrastructure
 {

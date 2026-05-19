@@ -1,5 +1,4 @@
 using CagHome.IngestionService.Application.Validation.StructuralValidation;
-using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 

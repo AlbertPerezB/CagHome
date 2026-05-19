@@ -1,6 +1,6 @@
 namespace CagHome.Simulator.Domain.Models;
 
-public sealed record MeasurementPayload(
+public record MeasurementPayload(
     DateTimeOffset DeviceReported,
     Guid MeasurementId,
     MeasurementSourcePayload Source,

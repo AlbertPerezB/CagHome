@@ -142,13 +142,13 @@ public abstract class ThresholdCareplanPolicyBase : ICareplanDecisionPolicy
         );
     }
 
-    protected sealed record MetricThreshold(
+    protected record MetricThreshold(
         string Metric,
         ThresholdBand Warning,
         ThresholdBand Critical
     );
 
-    protected sealed record ThresholdBand(
+    protected record ThresholdBand(
         double? Lower = null,
         bool LowerInclusive = false,
         double? Upper = null,

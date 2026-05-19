@@ -3,6 +3,7 @@ using CagHome.MonitoringService.Application.Decision;
 using CagHome.MonitoringService.Application.Decision.Interfaces;
 using CagHome.MonitoringService.Application.Decision.Policies;
 using CagHome.MonitoringService.Infrastructure;
+using CagHome.ServiceDefaults;
 using Wolverine;
 using Wolverine.RabbitMQ;
 

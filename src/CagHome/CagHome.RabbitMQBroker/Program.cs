@@ -1,6 +1,6 @@
+using CagHome.RabbitMQBroker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RabbitMQBroker;
 
 var builder = Host.CreateApplicationBuilder(args);
 

@@ -6,9 +6,8 @@ using CagHome.NotificationService.Domain;
 using CagHome.NotificationService.Infrastructure;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using Wolverine.Transports;
 
-namespace CagHome.NotificationService.Tests.Application.Handlers;
+namespace CagHome.NotificationService.Tests.UnitTests;
 
 public class HospitalAlertHandlerTests
 {

@@ -1,7 +1,6 @@
 using CagHome.Contracts;
 using CagHome.NotificationService.Domain;
 using CagHome.NotificationService.Infrastructure;
-using Microsoft.Extensions.Logging;
 
 namespace CagHome.NotificationService.Application.Handlers;
 

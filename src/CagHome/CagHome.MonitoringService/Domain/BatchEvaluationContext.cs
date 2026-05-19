@@ -3,7 +3,7 @@ using CagHome.Contracts.Enums;
 
 namespace CagHome.MonitoringService.Domain;
 
-public sealed record BatchEvaluationContext(
+public record BatchEvaluationContext(
     BatchReceived Batch,
     Careplan Careplan
 );

@@ -1,6 +1,6 @@
 namespace CagHome.MonitoringService.Domain;
 
-public sealed record CooldownCheckResult(
+public record CooldownCheckResult(
     bool IsSuppressed,
     TimeSpan? RemainingCooldown
 );

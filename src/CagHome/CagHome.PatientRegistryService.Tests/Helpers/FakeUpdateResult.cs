@@ -1,7 +1,4 @@
-﻿using CagHome.Contracts;
-using CagHome.Contracts.Enums;
-using CagHome.PatientRegistryService.Domain;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace CagHome.PatientRegistryService.Tests.Helpers;

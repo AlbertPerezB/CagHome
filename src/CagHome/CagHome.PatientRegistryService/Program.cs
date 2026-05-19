@@ -1,8 +1,6 @@
 using CagHome.Contracts;
 using CagHome.PatientRegistryService.Infrastructure;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
+using CagHome.ServiceDefaults;
 using Wolverine;
 using Wolverine.ErrorHandling;
 using Wolverine.RabbitMQ;

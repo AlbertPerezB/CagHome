@@ -3,7 +3,7 @@ using CagHome.MonitoringService.Domain;
 
 namespace CagHome.MonitoringService.Infrastructure;
 
-public sealed class MongoDecisionAuditStore : IDecisionAuditStore
+public class MongoDecisionAuditStore : IDecisionAuditStore
 {
     private readonly IMongoCollection<DecisionAuditEntry> _collection;
 

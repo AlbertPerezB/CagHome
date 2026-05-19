@@ -8,14 +8,12 @@ using CagHome.IngestionService.Application.Validation;
 using CagHome.IngestionService.Application.Validation.BatchValidation;
 using CagHome.IngestionService.Application.Validation.MeasurementValidation;
 using CagHome.IngestionService.Application.Validation.StructuralValidation;
-using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure.Cache;
 using CagHome.IngestionService.Infrastructure.Schemas;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Wolverine;
-using Xunit;
 
 namespace CagHome.IngestionService.Tests.Integration;
 

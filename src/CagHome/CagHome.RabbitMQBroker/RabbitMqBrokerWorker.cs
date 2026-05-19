@@ -2,9 +2,9 @@ using RabbitMQ.Client;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace RabbitMQBroker;
+namespace CagHome.RabbitMQBroker;
 
-public sealed class RabbitMqBrokerWorker(ILogger<RabbitMqBrokerWorker> logger, IConnection connection) : BackgroundService
+public class RabbitMqBrokerWorker(ILogger<RabbitMqBrokerWorker> logger, IConnection connection) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

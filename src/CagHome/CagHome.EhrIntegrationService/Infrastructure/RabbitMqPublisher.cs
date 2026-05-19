@@ -1,5 +1,4 @@
 ﻿using CagHome.Contracts;
-using CagHome.Contracts.Enums;
 using Wolverine;
 
 namespace CagHome.EhrIntegrationService.Infrastructure

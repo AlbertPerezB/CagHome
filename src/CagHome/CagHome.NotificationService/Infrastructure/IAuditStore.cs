@@ -1,5 +1,4 @@
-﻿using CagHome.Contracts.Enums;
-using CagHome.NotificationService.Domain;
+﻿using CagHome.NotificationService.Domain;
 
 namespace CagHome.NotificationService.Infrastructure
 {

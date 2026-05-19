@@ -1,5 +1,6 @@
 using System.Text.Json;
 using CagHome.IngestionService.Domain.Models;
+using CagHome.IngestionService.Domain.Models.DataTransferObjects;
 
 public class IngestionContext
 {

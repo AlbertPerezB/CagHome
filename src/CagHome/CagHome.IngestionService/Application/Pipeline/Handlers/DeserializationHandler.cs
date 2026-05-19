@@ -1,6 +1,7 @@
 using System.Text.Json;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
+using CagHome.IngestionService.Domain.Models.DataTransferObjects;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 

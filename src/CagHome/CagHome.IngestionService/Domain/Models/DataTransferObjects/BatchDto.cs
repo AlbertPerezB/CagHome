@@ -1,4 +1,4 @@
-namespace CagHome.IngestionService.Domain.Models;
+namespace CagHome.IngestionService.Domain.Models.DataTransferObjects;
 
 public class BatchDto
 {

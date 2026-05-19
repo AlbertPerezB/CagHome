@@ -2,7 +2,7 @@ using CagHome.Simulator.Domain.Models;
 
 namespace CagHome.Simulator.Domain.Profiles;
 
-public sealed class ExerciseSimulationProfile : ISimulationProfile
+public class ExerciseSimulationProfile : ISimulationProfile
 {
 	public string Name => SimulationProfiles.Exercise;
 

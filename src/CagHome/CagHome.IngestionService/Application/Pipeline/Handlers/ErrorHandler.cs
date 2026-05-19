@@ -1,5 +1,4 @@
 using System.Text.Json;
-using CagHome.IngestionService.Infrastructure;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 

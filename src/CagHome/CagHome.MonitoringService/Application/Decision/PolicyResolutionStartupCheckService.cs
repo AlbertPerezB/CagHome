@@ -1,10 +1,9 @@
 using CagHome.Contracts.Enums;
 using CagHome.MonitoringService.Application.Decision.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace CagHome.MonitoringService.Application.Decision;
 
-public sealed class PolicyResolutionStartupCheckService(
+public class PolicyResolutionStartupCheckService(
     ICareplanPolicyResolver policyResolver,
     ILogger<PolicyResolutionStartupCheckService> logger
 ) : IHostedService

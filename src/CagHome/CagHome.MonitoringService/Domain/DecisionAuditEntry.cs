@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CagHome.MonitoringService.Domain;
 
-public sealed class DecisionAuditEntry
+public class DecisionAuditEntry
 {
     [BsonId]
     [BsonGuidRepresentation(GuidRepresentation.Standard)]

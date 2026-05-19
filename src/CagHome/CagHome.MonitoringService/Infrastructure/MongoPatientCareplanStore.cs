@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace CagHome.MonitoringService.Infrastructure;
 
-public sealed class MongoPatientCareplanStore : IPatientCareplanStore
+public class MongoPatientCareplanStore : IPatientCareplanStore
 {
     private readonly IMongoCollection<PatientCareplanState> _collection;
 

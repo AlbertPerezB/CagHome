@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using CagHome.NotificationService.Domain;
+﻿using CagHome.NotificationService.Domain;
 using MongoDB.Driver;
 
 namespace CagHome.NotificationService.Infrastructure;

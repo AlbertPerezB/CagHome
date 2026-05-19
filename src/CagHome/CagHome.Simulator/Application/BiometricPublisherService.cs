@@ -9,7 +9,7 @@ using MQTTnet.Protocol;
 
 namespace CagHome.Simulator.Application;
 
-public sealed class BiometricPublisherService(
+public class BiometricPublisherService(
     ILogger<BiometricPublisherService> logger,
     IOptionsMonitor<SimulatorOptions> optionsMonitor,
     IEnumerable<ISimulationProfile> profiles
