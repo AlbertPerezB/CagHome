@@ -10,7 +10,7 @@ using StackExchange.Redis;
 
 namespace CagHome.SystemTests.Helpers;
 
-public sealed class AspireAppFixture : IAsyncLifetime
+public class AspireAppFixture : IAsyncLifetime
 {
     private static readonly TimeSpan StartupTimeout = TimeSpan.FromSeconds(120);
 

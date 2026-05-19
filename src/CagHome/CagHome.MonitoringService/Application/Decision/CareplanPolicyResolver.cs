@@ -3,7 +3,7 @@ using CagHome.MonitoringService.Application.Decision.Interfaces;
 
 namespace CagHome.MonitoringService.Application.Decision;
 
-public sealed class CareplanPolicyResolver : ICareplanPolicyResolver
+public class CareplanPolicyResolver : ICareplanPolicyResolver
 {
     private readonly IReadOnlyDictionary<Careplan, ICareplanDecisionPolicy> _policies;
 

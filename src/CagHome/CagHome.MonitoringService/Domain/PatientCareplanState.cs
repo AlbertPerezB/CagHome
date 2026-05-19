@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CagHome.MonitoringService.Domain;
 
-public sealed class PatientCareplanState
+public class PatientCareplanState
 {
     [BsonId]
     [BsonGuidRepresentation(GuidRepresentation.Standard)]

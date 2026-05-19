@@ -1,6 +1,6 @@
 namespace CagHome.Simulator;
 
-public sealed class SimulatorOptions
+public class SimulatorOptions
 {
 	public const string SectionName = "Simulator";
 

@@ -1,6 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var mongo = builder.AddMongoDB("mongo").WithLifetime(ContainerLifetime.Persistent);
+var mongo = builder.AddMongoDB("mongo")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithArgs("--quiet");
 var patientregistryDb = mongo.AddDatabase("patient-registry");
 var notificationAuditDb = mongo.AddDatabase("notification-audit");
 var monitoringAuditDb = mongo.AddDatabase("monitoring-audit");
@@ -8,7 +10,10 @@ var monitoringPatientCareplansDb = mongo.AddDatabase("monitoring-patient-carepla
 
 var redis = builder.AddRedis("patient-cache");
 
-var rabbitmqBroker = builder.AddRabbitMQ("rabbitmq-broker").WithManagementPlugin();
+var rabbitmqBroker = builder
+    .AddRabbitMQ("rabbitmq-broker")
+    .WithManagementPlugin()
+    .WithEnvironment("RABBITMQ_LOG_LEVEL", "warning");
 
 var brokerPort = builder.AddParameter("mqtt-broker-port", "1883");
 var brokerHost = builder.AddParameter("mqtt-broker-host", "localhost");

@@ -4,7 +4,7 @@ using CagHome.MonitoringService.Domain;
 
 namespace CagHome.MonitoringService.Tests.Helpers;
 
-internal sealed class TestPolicy(Careplan careplan) : ICareplanDecisionPolicy
+internal class TestPolicy(Careplan careplan) : ICareplanDecisionPolicy
 {
     public Careplan Careplan { get; } = careplan;
 

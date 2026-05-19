@@ -1,6 +1,6 @@
 namespace CagHome.Simulator.Domain.Models;
 
-public sealed record TelemetrySample(
+public record TelemetrySample(
 	int HeartRateBpm,
 	double HrvRmssdMs,
 	string RhythmFlag,

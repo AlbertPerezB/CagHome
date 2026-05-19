@@ -3,7 +3,7 @@ using CagHome.MonitoringService.Infrastructure;
 
 namespace CagHome.MonitoringService.Tests.Helpers;
 
-public sealed class DecisionAuditStore : IDecisionAuditStore
+public class DecisionAuditStore : IDecisionAuditStore
 {
     private readonly object _lock = new();
     private readonly List<DecisionAuditEntry> _entries = [];

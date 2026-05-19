@@ -2,7 +2,7 @@ using CagHome.Contracts.Enums;
 
 namespace CagHome.MonitoringService.Application.Decision.Policies;
 
-public sealed class ValveDiseaseCareplanPolicy : ThresholdCareplanPolicyBase
+public class ValveDiseaseCareplanPolicy : ThresholdCareplanPolicyBase
 {
     public override Careplan Careplan => Careplan.ValveDisease;
 

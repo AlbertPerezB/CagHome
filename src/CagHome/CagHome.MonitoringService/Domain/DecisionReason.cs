@@ -1,6 +1,6 @@
 namespace CagHome.MonitoringService.Domain;
 
-public sealed record DecisionReason(
+public record DecisionReason(
     string Metric,
     double ObservedValue,
     string Unit,

@@ -2,7 +2,7 @@ using CagHome.Contracts.Enums;
 
 namespace CagHome.MonitoringService.Application.Decision.Policies;
 
-public sealed class NoneCareplanPolicy : ThresholdCareplanPolicyBase
+public class NoneCareplanPolicy : ThresholdCareplanPolicyBase
 {
     public override Careplan Careplan => Careplan.None;
 

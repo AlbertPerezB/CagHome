@@ -2,7 +2,7 @@ using CagHome.Contracts.Enums;
 
 namespace CagHome.MonitoringService.Domain;
 
-public sealed record PolicyDecisionResult(
+public record PolicyDecisionResult(
     Guid PatientId,
     Guid BatchId,
     Careplan Careplan,

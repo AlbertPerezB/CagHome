@@ -16,7 +16,7 @@ public interface IInjectedTelemetryPublisher
     );
 }
 
-public sealed class InjectedTelemetryPublisher(
+public class InjectedTelemetryPublisher(
     IOptionsMonitor<SimulatorOptions> optionsMonitor,
     ILogger<InjectedTelemetryPublisher> logger
 ) : IInjectedTelemetryPublisher, IAsyncDisposable

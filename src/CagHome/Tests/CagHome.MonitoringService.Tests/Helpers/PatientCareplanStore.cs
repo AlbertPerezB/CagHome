@@ -4,7 +4,7 @@ using CagHome.MonitoringService.Infrastructure;
 
 namespace CagHome.MonitoringService.Tests.Helpers;
 
-public sealed class PatientCareplanStore : IPatientCareplanStore
+public class PatientCareplanStore : IPatientCareplanStore
 {
     private readonly ConcurrentDictionary<Guid, (Careplan Careplan, DateTime UpdatedAtUtc)> _careplans =
         new();
