@@ -4,18 +4,16 @@ using CagHome.Simulator.Domain.Models;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Protocol;
+using CagHome.Simulator.Infrastructure;
+
 
 namespace CagHome.Simulator.Application;
 
-public interface IInjectedTelemetryPublisher
-{
-    Task PublishAsync(
-        MeasurementBatchPayload batchPayload,
-        Guid patientId,
-        CancellationToken cancellationToken
-    );
-}
-
+/// <summary>
+/// MQTT implementation of <see cref="IInjectedTelemetryPublisher"/> for publishing injected telemetry batches.
+/// </summary>
+/// <param name="optionsMonitor">Options monitor that provides MQTT broker configuration.</param>
+/// <param name="logger">Logger used for publish and connection lifecycle events.</param>
 public class InjectedTelemetryPublisher(
     IOptionsMonitor<SimulatorOptions> optionsMonitor,
     ILogger<InjectedTelemetryPublisher> logger
@@ -26,6 +24,13 @@ public class InjectedTelemetryPublisher(
     private readonly IMqttClient _mqttClient = new MqttClientFactory().CreateMqttClient();
     private readonly SemaphoreSlim _connectionGate = new(1, 1);
 
+    /// <summary>
+    /// Publishes a telemetry batch payload for a patient-specific topic.
+    /// </summary>
+    /// <param name="batchPayload">Payload to serialize and publish.</param>
+    /// <param name="patientId">Identifier of the patient used in the topic path.</param>
+    /// <param name="cancellationToken">Token that can cancel connect or publish operations.</param>
+    /// <returns>A task when the message is published.</returns>
     public async Task PublishAsync(
         MeasurementBatchPayload batchPayload,
         Guid patientId,
@@ -51,6 +56,11 @@ public class InjectedTelemetryPublisher(
         );
     }
 
+    /// <summary>
+    /// Ensures an active MQTT connection exists before publishing.
+    /// </summary>
+    /// <param name="cancellationToken">Token that can cancel the connection process.</param>
+    /// <returns>A task when the client is connected.</returns>
     private async Task EnsureConnectedAsync(CancellationToken cancellationToken)
     {
         if (_mqttClient.IsConnected)
@@ -91,6 +101,10 @@ public class InjectedTelemetryPublisher(
         }
     }
 
+    /// <summary>
+    /// Disconnects and disposes MQTT resources used by this publisher.
+    /// </summary>
+    /// <returns>A value task when cleanup finishes.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_mqttClient.IsConnected)
