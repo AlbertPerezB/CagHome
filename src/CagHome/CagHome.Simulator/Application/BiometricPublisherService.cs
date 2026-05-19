@@ -9,6 +9,12 @@ using MQTTnet.Protocol;
 
 namespace CagHome.Simulator.Application;
 
+/// <summary>
+/// Background service that samples biometric telemetry and publishes patient batches to MQTT.
+/// </summary>
+/// <param name="logger">Logger used for simulator lifecycle and publish diagnostics.</param>
+/// <param name="optionsMonitor">Options source used to retrieve current simulator settings.</param>
+/// <param name="profiles">Registered simulation profiles used to generate telemetry samples.</param>
 public class BiometricPublisherService(
     ILogger<BiometricPublisherService> logger,
     IOptionsMonitor<SimulatorOptions> optionsMonitor,
@@ -175,6 +181,11 @@ public class BiometricPublisherService(
         }
     }
 
+    /// <summary>
+    /// Handles inbound MQTT notifications consumed by the simulated device.
+    /// </summary>
+    /// <param name="args">Message metadata and payload received from MQTT.</param>
+    /// <returns>A completed task.</returns>
     private Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs args)
     {
         logger.LogInformation("Yes hello, patient received the alert");
@@ -262,6 +273,11 @@ public class BiometricPublisherService(
         _accumulatedMeasurementsByPatient.Clear();
     }
 
+    /// <summary>
+    /// Gets the patient id mapped to the given device index.
+    /// </summary>
+    /// <param name="index">Device index used to resolve a patient identifier.</param>
+    /// <returns>The mapped patient identifier.</returns>
     private Guid GetOrCreatePatientId(int index)
     {
         if (_patientIdsByIndex.TryGetValue(index, out var patientId))
@@ -275,6 +291,11 @@ public class BiometricPublisherService(
         return patientId;
     }
 
+    /// <summary>
+    /// Creates normalized measurement payloads from a telemetry sample.
+    /// </summary>
+    /// <param name="telemetry">Telemetry sample to transform.</param>
+    /// <returns>Array of measurement payloads derived from the sample.</returns>
     public static MeasurementPayload[] CreateMeasurements(TelemetrySample telemetry)
     {
         return
@@ -285,6 +306,14 @@ public class BiometricPublisherService(
         ];
     }
 
+    /// <summary>
+    /// Creates a single measurement payload instance.
+    /// </summary>
+    /// <param name="type">Measurement type name.</param>
+    /// <param name="value">Measurement value.</param>
+    /// <param name="unit">Measurement unit.</param>
+    /// <param name="deviceReported">Device timestamp for the measurement.</param>
+    /// <returns>A measurement payload ready for batching.</returns>
     private static MeasurementPayload CreateMeasurement(
         string type,
         double value,

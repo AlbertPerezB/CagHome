@@ -3,6 +3,7 @@ using CagHome.Simulator;
 using CagHome.Simulator.Application;
 using CagHome.Simulator.Domain.Models;
 using CagHome.Simulator.Domain.Profiles;
+using CagHome.Simulator.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
