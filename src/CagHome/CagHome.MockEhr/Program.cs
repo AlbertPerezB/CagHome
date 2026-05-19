@@ -1,5 +1,6 @@
 using CagHome.MockEhr;
 using CagHome.MockEhr.Domain;
+using CagHome.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 

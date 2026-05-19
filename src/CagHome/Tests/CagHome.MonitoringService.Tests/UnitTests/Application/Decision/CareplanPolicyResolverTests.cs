@@ -2,7 +2,7 @@ using CagHome.Contracts.Enums;
 using CagHome.MonitoringService.Application.Decision;
 using CagHome.MonitoringService.Tests.Helpers;
 
-namespace CagHome.MonitoringService.Tests.Application.Decision;
+namespace CagHome.MonitoringService.Tests.UnitTests.Application.Decision;
 
 public class CareplanPolicyResolverTests
 {

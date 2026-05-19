@@ -3,7 +3,7 @@ using CagHome.IngestionService.Application;
 using CagHome.IngestionService.Domain.Models;
 using MQTTnet;
 
-namespace CagHome.IngestionService.Infrastructure
+namespace CagHome.IngestionService.Infrastructure.Messaging
 {
     public class MqttConsumerService : BackgroundService, IDisposable
     {

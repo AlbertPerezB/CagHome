@@ -1,3 +1,5 @@
+using CagHome.IngestionService.Domain.Models.DataTransferObjects;
+
 namespace CagHome.IngestionService.Domain.Models;
 
 public record DeviceInfo

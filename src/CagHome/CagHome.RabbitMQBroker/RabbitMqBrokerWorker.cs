@@ -2,7 +2,7 @@ using RabbitMQ.Client;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace RabbitMQBroker;
+namespace CagHome.RabbitMQBroker;
 
 public class RabbitMqBrokerWorker(ILogger<RabbitMqBrokerWorker> logger, IConnection connection) : BackgroundService
 {

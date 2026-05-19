@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace CagHome.NotificationService.Tests.Integration;
+namespace CagHome.NotificationService.Tests.Helpers;
 
 public class FakeEhrHttpHandler : HttpMessageHandler
 {

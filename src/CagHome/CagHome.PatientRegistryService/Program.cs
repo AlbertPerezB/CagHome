@@ -1,5 +1,6 @@
 using CagHome.Contracts;
 using CagHome.PatientRegistryService.Infrastructure;
+using CagHome.ServiceDefaults;
 using Wolverine;
 using Wolverine.ErrorHandling;
 using Wolverine.RabbitMQ;

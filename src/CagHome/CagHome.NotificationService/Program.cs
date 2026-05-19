@@ -1,4 +1,5 @@
 using CagHome.NotificationService.Infrastructure;
+using CagHome.ServiceDefaults;
 using Microsoft.AspNetCore.Http;
 using Wolverine;
 using Wolverine.ErrorHandling;

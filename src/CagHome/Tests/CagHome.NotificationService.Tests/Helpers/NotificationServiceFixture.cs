@@ -7,7 +7,7 @@ using NSubstitute;
 using Wolverine;
 using Wolverine.ErrorHandling;
 
-namespace CagHome.NotificationService.Tests.Integration;
+namespace CagHome.NotificationService.Tests.Helpers;
 
 public class NotificationServiceFixture : IAsyncLifetime
 {

@@ -2,7 +2,7 @@
 using CagHome.Contracts.Enums;
 using CagHome.NotificationService.Domain;
 
-namespace CagHome.NotificationService.Tests.Domain;
+namespace CagHome.NotificationService.Tests.UnitTests;
 
 public class AuditEntryTests
 {

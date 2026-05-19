@@ -1,6 +1,7 @@
 using CagHome.Contracts;
 using CagHome.EhrIntegrationService.Application.Pollers;
 using CagHome.EhrIntegrationService.Infrastructure;
+using CagHome.ServiceDefaults;
 using Wolverine;
 using Wolverine.ErrorHandling;
 using Wolverine.RabbitMQ;

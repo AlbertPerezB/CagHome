@@ -1,10 +1,10 @@
-using CagHome.Simulator;
 using CagHome.Simulator.Application;
 using CagHome.Simulator.Domain.Models;
 using CagHome.Simulator.Domain.Profiles;
+using CagHome.Simulator.Tests.Helpers;
 using Xunit;
 
-namespace CagHome.Tests;
+namespace CagHome.Simulator.Tests.UnitTests;
 
 public class SimulatorUnitTests
 {

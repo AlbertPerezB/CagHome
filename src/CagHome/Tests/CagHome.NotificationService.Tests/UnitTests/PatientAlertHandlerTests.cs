@@ -6,7 +6,7 @@ using CagHome.NotificationService.Infrastructure;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace CagHome.NotificationService.Tests.Application.Handlers;
+namespace CagHome.NotificationService.Tests.UnitTests;
 
 public class PatientAlertHandlerTests
 {

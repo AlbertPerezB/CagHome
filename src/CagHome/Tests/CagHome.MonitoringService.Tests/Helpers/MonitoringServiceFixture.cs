@@ -3,12 +3,11 @@ using CagHome.MonitoringService.Application.Decision.Interfaces;
 using CagHome.MonitoringService.Application.Decision.Policies;
 using CagHome.MonitoringService.Application.Handlers;
 using CagHome.MonitoringService.Infrastructure;
-using CagHome.MonitoringService.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wolverine;
 
-namespace CagHome.MonitoringService.Tests.Integration;
+namespace CagHome.MonitoringService.Tests.Helpers;
 
 /// <summary>
 /// Integration test fixture that hosts MonitoringService components and exposes test stores.

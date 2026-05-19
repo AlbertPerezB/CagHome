@@ -1,10 +1,9 @@
-using CagHome.Simulator;
 using CagHome.Simulator.Application;
 using CagHome.Simulator.Domain.Profiles;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
-namespace CagHome.Tests;
+namespace CagHome.Simulator.Tests.Helpers;
 
 /// <summary>
 /// Provides test-only factory methods and lightweight infrastructure for creating simulator services.

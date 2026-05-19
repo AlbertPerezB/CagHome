@@ -3,7 +3,7 @@ using CagHome.Contracts.Enums;
 using CagHome.MonitoringService.Tests.Helpers;
 using Wolverine.Tracking;
 
-namespace CagHome.MonitoringService.Tests.Integration;
+namespace CagHome.MonitoringService.Tests.IntegrationTests;
 
 public class BatchReceivedIntegrationTests : IClassFixture<MonitoringServiceFixture>
 {

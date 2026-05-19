@@ -2,7 +2,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MQTTnet.Server;
 
-namespace CagHome.Broker;
+namespace CagHome.MqttBroker;
 
 public class MqttBrokerService : IHostedService
 {

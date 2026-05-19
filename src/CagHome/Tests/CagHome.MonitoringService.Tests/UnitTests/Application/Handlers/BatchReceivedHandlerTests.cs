@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Wolverine;
 
-namespace CagHome.MonitoringService.Tests.Application.Handlers;
+namespace CagHome.MonitoringService.Tests.UnitTests.Application.Handlers;
 
 public class BatchReceivedHandlerTests
 {

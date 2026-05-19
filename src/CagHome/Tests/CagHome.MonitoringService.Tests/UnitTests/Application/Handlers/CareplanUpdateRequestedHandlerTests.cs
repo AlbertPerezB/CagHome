@@ -4,7 +4,7 @@ using CagHome.MonitoringService.Infrastructure;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace CagHome.MonitoringService.Tests.Application.Handlers;
+namespace CagHome.MonitoringService.Tests.UnitTests.Application.Handlers;
 
 public class CareplanUpdateRequestedHandlerTests
 {
