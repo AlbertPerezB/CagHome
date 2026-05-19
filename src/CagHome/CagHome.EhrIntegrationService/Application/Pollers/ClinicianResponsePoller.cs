@@ -53,6 +53,7 @@ public class ClinicianResponsePoller(
                 new ClinicianResponseReceived(
                     response.AlertId,
                     response.CreatedAtUtc,
+                    response.CorrelationId,
                     response.HospitalId,
                     response.Message,
                     response.PatientId,

@@ -20,6 +20,7 @@ app.MapPost(
     {
         var received = new ReceivedAlert(
             AlertId: alert.AlertId,
+            CorrelationId: alert.CorrelationId,
             PatientId: alert.PatientId,
             HospitalId: alert.HospitalId,
             Message: alert.Message,
@@ -84,18 +85,17 @@ app.MapPost(
     "/mock/clinician-response",
     (ClinicianResponse response, MockEhrStore store, ILogger<Program> logger) =>
     {
+        var alert = store.Alerts.FirstOrDefault(a => a.AlertId == response.AlertId);
         store.ClinicianResponses.Enqueue(response);
 
+        var correlationId = (alert != null) ? alert.CorrelationId : Guid.Empty;
         logger.LogInformation(
             "Mock: clinician response created: ResponseId={ResponseId}, AlertId={AlertId}",
             response.ResponseId,
             response.AlertId
         );
 
-        return Results.Created(
-            $"/clinician-responses/{response.ResponseId}",
-            response.CorrelationId
-        );
+        return Results.Created($"/clinician-responses/{response.ResponseId}", correlationId);
     }
 );
 
