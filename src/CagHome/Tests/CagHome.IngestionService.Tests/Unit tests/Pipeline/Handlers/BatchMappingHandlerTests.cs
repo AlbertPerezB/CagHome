@@ -1,7 +1,9 @@
+using System.Net.Mime;
 using CagHome.IngestionService.Application.Pipeline.Handlers;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Domain.Models.DataTransferObjects;
+using Humanizer;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CagHome.IngestionService.Tests.UnitTests;
@@ -12,48 +14,12 @@ public class BatchMappingHandlerTests
         new NullLogger<BatchMappingHandler>()
     );
 
-    private static IngestionContext MakeContext(BatchDto? dto = null)
-    {
-        var raw = new RawBatch(
-            "patient/123",
-            "{}",
-            new DateTime(2024, 1, 1, 10, 0, 0, DateTimeKind.Utc)
-        );
-        var context = new IngestionContext(raw) { BatchDto = dto };
-        return context;
-    }
-
-    private static MeasurementDto ValidMeasurementDto() =>
-        new()
-        {
-            MeasurementId = Guid.NewGuid(),
-            Type = "HeartRate",
-            Value = 72.0,
-            Unit = "BPM",
-            DeviceReported = DateTime.UtcNow,
-            Source = new DeviceDto
-            {
-                DeviceManufacturer = "Apple",
-                DeviceModel = "Apple Watch Series 9",
-                DeviceId = "iOS",
-            },
-        };
-
-    private static BatchDto ValidBatchDto() =>
-        new()
-        {
-            SchemaVersion = 1,
-            AppVersion = new Version(1, 0, 0),
-            PatientId = Guid.NewGuid(),
-            CorrelationId = Guid.NewGuid(),
-            Measurements = [ValidMeasurementDto()],
-        };
-
     [Fact]
     public async Task ValidDto_MapsToBatch()
     {
-        var dto = ValidBatchDto();
-        var context = MakeContext(dto);
+        var dto = TestDataFactory.MakeBatchDto();
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -67,7 +33,9 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task ValidDto_ReceivedAt_TakenFromRawBatch()
     {
-        var context = MakeContext(ValidBatchDto());
+        var dto = TestDataFactory.MakeBatchDto();
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -77,7 +45,9 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task ValidDto_BatchId_IsNewGuid()
     {
-        var context = MakeContext(ValidBatchDto());
+        var dto = TestDataFactory.MakeBatchDto();
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -88,9 +58,10 @@ public class BatchMappingHandlerTests
     public async Task ValidDto_MeasurementId_PreservedWhenProvided()
     {
         var knownId = Guid.NewGuid();
-        var dto = ValidBatchDto();
+        var dto = TestDataFactory.MakeBatchDto();
         dto.Measurements![0].MeasurementId = knownId;
-        var context = MakeContext(dto);
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -100,9 +71,10 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task ValidDto_MeasurementId_GeneratedWhenNull()
     {
-        var dto = ValidBatchDto();
+        var dto = TestDataFactory.MakeBatchDto();
         dto.Measurements![0].MeasurementId = null;
-        var context = MakeContext(dto);
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -112,10 +84,11 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task ValidDto_EnumsParsedCaseInsensitive()
     {
-        var dto = ValidBatchDto();
+        var dto = TestDataFactory.MakeBatchDto();
         dto.Measurements![0].Type = "heartrate";
         dto.Measurements![0].Unit = "bpm";
-        var context = MakeContext(dto);
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -127,9 +100,10 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task ValidDto_NullSource_FallsBackToDefaultDeviceInfo()
     {
-        var dto = ValidBatchDto();
+        var dto = TestDataFactory.MakeBatchDto();
         dto.Measurements![0].Source = null;
-        var context = MakeContext(dto);
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -140,9 +114,10 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task ValidDto_EmptyMeasurements_MapsToEmptyList()
     {
-        var dto = ValidBatchDto();
+        var dto = TestDataFactory.MakeBatchDto();
         dto.Measurements = [];
-        var context = MakeContext(dto);
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -153,7 +128,7 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task NullDto_SetsFatalError()
     {
-        var context = MakeContext(null);
+        var context = TestDataFactory.MakeContext(TestDataFactory.DefaultTopic, payload: null);
 
         await _handler.HandleAsync(context);
 
@@ -168,7 +143,7 @@ public class BatchMappingHandlerTests
     [InlineData("measurements")]
     public async Task MissingRequiredField_SetsFatalError(string missingField)
     {
-        var dto = ValidBatchDto();
+        var dto = TestDataFactory.MakeBatchDto();
         if (missingField == "patientId")
             dto.PatientId = null;
         if (missingField == "schemaVersion")
@@ -177,7 +152,7 @@ public class BatchMappingHandlerTests
             dto.AppVersion = null;
         if (missingField == "measurements")
             dto.Measurements = null;
-        var context = MakeContext(dto);
+        var context = TestDataFactory.MakeContext();
 
         await _handler.HandleAsync(context);
 
@@ -188,9 +163,10 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task UnknownMeasurementType_SetsFatalError()
     {
-        var dto = ValidBatchDto();
+        var dto = TestDataFactory.MakeBatchDto();
         dto.Measurements![0].Type = "BloodPressure_INVALID";
-        var context = MakeContext(dto);
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -201,9 +177,10 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task UnknownUnit_SetsFatalError()
     {
-        var dto = ValidBatchDto();
+        var dto = TestDataFactory.MakeBatchDto();
         dto.Measurements![0].Unit = "PARSECS";
-        var context = MakeContext(dto);
+        var context = TestDataFactory.MakeContext();
+        context.BatchDto = dto;
 
         await _handler.HandleAsync(context);
 
@@ -214,7 +191,7 @@ public class BatchMappingHandlerTests
     [Fact]
     public async Task FatalError_PreventsNextHandlerFromRunning()
     {
-        var context = MakeContext(null);
+        var context = TestDataFactory.MakeContext(TestDataFactory.DefaultTopic, payload: null);
         var nextCalled = false;
         var next = new DelegateHandler(() =>
         {

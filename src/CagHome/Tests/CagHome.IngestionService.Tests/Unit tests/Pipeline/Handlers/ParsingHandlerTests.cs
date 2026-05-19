@@ -11,21 +11,11 @@ public class ParseJsonHandlerTests
         new NullLogger<ParseJsonHandler>()
     );
 
-    private static IngestionContext MakeContext(string payload) =>
-        new(new RawBatch("patient/123", payload, DateTime.UtcNow));
-
     [Fact]
     public async Task ValidJson_ParsesJsonDocument()
     {
-        var payload = """
-            {
-                "schemaVersion": 1,
-                "appVersion": "1.0.0",
-                "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
-                "measurements": []
-            }
-            """;
-        var context = MakeContext(payload);
+        var payload = TestDataFactory.ValidJsonPayload();
+        var context = TestDataFactory.MakeContext(payload: payload);
 
         await _handler.HandleAsync(context);
 
@@ -41,7 +31,7 @@ public class ParseJsonHandlerTests
     [Fact]
     public async Task MalformedJson_SetsFatalError()
     {
-        var context = MakeContext("{ this is not json }");
+        var context = TestDataFactory.MakeContext(payload: "{ this is not json }");
 
         await _handler.HandleAsync(context);
 
@@ -53,7 +43,7 @@ public class ParseJsonHandlerTests
     [Fact]
     public async Task EmptyPayload_SetsFatalError()
     {
-        var context = MakeContext("");
+        var context = TestDataFactory.MakeContext(payload: "");
 
         await _handler.HandleAsync(context);
 
@@ -65,7 +55,7 @@ public class ParseJsonHandlerTests
     [Fact]
     public async Task UnterminatedString_SetsFatalError()
     {
-        var context = MakeContext("""{"key": "unterminated""");
+        var context = TestDataFactory.MakeContext(payload: """{"key": "unterminated""");
 
         await _handler.HandleAsync(context);
 
@@ -76,7 +66,7 @@ public class ParseJsonHandlerTests
     [Fact]
     public async Task TrailingComma_SetsFatalError()
     {
-        var context = MakeContext("""{"key": "value",}""");
+        var context = TestDataFactory.MakeContext(payload: """{"key": "value",}""");
 
         await _handler.HandleAsync(context);
 

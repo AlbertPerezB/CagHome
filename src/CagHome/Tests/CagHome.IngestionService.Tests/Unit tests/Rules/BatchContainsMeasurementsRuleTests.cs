@@ -8,32 +8,10 @@ public class BatchContainsMeasurementsRuleTests
 {
     private readonly BatchContainsMeasurementsRule _rule = new();
 
-    private static Batch MakeBatch(List<Measurement> measurements) =>
-        new()
-        {
-            BatchId = Guid.NewGuid(),
-            PatientId = Guid.NewGuid(),
-            SchemaVersion = 1,
-            AppVersion = new Version(1, 0, 0),
-            Measurements = measurements,
-            ReceivedAt = DateTime.UtcNow,
-        };
-
-    private static Measurement MakeMeasurement() =>
-        new()
-        {
-            MeasurementId = Guid.NewGuid(),
-            MeasurementType = MeasurementType.HeartRate,
-            Value = 72f,
-            Unit = Unit.Bpm,
-            DeviceReported = DateTime.UtcNow,
-            Source = new DeviceInfo(),
-        };
-
     [Fact]
     public async Task BatchWithMeasurements_ReturnsNull()
     {
-        var batch = MakeBatch([MakeMeasurement()]);
+        var batch = TestDataFactory.MakeBatch();
 
         var result = await _rule.ValidateAsync(batch);
 
@@ -43,7 +21,7 @@ public class BatchContainsMeasurementsRuleTests
     [Fact]
     public async Task EmptyMeasurements_ReturnsValidationError()
     {
-        var batch = MakeBatch([]);
+        var batch = TestDataFactory.MakeBatch(measurements: []);
 
         var result = await _rule.ValidateAsync(batch);
 

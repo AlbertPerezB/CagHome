@@ -11,62 +11,10 @@ public class SchemaValidationRuleTests
 
     private static JsonDocument Parse(string json) => JsonDocument.Parse(json);
 
-    private static string ValidPayload() =>
-        """
-            {
-                "schemaVersion": 1,
-                "appVersion": "1.0.0",
-                "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
-                "measurements": [
-                    {
-                        "measurementId": "bbbbbbbb-0000-0000-0000-000000000000",
-                        "type": "HeartRate",
-                        "value": 72,
-                        "unit": "Bpm",
-                        "deviceReported": "2024-01-01T10:00:00Z"
-                    }
-                ]
-            }
-            """;
-
-    // --- Happy path ---
-
     [Fact]
     public async Task ValidPayload_ReturnsNull()
     {
-        var result = await _rule.ValidateAsync(Parse(ValidPayload()));
-
-        Assert.Null(result);
-    }
-
-    [Fact]
-    public async Task ValidPayload_WithOptionalSource_ReturnsNull()
-    {
-        var json = Parse(
-            """
-            {
-                "schemaVersion": 1,
-                "appVersion": "1.0.0",
-                "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
-                "measurements": [
-                    {
-                        "measurementId": "bbbbbbbb-0000-0000-0000-000000000000",
-                        "type": "HeartRate",
-                        "value": 72,
-                        "unit": "Bpm",
-                        "deviceReported": "2024-01-01T10:00:00Z",
-                        "source": {
-                            "deviceId": "dev-1",
-                            "deviceManufacturer": "Garmin",
-                            "deviceModel": "Forerunner 255"
-                        }
-                    }
-                ]
-            }
-            """
-        );
-
-        var result = await _rule.ValidateAsync(json);
+        var result = await _rule.ValidateAsync(Parse(TestDataFactory.ValidJsonPayload()));
 
         Assert.Null(result);
     }
@@ -74,23 +22,12 @@ public class SchemaValidationRuleTests
     [Fact]
     public async Task ValidPayload_EmptyMeasurements_ReturnsNull()
     {
-        var json = Parse(
-            """
-            {
-                "schemaVersion": 1,
-                "appVersion": "1.0.0",
-                "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
-                "measurements": []
-            }
-            """
-        );
+        var json = Parse(TestDataFactory.BatchJson(measurements: Array.Empty<string>()));
 
         var result = await _rule.ValidateAsync(json);
 
         Assert.Null(result);
     }
-
-    // --- schemaVersion checks ---
 
     [Fact]
     public async Task MissingSchemaVersion_ReturnsMissingRequiredField()
@@ -121,17 +58,12 @@ public class SchemaValidationRuleTests
     [Fact]
     public async Task UnsupportedSchemaVersion_ReturnsUnsupportedSchemaVersion()
     {
-        var json = Parse(
-            """{ "schemaVersion": 99, "appVersion": "1.0.0", "patientId": "a1b2c3d4-0000-0000-0000-000000000000", "measurements": [] }"""
-        );
-
+        var json = Parse(TestDataFactory.BatchJson(schemaVersion: 99));
         var result = await _rule.ValidateAsync(json);
 
         Assert.NotNull(result);
         Assert.Equal(ValidationCode.UnsupportedSchemaVersion, result!.Code);
     }
-
-    // --- Required top-level fields ---
 
     [Theory]
     [InlineData("appVersion")]
@@ -147,15 +79,13 @@ public class SchemaValidationRuleTests
             ["measurements"] = Array.Empty<object>(),
         };
         payload.Remove(field);
-        var json = Parse(System.Text.Json.JsonSerializer.Serialize(payload));
+        var json = Parse(JsonSerializer.Serialize(payload));
 
         var result = await _rule.ValidateAsync(json);
 
         Assert.NotNull(result);
         Assert.Equal(ValidationCode.InvalidSchema, result!.Code);
     }
-
-    // --- Required measurement fields ---
 
     [Theory]
     [InlineData("measurementId")]
@@ -182,15 +112,13 @@ public class SchemaValidationRuleTests
             patientId = "a1b2c3d4-0000-0000-0000-000000000000",
             measurements = new[] { measurement },
         };
-        var json = Parse(System.Text.Json.JsonSerializer.Serialize(payload));
+        var json = Parse(JsonSerializer.Serialize(payload));
 
         var result = await _rule.ValidateAsync(json);
 
         Assert.NotNull(result);
         Assert.Equal(ValidationCode.InvalidSchema, result!.Code);
     }
-
-    // --- Type violations ---
 
     [Fact]
     public async Task MeasurementValueAsString_ReturnsInvalidSchema()
@@ -247,8 +175,6 @@ public class SchemaValidationRuleTests
         Assert.NotNull(result);
         Assert.Equal(ValidationCode.InvalidSchema, result!.Code);
     }
-
-    // --- IsFatal ---
 
     [Fact]
     public void IsFatal_IsTrue()

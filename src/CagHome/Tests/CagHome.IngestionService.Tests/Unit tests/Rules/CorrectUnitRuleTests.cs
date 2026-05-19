@@ -8,17 +8,6 @@ public class CorrectUnitRuleTests
 {
     private readonly CorrectUnitRule _rule = new();
 
-    private static Measurement MakeMeasurement(MeasurementType type, Unit unit) =>
-        new()
-        {
-            MeasurementId = Guid.NewGuid(),
-            MeasurementType = type,
-            Value = 1f,
-            Unit = unit,
-            DeviceReported = DateTime.UtcNow,
-            Source = new DeviceInfo(),
-        };
-
     [Theory]
     [InlineData(MeasurementType.HeartRate, Unit.Bpm)]
     [InlineData(MeasurementType.Spo2, Unit.Percent)]
@@ -26,7 +15,7 @@ public class CorrectUnitRuleTests
     [InlineData(MeasurementType.BodyTemperature, Unit.F)]
     public async Task ValidUnit_ReturnsNull(MeasurementType type, Unit unit)
     {
-        var measurement = MakeMeasurement(type, unit);
+        var measurement = TestDataFactory.MakeMeasurement(type, unit);
 
         var result = await _rule.ValidateAsync(measurement);
 
@@ -45,7 +34,7 @@ public class CorrectUnitRuleTests
     [InlineData(MeasurementType.BodyTemperature, Unit.Percent)]
     public async Task InvalidUnit_ReturnsValidationError(MeasurementType type, Unit unit)
     {
-        var measurement = MakeMeasurement(type, unit);
+        var measurement = TestDataFactory.MakeMeasurement(type, unit);
 
         var result = await _rule.ValidateAsync(measurement);
 
@@ -62,7 +51,7 @@ public class CorrectUnitRuleTests
         Unit unit
     )
     {
-        var measurement = MakeMeasurement(type, unit);
+        var measurement = TestDataFactory.MakeMeasurement(type, unit);
 
         var result = await _rule.ValidateAsync(measurement);
 

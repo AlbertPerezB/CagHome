@@ -18,17 +18,6 @@ public class PatientActiveRuleTests
         _rule = new PatientActiveRule(_cache);
     }
 
-    private static Batch CreateBatch(Guid patientId) =>
-        new()
-        {
-            BatchId = Guid.NewGuid(),
-            PatientId = patientId,
-            SchemaVersion = 1,
-            AppVersion = new Version(1, 0, 0),
-            Measurements = new List<Measurement>(),
-            ReceivedAt = DateTime.UtcNow,
-        };
-
     [Fact]
     public void IsFatal_ShouldBeTrue()
     {
@@ -41,7 +30,7 @@ public class PatientActiveRuleTests
         var patientId = Guid.Parse("d9aaf610-c81e-4dd7-8e1e-3fa6c4cf9c18");
         _cache.GetPatientStatus(patientId).Returns(PatientStatus.Active);
 
-        var batch = CreateBatch(patientId);
+        var batch = TestDataFactory.MakeBatch(patientId: patientId);
         var result = await _rule.ValidateAsync(batch);
 
         Assert.Null(result);
@@ -53,7 +42,7 @@ public class PatientActiveRuleTests
         var patientId = Guid.NewGuid();
         _cache.GetPatientStatus(patientId).Returns(PatientStatus.Inactive);
 
-        var batch = CreateBatch(patientId);
+        var batch = TestDataFactory.MakeBatch(patientId: patientId);
         var result = await _rule.ValidateAsync(batch);
 
         Assert.NotNull(result);
@@ -67,7 +56,7 @@ public class PatientActiveRuleTests
         var patientId = Guid.NewGuid();
         _cache.GetPatientStatus(patientId).Returns((PatientStatus?)null);
 
-        var batch = CreateBatch(patientId);
+        var batch = TestDataFactory.MakeBatch(patientId: patientId);
         var result = await _rule.ValidateAsync(batch);
 
         Assert.NotNull(result);
@@ -81,7 +70,7 @@ public class PatientActiveRuleTests
         var patientId = Guid.Parse("b2ffdfe8-47ef-42c3-9a7a-94fc3cea8f34");
         _cache.GetPatientStatus(patientId).Returns(PatientStatus.Deceased);
 
-        var batch = CreateBatch(patientId);
+        var batch = TestDataFactory.MakeBatch(patientId: patientId);
         var result = await _rule.ValidateAsync(batch);
         Assert.NotNull(result);
     }

@@ -11,6 +11,7 @@ using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure.Cache;
 using CagHome.IngestionService.Infrastructure.Schemas;
+using CagHome.IngestionService.Tests;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Wolverine;
@@ -19,14 +20,6 @@ namespace CagHome.IngestionService.Tests.Integration;
 
 public class IngestionServiceIntegrationTests
 {
-    private static readonly Guid _patientId = Guid.Parse("a1b2c3d4-0000-0000-0000-000000000000");
-    private static readonly string _validTopic = $"biometrics/{_patientId}/telemetry";
-
-    private static string ValidTestPayload() => File.ReadAllText("TestData/test_batch_valid.json");
-
-    private static string InvalidMeasurementsPayload() =>
-        File.ReadAllText("TestData/test_batch_invalid_measurements.json");
-
     private static IIngestionService BuildService(
         PatientStatus? patientStatusOverride = null,
         PublishBatchHandler? publishOverride = null,
@@ -90,7 +83,7 @@ public class IngestionServiceIntegrationTests
     private static IPatientRegistryCache CreateCacheWithStatus(PatientStatus cacheStatus)
     {
         var cache = Substitute.For<IPatientRegistryCache>();
-        cache.GetPatientStatus(_patientId).Returns(cacheStatus);
+        cache.GetPatientStatus(TestDataFactory.DefaultPatientId).Returns(cacheStatus);
         return cache;
     }
 
@@ -98,7 +91,11 @@ public class IngestionServiceIntegrationTests
     public async Task ValidBatch_PipelineCompletesWithNoFatalError()
     {
         var service = BuildService();
-        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.ValidJsonPayload(),
+            DateTime.UtcNow
+        );
 
         var context = await service.ProcessAsync(raw);
 
@@ -109,12 +106,16 @@ public class IngestionServiceIntegrationTests
     public async Task ValidBatch_BatchIsMapped()
     {
         var service = BuildService();
-        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.ValidJsonPayload(),
+            DateTime.UtcNow
+        );
 
         var context = await service.ProcessAsync(raw);
 
         Assert.NotNull(context.Batch);
-        Assert.Equal(_patientId, context.Batch!.PatientId);
+        Assert.Equal(TestDataFactory.DefaultPatientId, context.Batch!.PatientId);
         Assert.Equal(1, context.Batch.SchemaVersion);
     }
 
@@ -122,7 +123,11 @@ public class IngestionServiceIntegrationTests
     public async Task ValidBatch_AllMeasurementsMapped()
     {
         var service = BuildService();
-        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.ValidJsonPayload(),
+            DateTime.UtcNow
+        );
 
         var context = await service.ProcessAsync(raw);
 
@@ -133,7 +138,11 @@ public class IngestionServiceIntegrationTests
     public async Task ValidBatch_NoMeasurementValidationErrors()
     {
         var service = BuildService();
-        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.ValidJsonPayload(),
+            DateTime.UtcNow
+        );
 
         var context = await service.ProcessAsync(raw);
 
@@ -149,7 +158,11 @@ public class IngestionServiceIntegrationTests
             new NullLogger<PublishBatchHandler>()
         );
         var service = BuildService(publishOverride: publishHandler);
-        var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.ValidJsonPayload(),
+            DateTime.UtcNow
+        );
 
         await service.ProcessAsync(raw);
 
@@ -157,7 +170,7 @@ public class IngestionServiceIntegrationTests
             .Received(1)
             .PublishAsync(
                 Arg.Is<BatchReceived>(br =>
-                    br.PatientId == _patientId && br.Measurements.Count == 13
+                    br.PatientId == TestDataFactory.DefaultPatientId && br.Measurements.Count == 13
                 )
             );
     }
@@ -171,7 +184,7 @@ public class IngestionServiceIntegrationTests
             new NullLogger<PublishBatchHandler>()
         );
         var service = BuildService(publishOverride: publishHandler);
-        var raw = new RawBatch(_validTopic, "{ not valid json }", DateTime.UtcNow);
+        var raw = new RawBatch(TestDataFactory.DefaultTopic, "{ not valid json }", DateTime.UtcNow);
 
         await service.ProcessAsync(raw);
 
@@ -184,7 +197,11 @@ public class IngestionServiceIntegrationTests
         // Non-fatal measurement errors should not cause a fatal error.
         // The batch should still flow through the entire pipeline.
         var service = BuildService();
-        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.InvalidMeasurementsPayload(),
+            DateTime.UtcNow
+        );
 
         var context = await service.ProcessAsync(raw);
 
@@ -197,7 +214,11 @@ public class IngestionServiceIntegrationTests
         // Even measurements with errors should remain in the batch —
         // downstream services decide how to handle annotated objects.
         var service = BuildService();
-        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.InvalidMeasurementsPayload(),
+            DateTime.UtcNow
+        );
 
         var context = await service.ProcessAsync(raw);
 
@@ -208,7 +229,11 @@ public class IngestionServiceIntegrationTests
     public async Task MixedBatch_InvalidMeasurementsAnnotatedWithErrors()
     {
         var service = BuildService();
-        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.InvalidMeasurementsPayload(),
+            DateTime.UtcNow
+        );
 
         var context = await service.ProcessAsync(raw);
 
@@ -220,7 +245,11 @@ public class IngestionServiceIntegrationTests
     public async Task MixedBatch_ValidMeasurementsHaveNoErrors()
     {
         var service = BuildService();
-        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.InvalidMeasurementsPayload(),
+            DateTime.UtcNow
+        );
 
         var context = await service.ProcessAsync(raw);
 
@@ -238,7 +267,11 @@ public class IngestionServiceIntegrationTests
             new NullLogger<PublishBatchHandler>()
         );
         var service = BuildService(publishOverride: publishHandler);
-        var raw = new RawBatch(_validTopic, InvalidMeasurementsPayload(), DateTime.UtcNow);
+        var raw = new RawBatch(
+            TestDataFactory.DefaultTopic,
+            TestDataFactory.InvalidMeasurementsPayload(),
+            DateTime.UtcNow
+        );
 
         await service.ProcessAsync(raw);
 
@@ -246,7 +279,7 @@ public class IngestionServiceIntegrationTests
             .Received(1)
             .PublishAsync(
                 Arg.Is<BatchReceived>(br =>
-                    br.PatientId == _patientId
+                    br.PatientId == TestDataFactory.DefaultPatientId
                     && br.Measurements.Count == 13
                     && br.Measurements.Count(m => m.ValidationErrors.Any()) == 2
                 )

@@ -12,68 +12,35 @@ public class DeserializationHandlerTests
         new NullLogger<DeserializationHandler>()
     );
 
-    private static IngestionContext MakeContext(string payload)
-    {
-        var context = new IngestionContext(new RawBatch("patient/123", payload, DateTime.UtcNow))
-        {
-            Json = JsonDocument.Parse(payload),
-        };
-        return context;
-    }
-
     [Fact]
     public async Task ValidJsonDocument_DeserializesBatchDto()
     {
-        var payload = """
-            {
-                "schemaVersion": 1,
-                "appVersion": "1.0.0",
-                "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
-                "measurements": []
-            }
-            """;
-        var context = MakeContext(payload);
+        var payload = TestDataFactory.ValidJsonPayload();
+        var context = TestDataFactory.MakeContext(payload: payload);
+        context.Json = JsonDocument.Parse(payload);
 
         await _handler.HandleAsync(context);
 
         Assert.Null(context.FatalError);
         Assert.NotNull(context.BatchDto);
         Assert.Equal(1, context.BatchDto!.SchemaVersion);
-        Assert.Equal(
-            Guid.Parse("a1b2c3d4-0000-0000-0000-000000000000"),
-            context.BatchDto.PatientId
-        );
+        Assert.Equal(TestDataFactory.DefaultPatientId, context.BatchDto.PatientId);
     }
 
     [Fact]
     public async Task ValidJson_WithMeasurements_DeserializesMeasurementDtos()
     {
-        var payload = """
-            {
-                "schemaVersion": 1,
-                "appVersion": "1.0.0",
-                "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
-                "measurements": [
-                    {
-                        "measurementId": "aaaaaaaa-0000-0000-0000-000000000000",
-                        "type": "HeartRate",
-                        "value": 72.0,
-                        "unit": "BPM",
-                        "deviceReported": "2024-01-01T10:00:00Z",
-                        "source": { "id": "dev-1", "name": "Band", "model": "X1" }
-                    }
-                ]
-            }
-            """;
-        var context = MakeContext(payload);
+        var payload = TestDataFactory.ValidJsonPayload();
+        var context = TestDataFactory.MakeContext(payload: payload);
+        context.Json = JsonDocument.Parse(payload);
 
         await _handler.HandleAsync(context);
 
         Assert.Null(context.FatalError);
         Assert.NotNull(context.BatchDto);
-        Assert.Single(context.BatchDto!.Measurements!);
+        Assert.Equal(13, context.BatchDto!.Measurements!.Count());
         Assert.Equal("HeartRate", context.BatchDto.Measurements![0].Type);
-        Assert.Equal(72.0, context.BatchDto.Measurements[0].Value);
+        Assert.Equal(68.0, context.BatchDto.Measurements[0].Value);
     }
 
     [Fact]
@@ -84,10 +51,12 @@ public class DeserializationHandlerTests
                 "SCHEMAVERSION": 1,
                 "appversion": "1.0.0",
                 "PatientId": "a1b2c3d4-0000-0000-0000-000000000000",
+                "CORRELATIONID": "00000000-0000-0000-0000-000000000000",
                 "MEASUREMENTS": []
             }
             """;
-        var context = MakeContext(payload);
+        var context = TestDataFactory.MakeContext(payload: payload);
+        context.Json = JsonDocument.Parse(payload);
 
         await _handler.HandleAsync(context);
 
@@ -99,9 +68,10 @@ public class DeserializationHandlerTests
     [Fact]
     public async Task SkipsProcessing_WhenFatalErrorAlreadySet()
     {
-        var payload =
-            """{"schemaVersion": 1, "patientId": "a1b2c3d4-0000-0000-0000-000000000000"}""";
-        var context = MakeContext(payload);
+        var payload = TestDataFactory.ValidJsonPayload();
+        var context = TestDataFactory.MakeContext(payload: payload);
+        context.Json = JsonDocument.Parse(payload);
+
         context.FatalError = new ValidationError(ValidationCode.ParseError, "Already failed");
 
         await _handler.HandleAsync(context);
