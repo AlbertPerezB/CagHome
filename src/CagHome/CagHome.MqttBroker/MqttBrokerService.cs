@@ -4,12 +4,19 @@ using MQTTnet.Server;
 
 namespace CagHome.MqttBroker;
 
+/// <summary>
+/// Hosts and manages the MQTT broker lifecycle for the application.
+/// </summary>
 public class MqttBrokerService : IHostedService
 {
     private readonly ILogger<MqttBrokerService> _logger;
     private MqttServer? _mqttServer;
     private readonly int _port;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MqttBrokerService"/> class.
+    /// </summary>
+    /// <param name="logger">Logger used to write broker lifecycle and client activity events.</param>
     public MqttBrokerService(ILogger<MqttBrokerService> logger)
     {
         _logger = logger;
@@ -18,6 +25,11 @@ public class MqttBrokerService : IHostedService
             : 1883;
     }
 
+    /// <summary>
+    /// Starts the MQTT broker and registers broker event handlers.
+    /// </summary>
+    /// <param name="cancellationToken">A token used to cancel the startup operation.</param>
+    /// <returns>A task that completes when the broker has started.</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         _logger.LogDebug("Starting MQTT Broker on port {Port}", _port);
@@ -42,6 +54,11 @@ public class MqttBrokerService : IHostedService
         _logger.LogDebug("MQTT Broker started successfully on port {Port}", _port);
     }
 
+    /// <summary>
+    /// Stops and disposes the MQTT broker instance.
+    /// </summary>
+    /// <param name="cancellationToken">A token used to cancel the shutdown operation.</param>
+    /// <returns>A task that completes when the broker has stopped.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogDebug("Stopping MQTT Broker");
