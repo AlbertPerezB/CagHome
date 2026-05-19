@@ -56,7 +56,7 @@ public class SimulatorUnitTests
 
         Assert.Equal(3, measurements.Length);
         Assert.Equal(
-            new[] { "HeartRate", "Spo2", "BodyTemperature" },
+            ["HeartRate", "Spo2", "BodyTemperature"],
             measurements.Select(m => m.Type)
         );
         Assert.Equal(77, measurements.Single(m => m.Type == "HeartRate").Value);
