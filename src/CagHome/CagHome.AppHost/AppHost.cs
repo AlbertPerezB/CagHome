@@ -38,11 +38,6 @@ builder
     .WithEnvironment("Simulator__BrokerHost", brokerHost)
     .WithEnvironment("Simulator__BrokerPort", brokerPort);
 
-builder
-    .AddProject<Projects.CagHome_RabbitMQBroker>("rabbitmqbroker")
-    .WithReference(rabbitmqBroker)
-    .WaitFor(rabbitmqBroker);
-
 var mockEhr = builder.AddProject<Projects.CagHome_MockEhr>("mock-ehr");
 
 builder
