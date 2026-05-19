@@ -10,13 +10,30 @@ using Wolverine;
 
 namespace CagHome.MonitoringService.Tests.Integration;
 
+/// <summary>
+/// Integration test fixture that hosts MonitoringService components and exposes test stores.
+/// </summary>
 public class MonitoringServiceFixture : IAsyncLifetime
 {
-    
+    /// <summary>
+    /// Gets the host instance.
+    /// </summary>
     public IHost Host { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the patient careplan store.
+    /// </summary>
     public PatientCareplanStore PatientCareplanStore { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the in-memory decision audit store.
+    /// </summary>
     public DecisionAuditStore DecisionAuditStore { get; private set; } = null!;
 
+    /// <summary>
+    /// Initializes the fixture host and registers the dependencies required.
+    /// </summary>
+    /// <returns>A task when the host has started.</returns>
     public async Task InitializeAsync()
     {
         PatientCareplanStore = new PatientCareplanStore();
@@ -49,12 +66,19 @@ public class MonitoringServiceFixture : IAsyncLifetime
             .StartAsync();
     }
 
+    /// <summary>
+    /// Stops and disposes the fixture host.
+    /// </summary>
+    /// <returns>A task when shutdown is finished.</returns>
     public async Task DisposeAsync()
     {
         await Host.StopAsync();
         Host.Dispose();
     }
 
+    /// <summary>
+    /// Clears all in-memory test data from fixture stores.
+    /// </summary>
     public void Reset()
     {
         PatientCareplanStore.Clear();
