@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CagHome.Contracts.Enums;
+﻿using CagHome.Contracts.Enums;
 
 namespace CagHome.Contracts
 {

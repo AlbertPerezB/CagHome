@@ -2,7 +2,6 @@
 using CagHome.Contracts;
 using CagHome.EhrIntegrationService.Domain;
 using CagHome.EhrIntegrationService.Infrastructure;
-using Wolverine;
 
 namespace CagHome.EhrIntegrationService.Application.Pollers;
 

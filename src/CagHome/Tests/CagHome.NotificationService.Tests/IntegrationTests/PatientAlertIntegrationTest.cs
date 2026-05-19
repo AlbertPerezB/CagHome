@@ -1,9 +1,7 @@
 ﻿using CagHome.Contracts;
 using CagHome.Contracts.Enums;
 using JasperFx.Core;
-using NSubstitute;
 using Wolverine.Tracking;
-using Xunit;
 
 namespace CagHome.NotificationService.Tests.Integration;
 

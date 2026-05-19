@@ -1,5 +1,4 @@
 using CagHome.Contracts.Enums;
-using StackExchange.Redis;
 
 namespace CagHome.IngestionService.Infrastructure.Cache;
 

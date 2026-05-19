@@ -1,7 +1,6 @@
 ﻿using CagHome.Contracts.Enums;
 using CagHome.SystemTests.Helpers;
 using CagHome.SystemTests.TestClasses;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit.Abstractions;

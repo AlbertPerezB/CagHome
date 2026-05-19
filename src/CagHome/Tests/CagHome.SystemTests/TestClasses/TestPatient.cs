@@ -1,5 +1,4 @@
 ﻿using CagHome.Contracts.Enums;
-using Grpc.Core;
 
 namespace CagHome.SystemTests.TestClasses;
 

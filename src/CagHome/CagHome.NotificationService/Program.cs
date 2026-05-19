@@ -1,5 +1,3 @@
-using CagHome.Contracts;
-using CagHome.NotificationService;
 using CagHome.NotificationService.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Wolverine;

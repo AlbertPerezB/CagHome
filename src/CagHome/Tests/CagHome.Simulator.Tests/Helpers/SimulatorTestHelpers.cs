@@ -1,4 +1,3 @@
-using System.Reflection;
 using CagHome.Simulator;
 using CagHome.Simulator.Application;
 using CagHome.Simulator.Domain.Profiles;

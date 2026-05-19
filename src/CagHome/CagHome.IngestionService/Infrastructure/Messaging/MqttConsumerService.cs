@@ -1,12 +1,7 @@
 using System.Text;
-using System.Text.Json;
 using CagHome.IngestionService.Application;
-using CagHome.IngestionService.Application.Pipeline;
 using CagHome.IngestionService.Domain.Models;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using MQTTnet;
-using Spectre.Console;
 
 namespace CagHome.IngestionService.Infrastructure
 {

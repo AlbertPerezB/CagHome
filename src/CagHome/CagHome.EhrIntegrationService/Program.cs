@@ -1,5 +1,4 @@
 using CagHome.Contracts;
-using CagHome.Contracts.Enums;
 using CagHome.EhrIntegrationService.Application.Pollers;
 using CagHome.EhrIntegrationService.Infrastructure;
 using Wolverine;

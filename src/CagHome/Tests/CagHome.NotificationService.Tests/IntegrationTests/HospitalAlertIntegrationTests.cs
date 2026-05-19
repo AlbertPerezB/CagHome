@@ -1,10 +1,8 @@
 ﻿using System.Net;
 using CagHome.Contracts;
 using CagHome.Contracts.Enums;
-using CagHome.NotificationService.Domain;
 using JasperFx.Core;
 using Wolverine.Tracking;
-using Xunit;
 
 namespace CagHome.NotificationService.Tests.Integration;
 

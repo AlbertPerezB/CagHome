@@ -1,4 +1,3 @@
-using System.Net.Http;
 using System.Text;
 using CagHome.SystemTests.Helpers;
 using Xunit.Abstractions;

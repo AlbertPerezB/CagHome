@@ -1,6 +1,5 @@
 using CagHome.Contracts.Enums;
 using CagHome.MonitoringService.Application.Decision.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace CagHome.MonitoringService.Application.Decision;
 

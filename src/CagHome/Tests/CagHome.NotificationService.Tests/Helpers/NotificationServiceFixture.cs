@@ -3,11 +3,9 @@ using CagHome.NotificationService.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 using Wolverine;
 using Wolverine.ErrorHandling;
-using Wolverine.Tracking;
 
 namespace CagHome.NotificationService.Tests.Integration;
 

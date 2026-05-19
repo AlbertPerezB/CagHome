@@ -2,7 +2,6 @@ using System.Text.Json;
 using CagHome.IngestionService.Application.Validation.StructuralValidation;
 using CagHome.IngestionService.Domain.Enums;
 using CagHome.IngestionService.Infrastructure.Schemas;
-using Xunit;
 
 namespace CagHome.IngestionService.Tests.UnitTests;
 

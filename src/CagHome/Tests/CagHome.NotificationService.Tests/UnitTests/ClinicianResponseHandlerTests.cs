@@ -1,11 +1,9 @@
 ﻿using CagHome.Contracts;
-using CagHome.Contracts.Enums;
 using CagHome.NotificationService.Application.Handlers;
 using CagHome.NotificationService.Domain;
 using CagHome.NotificationService.Infrastructure;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using Wolverine.Transports;
 
 namespace CagHome.NotificationService.Tests.Application.Handlers;
 

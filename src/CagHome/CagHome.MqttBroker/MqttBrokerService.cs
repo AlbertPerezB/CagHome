@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MQTTnet;
 using MQTTnet.Server;
 
 namespace CagHome.Broker;

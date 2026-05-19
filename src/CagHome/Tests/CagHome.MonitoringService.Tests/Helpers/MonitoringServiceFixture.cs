@@ -1,4 +1,3 @@
-using CagHome.Contracts.Enums;
 using CagHome.MonitoringService.Application.Decision;
 using CagHome.MonitoringService.Application.Decision.Interfaces;
 using CagHome.MonitoringService.Application.Decision.Policies;

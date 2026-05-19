@@ -1,6 +1,5 @@
 using CagHome.Contracts;
 using CagHome.Contracts.Enums;
-using CagHome.MonitoringService.Domain;
 using CagHome.MonitoringService.Tests.Helpers;
 using Wolverine.Tracking;
 
