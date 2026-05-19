@@ -36,6 +36,7 @@ public class IngestionServiceIntegrationTests
     )
     {
         var registry = new JsonSchemaRegistry();
+        var messageBus = Substitute.For<IMessageBus>();
 
         var parseJson = new ParseJsonHandler(new NullLogger<ParseJsonHandler>());
         var deserialization = new DeserializationHandler(new NullLogger<DeserializationHandler>());
@@ -68,7 +69,9 @@ public class IngestionServiceIntegrationTests
             new NullLogger<MeasurementValidationHandler>()
         );
 
-        var publish = publishOverride ?? Substitute.For<PublishBatchHandler>();
+        var publish =
+            publishOverride
+            ?? new PublishBatchHandler(messageBus, new NullLogger<PublishBatchHandler>());
         var errors = errorOverride ?? new ErrorHandler(new NullLogger<ErrorHandler>());
 
         var pipeline = IngestionPipelineBuilder.Build(
@@ -143,7 +146,10 @@ public class IngestionServiceIntegrationTests
     public async Task ValidBatch_ShouldPublishBatchReceivedMessage()
     {
         var messageBus = Substitute.For<IMessageBus>();
-        var publishHandler = new PublishBatchHandler(messageBus);
+        var publishHandler = new PublishBatchHandler(
+            messageBus,
+            new NullLogger<PublishBatchHandler>()
+        );
         var service = BuildService(publishOverride: publishHandler);
         var raw = new RawBatch(_validTopic, ValidTestPayload(), DateTime.UtcNow);
 

@@ -47,6 +47,7 @@ public class BatchMappingHandlerTests
             SchemaVersion = 1,
             AppVersion = new Version(1, 0, 0),
             PatientId = Guid.NewGuid(),
+            CorrelationId = Guid.NewGuid(),
             Measurements = [ValidMeasurementDto()],
         };
 

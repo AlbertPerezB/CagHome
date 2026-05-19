@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "appVersion": "1.0.0",
   "patientId": "a1b2c3d4-0000-0000-0000-000000000000",
+  "correlationId": "00000000-0000-0000-0000-000000000000",
   "measurements": [
     {
       "measurementId": "00000001-0000-0000-0000-000000000000",
@@ -19,7 +20,7 @@
       "measurementId": "00000002-0000-0000-0000-000000000000",
       "type": "Spo2",
       "value": 97,
-      "unit": "Bpm", 
+      "unit": "Bpm",
       "deviceReported": "2024-01-01T10:00:00Z",
       "source": {
         "deviceId": "garmin-001",

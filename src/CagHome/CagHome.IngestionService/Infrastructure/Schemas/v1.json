@@ -5,7 +5,8 @@
         "schemaVersion",
         "appVersion",
         "patientId",
-        "measurements"
+      "measurements",
+      "correlationId"
     ],
     "properties": {
         "schemaVersion": {
@@ -14,10 +15,14 @@
         "appVersion": {
             "type": "string"
         },
-        "patientId": {
-            "type": "string",
-            "format": "uuid"
-        },
+      "patientId": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "correlationId": {
+        "type": "string",
+        "format": "uuid"
+      },
         "measurements": {
             "type": "array",
             "items": {

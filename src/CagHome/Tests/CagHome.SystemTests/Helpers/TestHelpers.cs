@@ -5,7 +5,8 @@ using Xunit.Abstractions;
 
 namespace CagHome.SystemTests.Helpers;
 
-public class TestHelpers{
+public class TestHelpers
+{
     private readonly AspireAppFixture _fixture;
     private readonly ITestOutputHelper _output;
 
@@ -16,27 +17,31 @@ public class TestHelpers{
     }
 
     /// <summary>
-    /// Returns the total count of monitoring audit entries.
-    /// </summary>
-    public async Task<long> GetMonitoringAuditCount()
-    {
-        return await _fixture.MonitoringAudit.CountDocumentsAsync(FilterDefinition<BsonDocument>.Empty);
-    }
-
-    /// <summary>
     /// Injects a batch via the simulator endpoint.
-    /// Returns the correlationId to use for filtering audit entries.
     /// </summary>
+    /// <param name="patientId"> The patient id to be injected</param>
+    /// <param name="payload"> The payload to be injected <see cref = "NormalBatch(Guid)" /> </param>
+    /// <returns>The correlationId to use for filtering audit entries.</returns>
     public async Task<Guid> InjectBatch(Guid patientId, object payload)
     {
         var response = await _fixture.Simulator.PostAsJsonAsync("/simulator/inject", payload);
         response.EnsureSuccessStatusCode();
 
         var responseBody = await response.Content.ReadFromJsonAsync<InjectResponse>();
-        _output.WriteLine($"Injected batch for patient {patientId} with correlation id {responseBody!.CorrelationId}");
+        _output.WriteLine(
+            $"Injected batch for patient {patientId} with correlation id {responseBody!.CorrelationId}"
+        );
         return responseBody.CorrelationId;
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="alertId"></param>
+    /// <param name="patientId"></param>
+    /// <param name="hospitalId"></param>
+    /// <param name="message"></param>
+    /// <returns></returns>
     public async Task PostClinicianResponse(
         Guid alertId,
         Guid patientId,
@@ -81,22 +86,17 @@ public class TestHelpers{
         int maxWaitSeconds = 30
     )
     {
-        var deadline = DateTime.UtcNow.AddSeconds(maxWaitSeconds);
-
-        while (DateTime.UtcNow < deadline)
-        {
-            var filter = Builders<BsonDocument>.Filter.Eq("CorrelationId", correlationId);
-            var entry = await _fixture
-                .MonitoringAudit.Find(filter)
-                .SortByDescending(d => d["TimestampUtc"])
-                .FirstOrDefaultAsync();
-
-            if (entry != null)
-                return entry;
-            await Task.Delay(500);
-        }
-
-        return null;
+        return await PollUntilAsync(
+            async () =>
+            {
+                var filter = Builders<BsonDocument>.Filter.Eq("CorrelationId", correlationId);
+                return await _fixture
+                    .MonitoringAudit.Find(filter)
+                    .SortByDescending(d => d["TimestampUtc"])
+                    .FirstOrDefaultAsync();
+            },
+            TimeSpan.FromSeconds(maxWaitSeconds)
+        );
     }
 
     public async Task<List<BsonDocument>> WaitForNotificationAudit(
@@ -105,19 +105,68 @@ public class TestHelpers{
         int maxWaitSeconds = 15
     )
     {
-        var deadline = DateTime.UtcNow.AddSeconds(maxWaitSeconds);
+        var result = await PollUntilAsync(
+            async () =>
+            {
+                var filter = Builders<BsonDocument>.Filter.Eq("CorrelationId", correlationId);
+                var entries = await _fixture.NotificationAudit.Find(filter).ToListAsync();
+                return entries.Count >= expectedCount ? entries : null;
+            },
+            TimeSpan.FromSeconds(maxWaitSeconds)
+        );
 
+        return result ?? new List<BsonDocument>();
+    }
+
+    public async Task<BsonDocument?> WaitForCareplansDb(Guid patientId, int maxWaitSeconds = 15)
+    {
+        return await PollUntilAsync(
+            async () =>
+            {
+                var filter = Builders<BsonDocument>.Filter.Eq("_id", patientId);
+                return await _fixture.MonitoringCareplans.Find(filter).FirstOrDefaultAsync();
+            },
+            TimeSpan.FromSeconds(maxWaitSeconds)
+        );
+    }
+
+    public async Task<BsonDocument?> WaitForPatientRegistry(Guid patientId, int maxWaitSeconds = 15)
+    {
+        return await PollUntilAsync(
+            async () =>
+            {
+                var filter = Builders<BsonDocument>.Filter.Eq("_id", patientId);
+                return await _fixture.PatientRegistry.Find(filter).FirstOrDefaultAsync();
+            },
+            TimeSpan.FromSeconds(maxWaitSeconds)
+        );
+    }
+
+    public async Task<string> WaitForRedisCache(Guid patientId, int maxWaitSeconds = 15)
+    {
+        return await PollUntilAsync(
+                async () =>
+                {
+                    var val = await _fixture.RedisCache.StringGetAsync(
+                        $"patient:{patientId}:status"
+                    );
+                    return val.IsNullOrEmpty ? null : val.ToString();
+                },
+                TimeSpan.FromSeconds(maxWaitSeconds)
+            ) ?? string.Empty;
+    }
+
+    private static async Task<T?> PollUntilAsync<T>(Func<Task<T?>> probe, TimeSpan timeout)
+    {
+        var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("CorrelationId", correlationId);
-            var entries = await _fixture.NotificationAudit.Find(filter).ToListAsync();
-
-            if (entries.Count >= expectedCount)
-                return entries;
-            await Task.Delay(500);
+            var result = await probe();
+            if (result is not null)
+                return result;
+            await Task.Delay(1000);
         }
-
-        return new List<BsonDocument>();
+        return default;
     }
 
     // ── Payload builders ─────────────────────────────

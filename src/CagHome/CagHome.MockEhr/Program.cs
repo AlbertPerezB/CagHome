@@ -9,6 +9,7 @@ builder.Services.AddOpenTelemetry();
 builder.Services.AddSingleton<MockEhrStore>();
 
 var app = builder.Build();
+app.MapDefaultEndpoints();
 
 // POST /alerts
 // Receives alerts from our system. Returns 202 Accepted.
