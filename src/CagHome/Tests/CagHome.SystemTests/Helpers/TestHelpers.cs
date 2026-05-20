@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Json;
 using CagHome.Contracts;
 using CagHome.Contracts.Enums;
-using CagHome.SystemTests.TestClasses;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit.Abstractions;

@@ -1,5 +1,4 @@
 ﻿using CagHome.Contracts;
-using CagHome.Contracts.Enums;
 using CagHome.NotificationService.Application.Handlers;
 using CagHome.NotificationService.Domain;
 using CagHome.NotificationService.Infrastructure;

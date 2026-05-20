@@ -1,6 +1,4 @@
 using CagHome.IngestionService.Application.Validation.BatchValidation;
-using CagHome.IngestionService.Domain.Enums;
-using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Tests.UnitTests;
 

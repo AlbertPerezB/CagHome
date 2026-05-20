@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using CagHome.Contracts;
-using CagHome.Contracts.Enums;
 using CagHome.NotificationService.Tests.Helpers;
 using JasperFx.Core;
 using Wolverine.Tracking;

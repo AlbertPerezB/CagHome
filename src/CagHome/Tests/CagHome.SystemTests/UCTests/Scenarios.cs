@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CagHome.Contracts.Enums;
+﻿using CagHome.Contracts.Enums;
 using CagHome.SystemTests.Helpers;
 using CagHome.SystemTests.TestClasses;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit.Abstractions;
 

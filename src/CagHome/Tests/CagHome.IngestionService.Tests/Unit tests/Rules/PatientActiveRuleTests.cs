@@ -1,7 +1,6 @@
 ﻿using CagHome.Contracts.Enums;
 using CagHome.IngestionService.Application.Validation.BatchValidation;
 using CagHome.IngestionService.Domain.Enums;
-using CagHome.IngestionService.Domain.Models;
 using CagHome.IngestionService.Infrastructure.Cache;
 using NSubstitute;
 

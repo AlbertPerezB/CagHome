@@ -1,6 +1,5 @@
 using CagHome.IngestionService.Application.Pipeline.Handlers;
 using CagHome.IngestionService.Domain.Enums;
-using CagHome.IngestionService.Domain.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CagHome.IngestionService.Tests.UnitTests;
