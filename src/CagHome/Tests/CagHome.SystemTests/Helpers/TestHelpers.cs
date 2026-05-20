@@ -1,4 +1,7 @@
 ﻿using System.Net.Http.Json;
+using CagHome.Contracts;
+using CagHome.Contracts.Enums;
+using CagHome.SystemTests.TestClasses;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit.Abstractions;
@@ -27,7 +30,7 @@ public class TestHelpers
         var response = await _fixture.Simulator.PostAsJsonAsync("/simulator/inject", payload);
         response.EnsureSuccessStatusCode();
 
-        var responseBody = await response.Content.ReadFromJsonAsync<InjectResponse>();
+        var responseBody = await response.Content.ReadFromJsonAsync<CorrelationIdResponse>();
         _output.WriteLine(
             $"Injected batch for patient {patientId} with correlation id {responseBody!.CorrelationId}"
         );
@@ -42,29 +45,58 @@ public class TestHelpers
     /// <param name="hospitalId"></param>
     /// <param name="message"></param>
     /// <returns></returns>
-    public async Task PostClinicianResponse(
+    public async Task<Guid> PostClinicianResponse(
         Guid alertId,
         Guid patientId,
         Guid hospitalId,
         string message
     )
     {
-        var payload = new
+        try
         {
-            AlertId = alertId,
-            CreatedAtUtc = DateTime.UtcNow,
-            HospitalId = hospitalId,
-            Message = message,
-            PatientId = patientId,
-            ResponseId = Guid.NewGuid(),
-        };
+            var payload = new
+            {
+                AlertId = alertId,
+                CreatedAtUtc = DateTime.UtcNow,
+                HospitalId = hospitalId,
+                Message = message,
+                PatientId = patientId,
+            };
 
-        var responseMessage = await _fixture.MockEhr.PostAsJsonAsync(
-            "/mock/clinician-response",
-            payload
+            var responseMessage = await _fixture.MockEhr.PostAsJsonAsync(
+                "/mock/clinician-response",
+                payload
+            );
+            responseMessage.EnsureSuccessStatusCode();
+            _output.WriteLine($"Posted clinician response for alert {alertId}");
+            var responseBody =
+                await responseMessage.Content.ReadFromJsonAsync<CorrelationIdResponse>();
+            return responseBody!.CorrelationId;
+        }
+        catch (Exception ex)
+        {
+            _output.WriteLine(
+                $"Failed to post clinician response for alert {alertId}. "
+                    + $"Exception: {ex.Message}"
+            );
+            return Guid.Empty;
+        }
+    }
+
+    public async Task PostAlertToHospital(Guid correlationId, Guid alertId)
+    {
+        var alert = new HospitalAlertRequested(
+            AlertId: alertId,
+            CorrelationId: correlationId,
+            DecidedAt: DateTime.UtcNow,
+            HospitalId: Guid.NewGuid(),
+            Message: "clincian response test",
+            PatientId: Guid.NewGuid(),
+            Severity: Severity.Critical
         );
+        var responseMessage = await _fixture.MockEhr.PostAsJsonAsync("/alerts", alert);
         responseMessage.EnsureSuccessStatusCode();
-        _output.WriteLine($"Posted clinician response for alert {alertId}");
+        _output.WriteLine($"Posted hospital alert for alert {alert.AlertId}");
     }
 
     public async Task RegisterPatientInMockEHR(Guid patientId, int careplan, int status)
@@ -342,4 +374,4 @@ public class TestHelpers
         };
 }
 
-public record InjectResponse(Guid CorrelationId);
+public record CorrelationIdResponse(Guid CorrelationId);

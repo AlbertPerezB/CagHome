@@ -2,6 +2,9 @@ using CagHome.IngestionService.Application.Pipeline.Handlers;
 
 namespace CagHome.IngestionService.Application.Pipeline;
 
+/// <summary>
+/// Builds the ingestion pipeline by chaining together the various handlers.
+/// </summary>
 public static class IngestionPipelineBuilder
 {
     public static IIngestionHandler Build(

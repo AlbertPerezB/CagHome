@@ -15,20 +15,10 @@ public class ClinicianResponseTests : IClassFixture<NotificationServiceFixture>
         _fixture.Reset();
     }
 
-    private static ClinicianResponseReceived CreateMessage() =>
-        new ClinicianResponseReceived(
-            AlertId: Guid.NewGuid(),
-            CreatedAtUtc: DateTime.UtcNow,
-            HospitalId: Guid.NewGuid(),
-            Message: "Lay down and keep feet high. An ambulance is on the way.",
-            ResponseId: Guid.NewGuid(),
-            PatientId: Guid.NewGuid()
-        );
-
     [Fact]
     public async Task Message_IsRoutedToHandler_AndExecutesSuccessfully()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreateClinicianResponseReceived();
 
         var session = await _fixture
             .Host.TrackActivity()

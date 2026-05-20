@@ -2,6 +2,10 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation.BatchValidation;
 
+/// <summary>
+/// Validates a Batch against a set of rules, accumulating any validation errors
+/// and identifying fatal errors that should stop further processing.
+/// </summary>
 public class BatchValidator
 {
     private IEnumerable<IBatchValidationRule> Rules { get; }

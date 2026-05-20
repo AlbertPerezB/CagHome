@@ -38,6 +38,7 @@ public class ClinicianResponsePollerTests
                     AlertId: Guid.NewGuid(),
                     HospitalId: Guid.NewGuid(),
                     CreatedAtUtc: DateTime.UtcNow,
+                    CorrelationId: Guid.NewGuid(),
                     Message: "Increase dosage",
                     PatientId: Guid.NewGuid(),
                     ResponseId: Guid.NewGuid()
@@ -46,6 +47,7 @@ public class ClinicianResponsePollerTests
                     AlertId: Guid.NewGuid(),
                     HospitalId: Guid.NewGuid(),
                     CreatedAtUtc: DateTime.UtcNow,
+                    CorrelationId: Guid.NewGuid(),
                     Message: "Monitor closely",
                     PatientId: Guid.NewGuid(),
                     ResponseId: Guid.NewGuid()
@@ -77,6 +79,7 @@ public class ClinicianResponsePollerTests
             AlertId: Guid.NewGuid(),
             HospitalId: Guid.NewGuid(),
             CreatedAtUtc: DateTime.UtcNow,
+            CorrelationId: Guid.NewGuid(),
             Message: "Reduce activity",
             PatientId: Guid.NewGuid(),
             ResponseId: Guid.NewGuid()

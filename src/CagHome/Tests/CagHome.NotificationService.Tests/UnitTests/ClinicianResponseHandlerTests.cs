@@ -2,6 +2,7 @@
 using CagHome.NotificationService.Application.Handlers;
 using CagHome.NotificationService.Domain;
 using CagHome.NotificationService.Infrastructure;
+using CagHome.NotificationService.Tests.Helpers;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -22,20 +23,10 @@ public class ClinicianResponseHandlerTests
         _handler = new ClinicianResponseHandler();
     }
 
-    private static ClinicianResponseReceived CreateMessage() =>
-        new ClinicianResponseReceived(
-            AlertId: Guid.NewGuid(),
-            CreatedAtUtc: DateTime.UtcNow,
-            HospitalId: Guid.NewGuid(),
-            Message: "Lay down and keep feet high. An ambulance is on the way.  ",
-            PatientId: Guid.NewGuid(),
-            ResponseId: Guid.NewGuid()
-        );
-
     [Fact]
     public async Task Handle_OnSuccess_RecordsAttemptedThenDelivered()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreateClinicianResponseReceived();
 
         await _handler.Handle(message, _mqttPublisher, _auditStore, _logger);
 
@@ -53,7 +44,7 @@ public class ClinicianResponseHandlerTests
     [Fact]
     public async Task Handle_OnSuccess_PublishesToCorrectPatient()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreateClinicianResponseReceived();
 
         await _handler.Handle(message, _mqttPublisher, _auditStore, _logger);
 
@@ -63,7 +54,7 @@ public class ClinicianResponseHandlerTests
     [Fact]
     public async Task Handle_OnMqttFailure_RecordsFailedAndThrows()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreateClinicianResponseReceived();
         _mqttPublisher
             .When(x => x.Publish(Arg.Any<Guid>(), Arg.Any<object>()))
             .Throw(new Exception("MQTT connection lost"));

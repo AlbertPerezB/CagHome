@@ -6,6 +6,9 @@ using Json.Schema;
 
 namespace CagHome.IngestionService.Application.Validation.StructuralValidation;
 
+/// <summary>
+/// Validates that the incoming JSON adheres to the expected schema version and structure.
+/// </summary>
 public class SchemaValidationRule : IValidationRule<JsonDocument>
 {
     private readonly IJsonSchemaRegistry _registry;

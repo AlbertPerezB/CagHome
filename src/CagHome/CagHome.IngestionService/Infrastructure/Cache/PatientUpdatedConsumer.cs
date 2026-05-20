@@ -2,6 +2,10 @@
 
 namespace CagHome.IngestionService.Infrastructure.Cache;
 
+/// <summary>
+/// Handler invoked by Wolverine when a <see cref="PatientStatusUpdated"/> message is received,
+/// responsible for updating the patient status in the cache.
+/// </summary>
 public class PatientStatusUpdatedConsumer()
 {
     public static async Task Handle(

@@ -17,21 +17,10 @@ public class HospitalAlertIntegrationTests : IClassFixture<NotificationServiceFi
         _fixture.Reset();
     }
 
-    private static HospitalAlertRequested CreateMessage() =>
-        new HospitalAlertRequested(
-            AlertId: Guid.NewGuid(),
-            CorrelationId: Guid.NewGuid(),
-            DecidedAt: DateTime.UtcNow,
-            HospitalId: Guid.NewGuid(),
-            Message: "High heart rate. Patient risks going into SVT",
-            PatientId: Guid.NewGuid(),
-            Severity: Severity.Critical
-        );
-
     [Fact]
     public async Task Message_IsRoutedToHandler_AndExecutesSuccessfully()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreateHospitalAlertRequested();
         _fixture.Reset();
 
         var session = await _fixture
@@ -46,7 +35,7 @@ public class HospitalAlertIntegrationTests : IClassFixture<NotificationServiceFi
     [Fact]
     public async Task OnSuccess_PostsToEhrAlertEndpoint()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreateHospitalAlertRequested();
         _fixture.Reset();
 
         await _fixture
@@ -61,7 +50,7 @@ public class HospitalAlertIntegrationTests : IClassFixture<NotificationServiceFi
     [Fact] // HttpRequestException (500-errors) should retry multiple times (initial + 3 retries from policy)
     public async Task OnHttpFailure_RetriesBeforeMovingToErrorQueue()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreateHospitalAlertRequested();
         _fixture.Reset();
         _fixture.EhrHttpHandler.RespondWith(HttpStatusCode.InternalServerError);
 
@@ -80,7 +69,7 @@ public class HospitalAlertIntegrationTests : IClassFixture<NotificationServiceFi
     [Fact] // BadHttpRequestException (400-errors) should skip retries per the policy
     public async Task OnBadRequest_MovesDirectlyToErrorQueueWithoutRetry()
     {
-        var message = CreateMessage();
+        var message = TestDataFactory.CreateHospitalAlertRequested();
         _fixture.Reset();
         _fixture.EhrHttpHandler.RespondWith(HttpStatusCode.BadRequest);
 

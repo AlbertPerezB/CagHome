@@ -3,6 +3,11 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation.MeasurementValidation;
 
+/// <summary>
+/// Validation rule to ensure that measurements have the correct unit for their type.
+/// For example, a heart rate measurement should have a unit of bpm, and a body temperature
+/// measurement should have a unit of either C or F.
+/// </summary>
 public class CorrectUnitRule : IValidationRule<Measurement>
 {
     private static readonly Dictionary<MeasurementType, HashSet<Unit>> AllowedUnits = new()

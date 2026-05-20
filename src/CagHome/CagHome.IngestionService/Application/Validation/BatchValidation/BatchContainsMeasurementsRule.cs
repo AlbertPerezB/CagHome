@@ -3,6 +3,9 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Validation.BatchValidation;
 
+/// <summary>
+/// Fatal rule that rejects batches containing no measurements.
+/// </summary>
 public class BatchContainsMeasurementsRule : IBatchValidationRule
 {
     public bool IsFatal => true;

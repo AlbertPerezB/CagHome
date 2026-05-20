@@ -4,6 +4,10 @@ using CagHome.IngestionService.Domain.Models;
 
 namespace CagHome.IngestionService.Application.Pipeline.Handlers;
 
+/// <summary>
+/// Handler responsible for parsing the raw json payload into a JsonDocument and
+/// storing it in the context for downstream handlers to use.
+/// </summary>
 public class ParseJsonHandler(ILogger<ParseJsonHandler> logger) : IngestionHandler
 {
     protected override Task ProcessAsync(IngestionContext context)
