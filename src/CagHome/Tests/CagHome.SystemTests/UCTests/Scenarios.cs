@@ -83,7 +83,7 @@ namespace CagHome.SystemTests.UCTests
             Assert.Equal(Severity.Critical, severity);
             _output.WriteLine("UC2B — monitoring decision correct");
 
-            var notifications = await _helpers.WaitForNotificationAudit(correlationId, 3);
+            var notifications = await _helpers.WaitForNotificationAudit(correlationId, 4);
 
             var hospitalDelivered = notifications.FirstOrDefault(n =>
                 n["Receiver"] == 0 && n["DeliveryStatus"] == 1

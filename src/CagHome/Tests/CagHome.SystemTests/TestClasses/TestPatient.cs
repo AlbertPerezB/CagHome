@@ -46,6 +46,7 @@ public class TestPatient
         new List<TestPatient>
         {
             ActiveCardiomyopathy(),
+            ActiveCoronaryArteryDisease(),
             InactiveCoronaryArteryDisease(),
             DeceasedValveDisease(),
         };
