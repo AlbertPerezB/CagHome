@@ -143,22 +143,31 @@ namespace CagHome.SystemTests.UCTests
                 status: (int)PatientStatus.Active
             );
 
-            var timeout = TimeSpan.FromSeconds(60);
+            var timeoutSeconds = 60;
 
             // Postcondition 1: Patient Registry has the new patient
-            var registryEntry = await _helpers.WaitForPatientRegistry(newPatientId);
+            var registryEntry = await _helpers.WaitForPatientRegistry(
+                newPatientId,
+                maxWaitSeconds: timeoutSeconds
+            );
 
             Assert.NotNull(registryEntry);
             _output.WriteLine($"UC5 — patient in registry: {registryEntry!["Status"]}");
 
             // Postcondition 2: Redis cache reflects the new patient
-            var cachedStatus = await _helpers.WaitForRedisCache(newPatientId);
+            var cachedStatus = await _helpers.WaitForRedisCache(
+                newPatientId,
+                maxWaitSeconds: timeoutSeconds
+            );
             Assert.NotEmpty(cachedStatus);
             Assert.Equal("Active", cachedStatus);
             _output.WriteLine($"UC5 — patient cached in Redis as: {cachedStatus}");
 
             // Postcondition 3: Monitoring config store has the care plan
-            var careplan = await _helpers.WaitForCareplansDb(newPatientId);
+            var careplan = await _helpers.WaitForCareplansDb(
+                newPatientId,
+                maxWaitSeconds: timeoutSeconds
+            );
 
             Assert.NotNull(careplan);
             _output.WriteLine($"UC5 — careplan stored: {careplan!["Careplan"]}");
