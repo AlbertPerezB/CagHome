@@ -4,6 +4,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CagHome.MonitoringService.Domain;
 
+/// <summary>
+/// Represents the careplan state for a patient.
+/// </summary>
 public class PatientCareplanState
 {
     [BsonId]

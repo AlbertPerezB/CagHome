@@ -5,10 +5,20 @@ using CagHome.MonitoringService.Domain;
 
 namespace CagHome.MonitoringService.Application.Decision;
 
+/// <summary>
+/// Applies cooldown rules to suppress repeated alerts for the same patient and severity.
+/// </summary>
 public class CooldownService : ICooldownService
 {
     private readonly ConcurrentDictionary<string, DateTime> _lastAlertByPatientAndSeverity = new();
 
+    /// <summary>
+    /// Evaluates whether alert publication should be suppressed by cooldown.
+    /// </summary>
+    /// <param name="patientId">The unique id of the patient.</param>
+    /// <param name="severity">The severity of the alert being evaluated.</param>
+    /// <param name="timestampUtc">The UTC timestamp for the current evaluation.</param>
+    /// <returns>The cooldown evaluation result with suppression state and remaining duration.</returns>
     public CooldownCheckResult Evaluate(Guid patientId, Severity severity, DateTime timestampUtc)
     {
         var cooldown = GetCooldownWindow(severity);
@@ -34,6 +44,11 @@ public class CooldownService : ICooldownService
         return new CooldownCheckResult(IsSuppressed: false, RemainingCooldown: null);
     }
 
+    /// <summary>
+    /// Gets the cooldown window configured for a severity level.
+    /// </summary>
+    /// <param name="severity">The alert severity.</param>
+    /// <returns>The cooldown duration for the specified severity.</returns>
     private static TimeSpan GetCooldownWindow(Severity severity)
     {
         return severity switch

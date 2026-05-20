@@ -5,6 +5,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CagHome.MonitoringService.Domain;
 
+/// <summary>
+/// Represents an audit record for a policy decision and its outcomes.
+/// </summary>
 public class DecisionAuditEntry
 {
     [BsonId]

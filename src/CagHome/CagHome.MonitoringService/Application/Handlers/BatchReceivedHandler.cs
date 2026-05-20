@@ -7,6 +7,14 @@ using Wolverine;
 
 namespace CagHome.MonitoringService.Application.Handlers;
 
+/// <summary>
+/// Handles incoming telemetry batches by evaluating policy outcomes, publishing alerts, and auditing decisions.
+/// </summary>
+/// <param name="patientCareplanStore">Store used to retrieve the current careplan for a patient.</param>
+/// <param name="policyResolver">Resolver used to select the evaluation policy for a careplan.</param>
+/// <param name="cooldownService">Service used to enforce alert cooldown windows.</param>
+/// <param name="decisionAuditStore">Store used to save decision audit records.</param>
+/// <param name="logger">Logger for evaluation and publishing events.</param>
 public class BatchReceivedHandler(
     IPatientCareplanStore patientCareplanStore,
     ICareplanPolicyResolver policyResolver,
@@ -14,6 +22,12 @@ public class BatchReceivedHandler(
     IDecisionAuditStore decisionAuditStore,
     ILogger<BatchReceivedHandler> logger)
 {
+    /// <summary>
+    /// Processes a received telemetry batch and publishes resulting alerts when applicable.
+    /// </summary>
+    /// <param name="message">The telemetry batch message to evaluate.</param>
+    /// <param name="messageBus">The message bus used to publish alert requests.</param>
+    /// <returns>A task when evaluation, publication, and auditing are finished.</returns>
     public async Task Handle(BatchReceived message, IMessageBus messageBus)
     {
         var careplan = await patientCareplanStore.TryGet(message.PatientId) ?? Careplan.None;

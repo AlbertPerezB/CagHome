@@ -72,6 +72,11 @@ public class MqttBrokerService : IHostedService
         _logger.LogDebug("MQTT Broker stopped");
     }
 
+    /// <summary>
+    /// Handles connection events and logs the client details.
+    /// </summary>
+    /// <param name="eventArgs">Connection event from the MQTT client.</param>
+    /// <returns>A completed task.</returns>
     private Task OnClientConnectedAsync(ClientConnectedEventArgs eventArgs)
     {
         _logger.LogDebug(
@@ -82,6 +87,11 @@ public class MqttBrokerService : IHostedService
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Handles disconnection events and logs the information.
+    /// </summary>
+    /// <param name="eventArgs">Disconnection event from the MQTT client.</param>
+    /// <returns>A completed task.</returns>
     private Task OnClientDisconnectedAsync(ClientDisconnectedEventArgs eventArgs)
     {
         _logger.LogDebug(
@@ -92,6 +102,11 @@ public class MqttBrokerService : IHostedService
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Handles topic subscription events and logs the subscribed topic.
+    /// </summary>
+    /// <param name="eventArgs">Subscription event from the MQTT client.</param>
+    /// <returns>A completed task.</returns>
     private Task OnClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs eventArgs)
     {
         _logger.LogDebug(
@@ -102,6 +117,11 @@ public class MqttBrokerService : IHostedService
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Handles topic unsubscription events and logs the unsubscribed topic.
+    /// </summary>
+    /// <param name="eventArgs">Unsubscription event from the MQTT client.</param>
+    /// <returns>A completed task.</returns>
     private Task OnClientUnsubscribedTopicAsync(ClientUnsubscribedTopicEventArgs eventArgs)
     {
         _logger.LogDebug(

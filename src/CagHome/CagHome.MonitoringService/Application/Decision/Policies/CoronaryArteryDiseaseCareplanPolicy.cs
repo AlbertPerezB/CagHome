@@ -2,8 +2,11 @@ using CagHome.Contracts.Enums;
 
 namespace CagHome.MonitoringService.Application.Decision.Policies;
 
+/// <summary>
+/// Threshold policy for patients on the coronary artery disease careplan.
+/// </summary>
 public class CoronaryArteryDiseaseCareplanPolicy : ThresholdCareplanPolicyBase
-{
+{    
     public override Careplan Careplan => Careplan.CoronaryArteryDisease;
 
     protected override IReadOnlyList<MetricThreshold> Thresholds =>

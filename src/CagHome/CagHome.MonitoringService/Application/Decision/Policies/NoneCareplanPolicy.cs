@@ -2,6 +2,9 @@ using CagHome.Contracts.Enums;
 
 namespace CagHome.MonitoringService.Application.Decision.Policies;
 
+/// <summary>
+/// Threshold policy used when no careplan is assigned.
+/// </summary>
 public class NoneCareplanPolicy : ThresholdCareplanPolicyBase
 {
     public override Careplan Careplan => Careplan.None;
