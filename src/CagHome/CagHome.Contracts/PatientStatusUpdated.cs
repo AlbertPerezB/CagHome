@@ -7,7 +7,7 @@ namespace CagHome.Contracts;
 /// </summary>
 /// <param name="PatientId">The unique id of the patient.</param>
 /// <param name="PatientStatus">The updated patient status.</param>
-/// <param name="UpdatedAtUtc">The UTC timestamp when the status was updated.</param>
+/// <param name="UpdatedAtUtc">The UTC timestamp when the status was updated in the EHR system.</param>
 public record PatientStatusUpdated(
     Guid PatientId,
     PatientStatus PatientStatus,
