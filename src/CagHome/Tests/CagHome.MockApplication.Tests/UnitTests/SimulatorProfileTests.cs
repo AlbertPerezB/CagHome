@@ -1,7 +1,7 @@
-using CagHome.Simulator.Domain.Profiles;
+using CagHome.MockApplication.Domain.Profiles;
 using Xunit;
 
-namespace CagHome.Simulator.Tests.UnitTests;
+namespace CagHome.MockApplication.Tests.UnitTests;
 
 public class SimulatorProfileTests
 {

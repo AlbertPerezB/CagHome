@@ -1,13 +1,13 @@
 using System.Collections.Frozen;
 using System.Text;
 using System.Text.Json;
-using CagHome.Simulator.Domain.Models;
-using CagHome.Simulator.Domain.Profiles;
+using CagHome.MockApplication.Domain.Models;
+using CagHome.MockApplication.Domain.Profiles;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Protocol;
 
-namespace CagHome.Simulator.Application;
+namespace CagHome.MockApplication.Application;
 
 /// <summary>
 /// Background service that samples biometric telemetry and publishes patient batches to MQTT.
@@ -15,8 +15,8 @@ namespace CagHome.Simulator.Application;
 /// <param name="logger">Logger used for simulator lifecycle and publish diagnostics.</param>
 /// <param name="optionsMonitor">Options source used to retrieve current simulator settings.</param>
 /// <param name="profiles">Registered simulation profiles used to generate telemetry samples.</param>
-public class BiometricPublisherService(
-    ILogger<BiometricPublisherService> logger,
+public class MockApplicationService(
+    ILogger<MockApplicationService> logger,
     IOptionsMonitor<SimulatorOptions> optionsMonitor,
     IEnumerable<ISimulationProfile> profiles
 ) : BackgroundService

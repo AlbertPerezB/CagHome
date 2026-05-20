@@ -1,6 +1,6 @@
-namespace CagHome.Simulator.Domain.Profiles;
+namespace CagHome.MockApplication.Domain.Profiles;
 
-using CagHome.Simulator.Domain.Models;
+using CagHome.MockApplication.Domain.Models;
 
 /// <summary>
 /// Produces telemetry samples that (sometimes) simulate arrhythmia events.

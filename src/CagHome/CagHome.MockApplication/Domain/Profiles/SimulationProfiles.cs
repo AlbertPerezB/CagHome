@@ -1,4 +1,4 @@
-namespace CagHome.Simulator.Domain.Profiles;
+namespace CagHome.MockApplication.Domain.Profiles;
 
 public static class SimulationProfiles
 {

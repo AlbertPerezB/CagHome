@@ -1,4 +1,4 @@
-namespace CagHome.Simulator.Domain.Models;
+namespace CagHome.MockApplication.Domain.Models;
 
 /// <summary>
 /// Describes the device metadata for a measurement.

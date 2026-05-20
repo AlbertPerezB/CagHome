@@ -1,4 +1,4 @@
-namespace CagHome.Simulator;
+namespace CagHome.MockApplication;
 
 public class SimulatorOptions
 {

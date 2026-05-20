@@ -1,31 +1,31 @@
-using CagHome.Simulator.Domain.Models;
+using CagHome.MockApplication.Domain.Models;
 
-namespace CagHome.Simulator.Domain.Profiles;
+namespace CagHome.MockApplication.Domain.Profiles;
 
 /// <summary>
-/// Produces telemetry samples representing a resting baseline state.
+/// Produces telemetry samples representing elevated activity levels.
 /// </summary>
-public class NormalSimulationProfile : ISimulationProfile
+public class ExerciseSimulationProfile : ISimulationProfile
 {
 	/// <summary>
 	/// Gets the profile name.
 	/// </summary>
-	public string Name => SimulationProfiles.Normal;
+	public string Name => SimulationProfiles.Exercise;
 
 	/// <summary>
-	/// Creates one normal telemetry sample.
+	/// Creates one exercise telemetry sample.
 	/// </summary>
 	/// <param name="random">The random number generator used to produce values.</param>
-	/// <returns>A telemetry sample in normal physiological ranges.</returns>
+	/// <returns>A telemetry sample in exercise physiological ranges.</returns>
 	public TelemetrySample CreateSample(Random random)
 	{
 		return new TelemetrySample(
 			Timestamp: DateTimeOffset.UtcNow,
-			HeartRateBpm: NextValue(random, 64, 82),
+			HeartRateBpm: NextValue(random, 112, 156),
 			RhythmFlag: "normal",
-			HrvRmssdMs: NextDouble(random, 28, 55),
-			Spo2Pct: NextValue(random, 96, 99),
-			TemperatureC: NextDouble(random, 36.4, 37.1));
+			HrvRmssdMs: NextDouble(random, 12, 30),
+			Spo2Pct: NextValue(random, 94, 98),
+			TemperatureC: NextDouble(random, 36.8, 37.8));
 	}
 
 	/// <summary>

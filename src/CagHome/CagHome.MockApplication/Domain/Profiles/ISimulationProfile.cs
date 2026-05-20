@@ -1,6 +1,6 @@
-using CagHome.Simulator.Domain.Models;
+using CagHome.MockApplication.Domain.Models;
 
-namespace CagHome.Simulator.Domain.Profiles;
+namespace CagHome.MockApplication.Domain.Profiles;
 
 /// <summary>
 /// Defines a generation profile used by the simulator.

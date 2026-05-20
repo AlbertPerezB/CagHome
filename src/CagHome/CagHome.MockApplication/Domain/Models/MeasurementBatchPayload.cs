@@ -1,4 +1,4 @@
-namespace CagHome.Simulator.Domain.Models;
+namespace CagHome.MockApplication.Domain.Models;
 
 /// <summary>
 /// Represents the root payload published by the simulator for a patient measurement batch.

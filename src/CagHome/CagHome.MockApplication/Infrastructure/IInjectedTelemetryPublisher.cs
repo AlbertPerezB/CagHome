@@ -1,6 +1,6 @@
-using CagHome.Simulator.Domain.Models;
+using CagHome.MockApplication.Domain.Models;
 
-namespace CagHome.Simulator.Infrastructure;
+namespace CagHome.MockApplication.Infrastructure;
 
 /// <summary>
 /// Publishes injected telemetry batches to the simulator MQTT topic.

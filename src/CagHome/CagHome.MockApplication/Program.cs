@@ -1,9 +1,9 @@
 using CagHome.ServiceDefaults;
-using CagHome.Simulator;
-using CagHome.Simulator.Application;
-using CagHome.Simulator.Domain.Models;
-using CagHome.Simulator.Domain.Profiles;
-using CagHome.Simulator.Infrastructure;
+using CagHome.MockApplication;
+using CagHome.MockApplication.Application;
+using CagHome.MockApplication.Domain.Models;
+using CagHome.MockApplication.Domain.Profiles;
+using CagHome.MockApplication.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +13,7 @@ builder.Services.Configure<SimulatorOptions>(builder.Configuration.GetSection(Si
 builder.Services.AddSingleton<ISimulationProfile, NormalSimulationProfile>();
 builder.Services.AddSingleton<ISimulationProfile, ExerciseSimulationProfile>();
 builder.Services.AddSingleton<ISimulationProfile, ArrhythmiaSimulationProfile>();
-builder.Services.AddHostedService<BiometricPublisherService>();
+builder.Services.AddHostedService<MockApplicationService>();
 builder.Services.AddSingleton<IInjectedTelemetryPublisher, InjectedTelemetryPublisher>();
 
 var app = builder.Build();

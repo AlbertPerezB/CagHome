@@ -1,12 +1,12 @@
-using CagHome.Simulator.Application;
-using CagHome.Simulator.Domain.Models;
-using CagHome.Simulator.Domain.Profiles;
-using CagHome.Simulator.Tests.Helpers;
+using CagHome.MockApplication.Domain.Models;
+using CagHome.MockApplication.Domain.Profiles;
+using CagHome.MockApplication.Tests.Helpers;
+using CagHome.MockApplication.Application;
 using Xunit;
 
-namespace CagHome.Simulator.Tests.UnitTests;
+namespace CagHome.MockApplication.Tests.UnitTests;
 
-public class SimulatorUnitTests
+public class MockApplicationUnitTests
 {
     [Fact]
     public void GetValidatedOptions_ClampsAndNormalizesValues()
@@ -22,7 +22,7 @@ public class SimulatorUnitTests
             PublishBatchIntervalSeconds = 1,
         };
 
-        var validated = BiometricPublisherService.GetValidatedOptions(source);
+        var validated = MockApplicationService.GetValidatedOptions(source);
 
         Assert.Equal("exercise", validated.Profile);
         Assert.Equal(10, validated.DeviceCount);
@@ -33,7 +33,7 @@ public class SimulatorUnitTests
     [Fact]
     public void ResolveProfile_UnknownNameFallsBackToNormal()
     {
-        var service = SimulatorTestHelpers.CreateService();
+        var service = MockApplicationTestHelpers.CreateService();
 
         var resolved = service.ResolveProfile("this-does-not-exist");
 
@@ -52,7 +52,7 @@ public class SimulatorUnitTests
             TemperatureC: 37.2
         );
 
-        var measurements = BiometricPublisherService.CreateMeasurements(telemetry);
+        var measurements = MockApplicationService.CreateMeasurements(telemetry);
 
         Assert.Equal(3, measurements.Length);
         Assert.Equal(

@@ -1,6 +1,6 @@
-using CagHome.Simulator.Domain.Models;
+using CagHome.MockApplication.Domain.Models;
 
-namespace CagHome.Simulator.Application;
+namespace CagHome.MockApplication.Application;
 
 /// <summary>
 /// Represents a request to publish a telemetry batch for a specific patient.

@@ -1,4 +1,4 @@
-namespace CagHome.Simulator.Domain.Models;
+namespace CagHome.MockApplication.Domain.Models;
 
 /// <summary>
 /// Generated telemetry produced by the simulator before payload mapping.

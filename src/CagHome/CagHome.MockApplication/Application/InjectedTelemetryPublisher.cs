@@ -1,13 +1,13 @@
 using System.Text;
 using System.Text.Json;
-using CagHome.Simulator.Domain.Models;
+using CagHome.MockApplication.Domain.Models;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Protocol;
-using CagHome.Simulator.Infrastructure;
+using CagHome.MockApplication.Infrastructure;
 
 
-namespace CagHome.Simulator.Application;
+namespace CagHome.MockApplication.Application;
 
 /// <summary>
 /// MQTT implementation of <see cref="IInjectedTelemetryPublisher"/> for publishing injected telemetry batches.

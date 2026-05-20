@@ -1,22 +1,22 @@
-using CagHome.Simulator.Application;
-using CagHome.Simulator.Domain.Profiles;
+using CagHome.MockApplication.Application;
+using CagHome.MockApplication.Domain.Profiles;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
-namespace CagHome.Simulator.Tests.Helpers;
+namespace CagHome.MockApplication.Tests.Helpers;
 
 /// <summary>
 /// Provides test-only factory methods and lightweight infrastructure for creating simulator services.
 /// </summary>
-internal static class SimulatorTestHelpers
+internal static class MockApplicationTestHelpers
 {
     /// <summary>
-    /// Creates a <see cref="BiometricPublisherService"/> instance configured with deterministic test defaults.
+    /// Creates a <see cref="MockApplication"/> instance configured with deterministic test defaults.
     /// </summary>
     /// <returns>
-    /// A configured <see cref="BiometricPublisherService"/> that uses in-memory options and known simulation profiles.
+    /// A configured <see cref="MockApplication"/> that uses in-memory options and known simulation profiles.
     /// </returns>
-    internal static BiometricPublisherService CreateService()
+    internal static MockApplicationService CreateService()
     {
         var options = new SimulatorOptions
         {
@@ -36,8 +36,8 @@ internal static class SimulatorTestHelpers
             new ArrhythmiaSimulationProfile(),
         };
 
-        return new BiometricPublisherService(
-            NullLogger<BiometricPublisherService>.Instance,
+        return new MockApplicationService(
+            NullLogger<MockApplicationService>.Instance,
             new TestOptionsMonitor(options),
             profiles
         );

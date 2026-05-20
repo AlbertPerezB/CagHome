@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.MqttBroker", "CagHo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.IngestionService", "CagHome.IngestionService\CagHome.IngestionService.csproj", "{8C73E4A2-410D-4983-A126-63B8C9D4E892}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Simulator", "CagHome.Simulator\CagHome.Simulator.csproj", "{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.MockApplication", "CagHome.MockApplication\CagHome.MockApplication.csproj", "{A36785B1-8686-4DBC-AEB7-DA2BB57D30AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.NotificationService", "CagHome.NotificationService\CagHome.NotificationService.csproj", "{21A863A1-19BF-417F-9F5E-0988B87009BF}"
 EndProject
@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.IngestionService.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.NotificationService.Tests", "Tests\CagHome.NotificationService.Tests\CagHome.NotificationService.Tests.csproj", "{F691A555-87FE-0C74-5705-2B16443A5226}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.Simulator.Tests", "Tests\CagHome.Simulator.Tests\CagHome.Simulator.Tests.csproj", "{EA078A9D-E121-582A-2A14-A3B00D327B87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.MockApplication.Tests", "Tests\CagHome.MockApplication.Tests\CagHome.MockApplication.Tests.csproj", "{EA078A9D-E121-582A-2A14-A3B00D327B87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CagHome.PatientRegistryService", "CagHome.PatientRegistryService\CagHome.PatientRegistryService.csproj", "{68297E31-CAD6-7DAA-406B-9D12D8CC3F73}"
 EndProject

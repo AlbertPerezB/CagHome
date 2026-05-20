@@ -1,4 +1,4 @@
-namespace CagHome.Simulator.Domain.Models;
+namespace CagHome.MockApplication.Domain.Models;
 
 /// <summary>
 /// Represents a single (normalized) measurement item in a simulator batch payload.

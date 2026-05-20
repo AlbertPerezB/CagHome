@@ -33,7 +33,7 @@ builder
 // .WithReplicas(3);
 
 builder
-    .AddProject<Projects.CagHome_Simulator>("simulator")
+    .AddProject<Projects.CagHome_MockApplication>("simulator")
     .WithReference(mqttBroker)
     .WithEnvironment("Simulator__BrokerHost", brokerHost)
     .WithEnvironment("Simulator__BrokerPort", brokerPort);
