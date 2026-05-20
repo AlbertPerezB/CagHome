@@ -15,7 +15,7 @@ public class IngestionContext
 
     public Batch? Batch { get; set; }
 
-    public ValidationError? FatalError { get; set; };
+    public ValidationError? FatalError { get; set; }
 
     public JsonDocument? Json { get; set; }
 
