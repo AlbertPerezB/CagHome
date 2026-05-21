@@ -13,7 +13,7 @@ var app = builder.Build();
 app.MapDefaultEndpoints();
 
 // POST /alerts
-// Receives alerts from our system. Returns 202 Accepted.
+// Receives alerts from our system. Returns 202 Accepted
 app.MapPost(
     "/alerts",
     (AlertDTO alert, MockEhrStore store, ILogger<Program> logger) =>

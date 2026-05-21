@@ -5,6 +5,12 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CagHome.NotificationService.Domain;
 
+/// <summary>
+/// Represents an audit record for alert delivery and response events, capturing relevant identifiers, status, and
+/// metadata for tracking and analysis.
+/// </summary>
+/// <remarks>An AuditEntry contains information about the delivery or response of alerts to hospitals or patients,
+/// including correlation and trace identifiers for distributed tracing. </remarks>
 public class AuditEntry
 {
     [BsonId]
@@ -32,6 +38,14 @@ public class AuditEntry
     public DateTime Timestamp { get; set; }
     public string TraceId { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Initializes a new instance of the AuditEntry class using a <see cref="HospitalAlertRequested"/> message, delivery status,
+    /// and optional status code.
+    /// </summary>
+    /// <param name="message">The hospital alert request message containing alert details. Cannot be null.</param>
+    /// <param name="status">The delivery status to associate with this audit entry.</param>
+    /// <param name="statusCode">An optional status code that provides additional information about the delivery status. The default is an empty
+    /// string.</param>
     public AuditEntry(HospitalAlertRequested message, DeliveryStatus status, string statusCode = "")
     {
         AlertId = message.AlertId;
@@ -46,6 +60,12 @@ public class AuditEntry
         TraceId = Activity.Current?.TraceId.ToString() ?? string.Empty;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the AuditEntry class using the <see cref="PatientAlertRequested"/> message request and delivery
+    /// status.
+    /// </summary>
+    /// <param name="message">The patient alert request message containing alert details to be audited. Cannot be null.</param>
+    /// <param name="status">The delivery status to associate with this audit entry.</param>
     public AuditEntry(PatientAlertRequested message, DeliveryStatus status)
     {
         AlertId = message.AlertId;
@@ -59,6 +79,12 @@ public class AuditEntry
         TraceId = Activity.Current?.TraceId.ToString() ?? string.Empty;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the AuditEntry class using the <see cref="ClinicianResponseReceived"/> message request and delivery
+    /// status.
+    /// </summary>
+    /// <param name="message">The clinician response received message containing the message detials to be audited. Cannot be null.</param>
+    /// <param name="status">The delivery status to associate with this audit entry.</param>
     public AuditEntry(ClinicianResponseReceived message, DeliveryStatus status)
     {
         AlertId = message.AlertId;
