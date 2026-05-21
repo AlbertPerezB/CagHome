@@ -3,6 +3,12 @@ using MongoDB.Driver;
 
 namespace CagHome.PatientRegistryService.Infrastructure;
 
+/// <summary>
+/// The store responsible for managing patient registry data, providing methods to update patient information
+/// and retrieve all patient entries. This class interacts with a MongoDB collection to persist patient data
+/// and ensures that updates are applied only if they are more recent than existing records. It also supports
+/// upserting new patient entries when necessary.
+/// </summary>
 internal class PatientRegistryStore : IPatientRegistryStore
 {
     private readonly IMongoCollection<PatientRegistryEntry> _collection;
@@ -13,6 +19,12 @@ internal class PatientRegistryStore : IPatientRegistryStore
         _collection = database.GetCollection<PatientRegistryEntry>("PatientData");
     }
 
+    /// <summary>
+    /// Updates the patient data in the registry with the information provided in the specified <see cref="PatientRegistryEntry"/>.
+    /// </summary>
+    /// <param name="entry">The <see cref="PatientRegistryEntry"/> containing updated patient information. Cannot be null.</param>
+    /// <returns>A task that represents the asynchronous update operation. The task result contains an <see cref="UpdateResult"/>
+    /// indicating the outcome of the update.</returns>
     public async Task<UpdateResult> UpdatePatientData(PatientRegistryEntry entry)
     {
         var filter = Builders<PatientRegistryEntry>.Filter.And(
@@ -46,6 +58,11 @@ internal class PatientRegistryStore : IPatientRegistryStore
         return result;
     }
 
+    /// <summary>
+    /// Retrieves all patient entries from the MongoDB collection and returns them as a list.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous retrieval operation. The task result contains a list of <see cref="PatientRegistryEntry"/>
+    /// objects representing the patients in the registry.</returns>
     public async Task<List<PatientRegistryEntry>> GetAllPatients()
     {
         return await _collection.Find(_ => true).ToListAsync();
