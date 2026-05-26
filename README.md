@@ -62,6 +62,18 @@ On the next publish cycle, the simulator picks up the new profile without restar
 ## Observability
 ### Traces
 In the Aspire web dashboard, navigate to the "Traces" tab to see the traces emitted by the application. You can filter by service name, operation name, or custom attributes to find specific traces.
+### Structured Logs
+In the "Structured" tab in the dashboard, the structured logs are found. These show all logs for all components and can be filtered. The current configuration includes logs from CagHome with level
+"Information" or higher and other logs are only included if they have level "Warning" or higher. This can be configured in each project's appsettings like so:
+```csharp
+Logging": {
+    "LogLevel": {
+      "Default": "Warning",
+      "CagHome": "Information",
+      "Wolverine": "Warning",
+      "RabbitMQ": "Warning"
+    }
+```
 
 ### RabbitMQ Management 
 The credentials for theRabbitMQ management UI can be found by clicking the *messaging* row in the Aspire resources tab. Scroll down to *Environment Variables*.
