@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Diagnostics;
+using System.Net.Http.Json;
 using CagHome.Contracts;
 using CagHome.EhrIntegrationService.Domain;
 using CagHome.EhrIntegrationService.Infrastructure;
@@ -12,6 +13,7 @@ public class ClinicianResponsePoller(
 ) : BackgroundService
 {
     private DateTime _lastPollTimestamp = DateTime.MinValue;
+    private static readonly ActivitySource ActivitySource = new("CagHome.EhrIntegrationService");
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -47,8 +49,17 @@ public class ClinicianResponsePoller(
 
         if (responses is null || responses.Count == 0)
             return;
+
+        using var activity = ActivitySource.StartActivity(
+            "PollClinicianResponses",
+            ActivityKind.Consumer
+        );
+        activity?.SetTag("poll.response_count", responses.Count);
+
         foreach (var response in responses)
         {
+            activity?.SetTag("clinician_response.id", response.ResponseId.ToString());
+
             await publisher.PublishClinicianResponseReceived(
                 new ClinicianResponseReceived(
                     response.AlertId,
