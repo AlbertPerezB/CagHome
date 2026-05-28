@@ -101,7 +101,12 @@ builder.Services.AddWolverine(options =>
 
 builder
     .Services.AddOpenTelemetry()
-    .WithTracing(tracing => tracing.AddSource("Wolverine").AddSource("RabbitMQ.Client"));
+    .WithTracing(tracing =>
+        tracing
+            .AddSource("Wolverine")
+            .AddSource("RabbitMQ.Client")
+            .AddSource("CagHome.IngestionService")
+    );
 
 builder.AddRedisClient("patient-cache");
 

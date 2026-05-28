@@ -123,6 +123,7 @@ namespace CagHome.SystemTests.UCTests
 
             var delivered = audits.FirstOrDefault(a => a["DeliveryStatus"] == 1);
             Assert.NotNull(delivered);
+            Assert.Contains("Take 2mg adenosine and lay down", delivered.ToString());
             _output.WriteLine("UC3 — clinician response processed and audit recorded");
 
             //TODO: Check if mesage delivered
