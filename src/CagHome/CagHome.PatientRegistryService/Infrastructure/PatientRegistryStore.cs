@@ -29,8 +29,10 @@ internal class PatientRegistryStore : IPatientRegistryStore
     {
         var filter = Builders<PatientRegistryEntry>.Filter.And(
             Builders<PatientRegistryEntry>.Filter.Eq(e => e.PatientId, entry.PatientId),
-            Builders<PatientRegistryEntry>.Filter.Lt(e => e.LastUpdatedUtc, entry.LastUpdatedUtc)
+            Builders<PatientRegistryEntry>.Filter.Lt(e => e.LastUpdatedUtc, entry.LastUpdatedUtc),
+            Builders<PatientRegistryEntry>.Filter.Ne(e => e.Status, entry.Status)
         );
+
         var update = Builders<PatientRegistryEntry>
             .Update.Set(e => e.Status, entry.Status)
             .Set(e => e.LastUpdatedUtc, entry.LastUpdatedUtc);
@@ -41,18 +43,22 @@ internal class PatientRegistryStore : IPatientRegistryStore
             new UpdateOptions { IsUpsert = false }
         );
 
-        // If no match (stale update), try upsert in case the patient doesn't exist yet
+        // No match: either new patient or no change
         if (result.MatchedCount == 0)
         {
-            var upsertFilter = Builders<PatientRegistryEntry>.Filter.Eq(
-                e => e.PatientId,
-                entry.PatientId
-            );
-            result = await _collection.UpdateOneAsync(
-                upsertFilter,
-                update,
-                new UpdateOptions { IsUpsert = true }
-            );
+            var exists = await _collection
+                .Find(Builders<PatientRegistryEntry>.Filter.Eq(e => e.PatientId, entry.PatientId))
+                .AnyAsync();
+
+            if (!exists)
+            {
+                await _collection.InsertOneAsync(entry);
+                return new UpdateResult.Acknowledged(
+                    matchedCount: 0,
+                    modifiedCount: 0,
+                    upsertedId: new MongoDB.Bson.BsonString(entry.PatientId.ToString())
+                );
+            }
         }
 
         return result;
