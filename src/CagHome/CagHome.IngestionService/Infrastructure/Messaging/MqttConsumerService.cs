@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using CagHome.IngestionService.Application;
 using CagHome.IngestionService.Domain.Models;
@@ -19,6 +20,7 @@ namespace CagHome.IngestionService.Infrastructure.Messaging
         private Task? _reconnectTask;
         private readonly IIngestionService _ingestionService;
         private readonly PatientCacheWarmupService _warmup;
+        private static readonly ActivitySource ActivitySource = new("CagHome.IngestionService");
 
         public MqttConsumerService(
             ILogger<MqttConsumerService> logger,
@@ -107,6 +109,13 @@ namespace CagHome.IngestionService.Infrastructure.Messaging
             var payload = Encoding.UTF8.GetString(args.ApplicationMessage.Payload).ToString();
             var qos = args.ApplicationMessage.QualityOfServiceLevel;
             var retain = args.ApplicationMessage.Retain;
+
+            using var activity = ActivitySource.StartActivity(
+                "MqttMessageReceived",
+                ActivityKind.Consumer
+            );
+
+            activity?.SetTag("mqtt.topic", topic);
 
             _logger.LogDebug(
                 "Message received - Topic: {Topic}, Payload: {Payload}, QoS: {QoS}, Retain: {Retain}",
