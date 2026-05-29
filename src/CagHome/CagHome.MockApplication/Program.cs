@@ -8,6 +8,8 @@ using CagHome.MockApplication.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<SimulatorOptions>(builder.Configuration.GetSection(SimulatorOptions.SectionName));
 builder.Services.AddSingleton<ISimulationProfile, NormalSimulationProfile>();
@@ -17,6 +19,8 @@ builder.Services.AddHostedService<MockApplicationService>();
 builder.Services.AddSingleton<IInjectedTelemetryPublisher, InjectedTelemetryPublisher>();
 
 var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapPost(
 	"/simulator/inject",
