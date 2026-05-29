@@ -13,6 +13,7 @@ public class PatientRegistrationPoller(
 ) : BackgroundService
 {
     private DateTime _lastPollTimestamp = DateTime.MinValue;
+    protected virtual int pollingIntervalSeconds => 60;
     private static readonly ActivitySource ActivitySource = new("CagHome.EhrIntegrationService");
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -33,7 +34,7 @@ public class PatientRegistrationPoller(
                 );
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(pollingIntervalSeconds), stoppingToken);
         }
     }
 

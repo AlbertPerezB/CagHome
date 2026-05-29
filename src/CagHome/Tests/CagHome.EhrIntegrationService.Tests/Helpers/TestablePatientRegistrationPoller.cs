@@ -11,5 +11,7 @@ public class TestablePatientRegistrationPoller : PatientRegistrationPoller
     )
         : base(httpClientFactory, logger, publisher) { }
 
+    protected override int pollingIntervalSeconds => 1;
+
     public new Task ExecuteAsync(CancellationToken ct) => base.ExecuteAsync(ct);
 }

@@ -184,4 +184,31 @@ public class PatientRegistrationPollerTests
             .DidNotReceive()
             .PublishPatientStatusUpdateRequested(Arg.Any<PatientStatusUpdateRequested>());
     }
+
+    [Fact]
+    public async Task SecondPoll_UsesPreviousMaxTimestampAsSince()
+    {
+        var firstTimestamp = new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+        var patient = new PatientRegistrationDto(
+            Careplan: Contracts.Enums.Careplan.Cardiomyopathy,
+            PatientId: Guid.NewGuid(),
+            Status: Contracts.Enums.PatientStatus.Active,
+            UpdatedAtUtc: firstTimestamp
+        );
+
+        _httpHandler.RespondWithJson(new List<PatientRegistrationDto> { patient });
+
+        using var cts = new CancellationTokenSource();
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            cts.Cancel();
+        });
+
+        await Assert.ThrowsAsync<TaskCanceledException>(() =>
+            CreatePoller().ExecuteAsync(cts.Token)
+        );
+
+        Assert.Contains(firstTimestamp.ToString("O"), _httpHandler.LastRequestUri!.ToString());
+    }
 }

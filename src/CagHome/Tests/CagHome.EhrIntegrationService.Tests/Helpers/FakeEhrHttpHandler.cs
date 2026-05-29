@@ -8,6 +8,7 @@ public class FakeEhrHttpHandler : HttpMessageHandler
 {
     private string? _jsonResponse;
     private Exception? _exception;
+    public Uri? LastRequestUri { get; private set; }
 
     public void RespondWithJson<T>(T body)
     {
@@ -26,6 +27,8 @@ public class FakeEhrHttpHandler : HttpMessageHandler
         CancellationToken cancellationToken
     )
     {
+        LastRequestUri = request.RequestUri;
+
         if (_exception is not null)
             throw _exception;
 

@@ -1,12 +1,17 @@
 ﻿using System.Net.Http.Json;
 using Aspire.Hosting;
+using CagHome.Contracts;
 using CagHome.SystemTests.TestClasses;
+using ImTools;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using StackExchange.Redis;
+using Wolverine;
+using Wolverine.RabbitMQ;
 
 namespace CagHome.SystemTests.Helpers;
 
@@ -23,6 +28,7 @@ public class AspireAppFixture : IAsyncLifetime
     public IMongoCollection<BsonDocument> MonitoringCareplans = null!;
     public IDatabase RedisCache = null!;
     private IConnectionMultiplexer _connectionMultiplexer = null!;
+    private IHost? _publisherHost;
 
     public async Task InitializeAsync()
     {
@@ -119,6 +125,36 @@ public class AspireAppFixture : IAsyncLifetime
         RedisCache = _connectionMultiplexer.GetDatabase();
     }
 
+    public async Task<string> GetRabbitConnectionString()
+    {
+        return await _app.GetConnectionStringAsync("rabbitmq-broker")
+            ?? throw new Exception("Could not get RabbitMQ connection string");
+    }
+
+    /// <summary>
+    /// Creates a lightweight Wolverine host connected to the system's RabbitMQ instance,
+    /// used to inject messages directly into queues bypassing the EHR poller.
+    /// </summary>
+    /// <returns>The message bus instance.</returns>
+    public async Task<IMessageBus> GetTestMessageBus()
+    {
+        if (_publisherHost != null)
+            return _publisherHost.Services.GetRequiredService<IMessageBus>();
+
+        var connectionString = await GetRabbitConnectionString();
+        _publisherHost = Host.CreateDefaultBuilder()
+            .UseWolverine(opts =>
+            {
+                opts.UseRabbitMq(new Uri(connectionString));
+                opts.PublishMessage<PatientStatusUpdateRequested>()
+                    .ToRabbitQueue("patient-registry.patient-status-update");
+            })
+            .Build();
+
+        await _publisherHost.StartAsync();
+        return _publisherHost.Services.GetRequiredService<IMessageBus>();
+    }
+
     private async Task CleanTestData()
     {
         foreach (var patient in TestPatient.All())
@@ -174,6 +210,7 @@ public class AspireAppFixture : IAsyncLifetime
         _connectionMultiplexer?.Dispose();
         Simulator?.Dispose();
         MockEhr?.Dispose();
+        _publisherHost?.Dispose();
         if (_app != null)
             await _app.DisposeAsync();
     }

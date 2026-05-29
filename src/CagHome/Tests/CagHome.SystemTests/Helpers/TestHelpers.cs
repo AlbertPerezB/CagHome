@@ -1,9 +1,14 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
 using CagHome.Contracts;
 using CagHome.Contracts.Enums;
+using Microsoft.Extensions.Hosting;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using RabbitMQ.Client;
+using Wolverine;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace CagHome.SystemTests.Helpers;
 
@@ -203,6 +208,19 @@ public class TestHelpers
             await Task.Delay(1000);
         }
         return default;
+    }
+
+    public async Task PublishStalePatientUpdate(
+        Guid patientId,
+        PatientStatus status,
+        DateTime staleTimestamp
+    )
+    {
+        var bus = await _fixture.GetTestMessageBus();
+        await bus.PublishAsync(new PatientStatusUpdateRequested(patientId, status, staleTimestamp));
+        _output.WriteLine(
+            $"Published stale update for {patientId} with timestamp {staleTimestamp:O}"
+        );
     }
 
     // ── Payload builders ─────────────────────────────

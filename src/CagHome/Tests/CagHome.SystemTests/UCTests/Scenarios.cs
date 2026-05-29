@@ -1,9 +1,12 @@
-﻿using CagHome.Contracts.Enums;
+﻿using CagHome.Contracts;
+using CagHome.Contracts.Enums;
 using CagHome.SystemTests.Helpers;
 using CagHome.SystemTests.TestClasses;
+using Microsoft.Extensions.Hosting;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace CagHome.SystemTests.UCTests
 {
@@ -204,34 +207,32 @@ namespace CagHome.SystemTests.UCTests
         }
 
         [Fact]
-        public async Task UC5_StaleData_ShouldNotOverwriteRegistry()
+        public async Task UC5_StaleUpdate_ShouldNotOverwriteRegistry()
         {
             var patientId = Guid.NewGuid();
 
-            var originalTimestamp = DateTime.UtcNow.ToString("O");
             await _helpers.RegisterPatientInMockEHR(
                 patientId,
                 careplan: (int)Careplan.ValveDisease,
-                status: (int)PatientStatus.Active,
-                timestamp: originalTimestamp
+                status: (int)PatientStatus.Active
             );
 
             var entry = await _helpers.WaitForPatientRegistry(patientId, maxWaitSeconds: 60);
             Assert.NotNull(entry);
 
-            var staleTimestamp = DateTime.UtcNow.AddHours(-1).ToString("O");
-            await _helpers.RegisterPatientInMockEHR(
+            await _helpers.PublishStalePatientUpdate(
                 patientId,
-                careplan: (int)Careplan.ValveDisease,
-                status: (int)PatientStatus.Inactive,
-                timestamp: staleTimestamp
+                PatientStatus.Inactive,
+                DateTime.UtcNow.AddHours(-1)
             );
 
-            await Task.Delay(TimeSpan.FromSeconds(15));
+            await Task.Delay(TimeSpan.FromSeconds(10));
 
             var afterEntry = await _helpers.WaitForPatientRegistry(patientId, maxWaitSeconds: 60);
+
             Assert.NotNull(afterEntry);
-            Assert.Equal((int)PatientStatus.Active, afterEntry!["Status"]);
+            Assert.Equal(PatientStatus.Active, (PatientStatus)afterEntry!["Status"].AsInt32);
+            _output.WriteLine("UC5 — stale update correctly rejected");
         }
     }
 }

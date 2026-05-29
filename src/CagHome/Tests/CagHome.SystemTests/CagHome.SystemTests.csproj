@@ -15,6 +15,7 @@
     <PackageReference Include="MongoDB.Driver" Version="3.*" />
     <PackageReference Include="MQTTnet" Version="5.*" />
     <PackageReference Include="StackExchange.Redis" Version="2.*" />
+    <PackageReference Include="WolverineFx.RabbitMQ" Version="5.39.0" />
   </ItemGroup>
 
   <ItemGroup>
