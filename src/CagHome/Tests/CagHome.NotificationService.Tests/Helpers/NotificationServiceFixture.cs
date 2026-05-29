@@ -9,6 +9,10 @@ using Wolverine.ErrorHandling;
 
 namespace CagHome.NotificationService.Tests.Helpers;
 
+/// <summary>
+/// A service fixture for testing the Notification Service. It sets up a test host with the same configuration as the real service,
+/// but replaces external dependencies with test doubles. It also provides methods for resetting the state of the test doubles between tests.
+/// </summary>
 public class NotificationServiceFixture : IAsyncLifetime
 {
     public IHost Host { get; private set; } = null!;
@@ -16,6 +20,11 @@ public class NotificationServiceFixture : IAsyncLifetime
     public FakeEhrHttpHandler EhrHttpHandler { get; private set; } = null!;
     public IMqttPublisher MqttPublisher { get; private set; } = null!;
 
+    /// <summary>
+    /// Asynchronously initializes the test host environment and configures service dependencies for integration
+    /// testing.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous initialization operation.</returns>
     public async Task InitializeAsync()
     {
         AuditStore = Substitute.For<IAuditStore>();
@@ -65,12 +74,19 @@ public class NotificationServiceFixture : IAsyncLifetime
             .StartAsync();
     }
 
+    /// <summary>
+    /// Disposes of the test host and its resources. Called automatically by xUnit after all tests have completed.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
     public async Task DisposeAsync()
     {
         await Host.StopAsync();
         Host.Dispose();
     }
 
+    /// <summary>
+    /// Resets the internal state of the HTTP handler and clears all received calls from the MQTT publisher.
+    /// </summary>
     public void Reset()
     {
         EhrHttpHandler.Reset();

@@ -2,6 +2,9 @@
 using CagHome.EhrIntegrationService.Infrastructure;
 using Microsoft.Extensions.Logging;
 
+/// <summary>
+/// A testable version of the ClinicianResponsePoller that exposes the ExecuteAsync method for testing purposes.
+/// </summary>
 public class TestableClinicianResponsePoller : ClinicianResponsePoller
 {
     public TestableClinicianResponsePoller(

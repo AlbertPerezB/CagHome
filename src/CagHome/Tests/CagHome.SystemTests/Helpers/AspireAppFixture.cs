@@ -205,12 +205,19 @@ public class AspireAppFixture : IAsyncLifetime
         throw new TimeoutException("System did not become ready within 60 seconds");
     }
 
+    /// <summary>
+    /// Asynchronously releases all resources used by the current instance. Called automatically by xUnit after all tests have completed.
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
     public async Task DisposeAsync()
     {
         _connectionMultiplexer?.Dispose();
         Simulator?.Dispose();
         MockEhr?.Dispose();
-        _publisherHost?.Dispose();
+        if (_publisherHost != null)
+        {
+            await _publisherHost.StopAsync();
+            _publisherHost.Dispose();
+        }
         if (_app != null)
             await _app.DisposeAsync();
     }

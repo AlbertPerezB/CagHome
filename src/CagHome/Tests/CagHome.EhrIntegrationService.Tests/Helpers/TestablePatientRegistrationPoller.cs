@@ -2,6 +2,10 @@
 using CagHome.EhrIntegrationService.Infrastructure;
 using Microsoft.Extensions.Logging;
 
+/// <summary>
+/// A testable version of the patient registration poller that overrides the polling interval to 1 second and
+/// exposes the ExecuteAsync method for testing purposes.
+/// </summary>
 public class TestablePatientRegistrationPoller : PatientRegistrationPoller
 {
     public TestablePatientRegistrationPoller(
