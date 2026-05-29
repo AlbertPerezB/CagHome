@@ -31,7 +31,6 @@ namespace CagHome.SystemTests.UCTests
                 ActivePatient1.PatientId,
                 TestHelpers.NormalBatch(ActivePatient1.PatientId)
             );
-            //TODO: Check ingestion checkpoints?
             var audit = await _helpers.WaitForMonitoringAudit(correlationId);
 
             Assert.NotNull(audit);
@@ -62,8 +61,6 @@ namespace CagHome.SystemTests.UCTests
 
             Assert.NotNull(delivered);
             _output.WriteLine("UC2A — patient notification delivered");
-
-            // TODO: Check patient actually received
         }
 
         [Fact]
@@ -87,7 +84,6 @@ namespace CagHome.SystemTests.UCTests
 
             var hospitalDelivered = notifications.FirstOrDefault(n =>
                 n["Receiver"] == 0 && n["DeliveryStatus"] == 1
-            //TODO: Check hospital actually received, and correct content (e.g. severity)
             );
             Assert.NotNull(hospitalDelivered);
             _output.WriteLine(
@@ -99,8 +95,6 @@ namespace CagHome.SystemTests.UCTests
             );
             Assert.NotNull(patientDelivered);
             _output.WriteLine("UC2B — patient notification also delivered");
-
-            //TODO: Check patient actually received
         }
 
         [Fact]
@@ -129,8 +123,6 @@ namespace CagHome.SystemTests.UCTests
             Assert.NotNull(delivered);
             Assert.Contains("Take 2mg adenosine and lay down", delivered.ToString());
             _output.WriteLine("UC3 — clinician response processed and audit recorded");
-
-            //TODO: Check if mesage delivered
         }
 
         [Fact]
