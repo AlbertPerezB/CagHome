@@ -191,10 +191,8 @@ public class IngestionServiceIntegrationTests
     }
 
     [Fact]
-    public async Task MixedBatch_PipelineCompletesWithNoFatalError()
+    public async Task MixedBatch_AnnotatesInvalidMeasurementsAndPreservesAll()
     {
-        // Non-fatal measurement errors should not cause a fatal error.
-        // The batch should still flow through the entire pipeline.
         var service = BuildService();
         var raw = new RawBatch(
             TestDataFactory.DefaultTopic,
@@ -205,61 +203,14 @@ public class IngestionServiceIntegrationTests
         var context = await service.ProcessAsync(raw);
 
         Assert.Null(context.FatalError);
-    }
-
-    [Fact]
-    public async Task MixedBatch_AllMeasurementsPreserved()
-    {
-        // Even measurements with errors should remain in the batch —
-        // downstream services decide how to handle annotated objects.
-        var service = BuildService();
-        var raw = new RawBatch(
-            TestDataFactory.DefaultTopic,
-            TestDataFactory.InvalidMeasurementsPayload(),
-            DateTime.UtcNow
-        );
-
-        var context = await service.ProcessAsync(raw);
-
         Assert.Equal(13, context.Batch!.Measurements.Count);
-    }
-
-    [Fact]
-    public async Task MixedBatch_InvalidMeasurementsAnnotatedWithErrors()
-    {
-        var service = BuildService();
-        var raw = new RawBatch(
-            TestDataFactory.DefaultTopic,
-            TestDataFactory.InvalidMeasurementsPayload(),
-            DateTime.UtcNow
-        );
-
-        var context = await service.ProcessAsync(raw);
-
-        var withErrors = context.Batch!.Measurements.Where(m => m.ValidationErrors.Any()).ToList();
-        Assert.Equal(2, withErrors.Count);
-    }
-
-    [Fact]
-    public async Task MixedBatch_ValidMeasurementsHaveNoErrors()
-    {
-        var service = BuildService();
-        var raw = new RawBatch(
-            TestDataFactory.DefaultTopic,
-            TestDataFactory.InvalidMeasurementsPayload(),
-            DateTime.UtcNow
-        );
-
-        var context = await service.ProcessAsync(raw);
-
-        var clean = context.Batch!.Measurements.Where(m => !m.ValidationErrors.Any()).ToList();
-        Assert.Equal(11, clean.Count);
+        Assert.Equal(2, context.Batch.Measurements.Count(m => m.ValidationErrors.Any()));
+        Assert.Equal(11, context.Batch.Measurements.Count(m => !m.ValidationErrors.Any()));
     }
 
     [Fact]
     public async Task MixedBatch_ShouldStillPublishBatchReceived()
     {
-        // UC4 Path B: the batch is forwarded including error annotations.
         var messageBus = Substitute.For<IMessageBus>();
         var publishHandler = new PublishBatchHandler(
             messageBus,
