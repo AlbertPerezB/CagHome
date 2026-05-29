@@ -43,7 +43,7 @@ public class AspireAppFixture : IAsyncLifetime
         _app = await appHost.BuildAsync(ct);
         await _app.StartAsync(ct);
 
-        Simulator = _app.CreateHttpClient("simulator");
+        Simulator = _app.CreateHttpClient("mock-application");
         MockEhr = _app.CreateHttpClient("mock-ehr");
 
         await GetDatabases();

@@ -1,6 +1,7 @@
 ﻿using CagHome.Contracts.Enums;
 using CagHome.SystemTests.Helpers;
 using CagHome.SystemTests.TestClasses;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit.Abstractions;
 
@@ -168,6 +169,69 @@ namespace CagHome.SystemTests.UCTests
 
             Assert.NotNull(careplan);
             _output.WriteLine($"UC5 — careplan stored: {careplan!["Careplan"]}");
+        }
+
+        [Fact]
+        public async Task UC5_UnchangedData_ShouldNotModifyRegistry()
+        {
+            var patientId = Guid.NewGuid();
+
+            await _helpers.RegisterPatientInMockEHR(
+                patientId,
+                careplan: (int)Careplan.ValveDisease,
+                status: (int)PatientStatus.Active
+            );
+
+            var entry = await _helpers.WaitForPatientRegistry(patientId, maxWaitSeconds: 60);
+            Assert.NotNull(entry);
+
+            var firstUpdated = entry!["LastUpdatedUtc"].ToUniversalTime();
+
+            await _helpers.RegisterPatientInMockEHR(
+                patientId,
+                careplan: (int)Careplan.ValveDisease,
+                status: (int)PatientStatus.Active
+            );
+
+            await Task.Delay(TimeSpan.FromSeconds(15));
+
+            var afterEntry = await _helpers.WaitForPatientRegistry(patientId, maxWaitSeconds: 60);
+
+            Assert.NotNull(afterEntry);
+            var secondUpdated = afterEntry!["LastUpdatedUtc"].ToUniversalTime();
+
+            Assert.Equal(firstUpdated, secondUpdated);
+        }
+
+        [Fact]
+        public async Task UC5_StaleData_ShouldNotOverwriteRegistry()
+        {
+            var patientId = Guid.NewGuid();
+
+            var originalTimestamp = DateTime.UtcNow.ToString("O");
+            await _helpers.RegisterPatientInMockEHR(
+                patientId,
+                careplan: (int)Careplan.ValveDisease,
+                status: (int)PatientStatus.Active,
+                timestamp: originalTimestamp
+            );
+
+            var entry = await _helpers.WaitForPatientRegistry(patientId, maxWaitSeconds: 60);
+            Assert.NotNull(entry);
+
+            var staleTimestamp = DateTime.UtcNow.AddHours(-1).ToString("O");
+            await _helpers.RegisterPatientInMockEHR(
+                patientId,
+                careplan: (int)Careplan.ValveDisease,
+                status: (int)PatientStatus.Inactive,
+                timestamp: staleTimestamp
+            );
+
+            await Task.Delay(TimeSpan.FromSeconds(15));
+
+            var afterEntry = await _helpers.WaitForPatientRegistry(patientId, maxWaitSeconds: 60);
+            Assert.NotNull(afterEntry);
+            Assert.Equal((int)PatientStatus.Active, afterEntry!["Status"]);
         }
     }
 }

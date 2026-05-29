@@ -9,7 +9,7 @@ namespace CagHome.PatientRegistryService.Infrastructure;
 /// and ensures that updates are applied only if they are more recent than existing records. It also supports
 /// upserting new patient entries when necessary.
 /// </summary>
-internal class PatientRegistryStore : IPatientRegistryStore
+public class PatientRegistryStore : IPatientRegistryStore
 {
     private readonly IMongoCollection<PatientRegistryEntry> _collection;
 

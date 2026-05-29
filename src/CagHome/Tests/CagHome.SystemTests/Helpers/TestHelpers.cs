@@ -98,12 +98,17 @@ public class TestHelpers
         _output.WriteLine($"Posted hospital alert for alert {alert.AlertId}");
     }
 
-    public async Task RegisterPatientInMockEHR(Guid patientId, int careplan, int status)
+    public async Task RegisterPatientInMockEHR(
+        Guid patientId,
+        int careplan,
+        int status,
+        string? timestamp = null
+    )
     {
         var payload = new
         {
             PatientId = patientId,
-            UpdatedAtUtc = DateTime.UtcNow.ToString("O"),
+            UpdatedAtUtc = timestamp ?? DateTime.UtcNow.ToString("O"),
             Careplan = careplan,
             Status = status,
         };
