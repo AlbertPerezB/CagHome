@@ -7,7 +7,7 @@ The platform is built using a microservice-oriented architecture with asynchrono
 
 The following diagram illustrates the overall system interaction between the patient, wearable device, mobile application, backend services, and EHR integration.
 
-![ContextDiagram](/docs/context_diagram.drawio.png)
+![ContextDiagram](/docs/Context_diagram.drawio.png)
 
 ## Table of Contents
 
