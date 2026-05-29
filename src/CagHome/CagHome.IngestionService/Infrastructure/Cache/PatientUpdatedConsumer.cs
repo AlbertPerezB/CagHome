@@ -15,8 +15,7 @@ public class PatientStatusUpdatedConsumer()
     )
     {
         logger.LogInformation(
-            "Patient status updated message received, updating cache for PatientId: {PatientId}",
-            message.PatientId
+            $"Patient status updated message received, updating cache for PatientId: {message.PatientId}"
         );
         await cache.SetPatientStatus(message.PatientId, message.PatientStatus);
     }

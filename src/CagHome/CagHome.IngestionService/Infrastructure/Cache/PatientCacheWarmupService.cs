@@ -33,8 +33,7 @@ public class PatientCacheWarmupService : BackgroundService
             {
                 await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
                 _logger.LogInformation(
-                    "Cache warm-up: requesting all patient statuses (attempt {Attempt})",
-                    i + 1
+                    $"Cache warm-up: requesting all patient statuses (attempt {i + 1})"
                 );
                 await _messageBus.PublishAsync(new AllPatientStatusesRequested());
                 break;

@@ -16,7 +16,9 @@ public class PublishBatchHandler(IMessageBus messageBus, ILogger<PublishBatchHan
         {
             var batch = context.Batch;
             await messageBus.PublishAsync(GetBatchReceived(context.Batch));
-            logger.LogInformation($"Batch {batch.BatchId} validated and published");
+            logger.LogInformation(
+                $"Batch with correlation id {batch.CorrelationId} validated and published"
+            );
         }
     }
 
