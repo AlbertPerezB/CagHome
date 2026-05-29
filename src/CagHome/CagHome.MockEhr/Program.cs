@@ -8,8 +8,12 @@ builder.AddServiceDefaults();
 
 builder.Services.AddOpenTelemetry();
 builder.Services.AddSingleton<MockEhrStore>();
+builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
 app.MapDefaultEndpoints();
 
 // POST /alerts
