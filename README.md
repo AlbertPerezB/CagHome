@@ -1,13 +1,16 @@
 # CAG-Home
-CAG-Home is a distributed event-driven healthcare prototype designed to simulate and process biometric data from wearable devices in a home-monitoring scenario. The system collects patient measurements through a mobile application, processes incoming telemetry in real time, evaluates monitoring conditions, and integrates alerts with an Electronic Health Record (EHR) system.
+CAG-Home is a distributed event-driven healthcare prototype designed to simulate and process biometric data from wearable devices in a home-monitoring scenario. <br>
+The system collects patient measurements through a mobile application, processes incoming telemetry in real time, evaluates monitoring conditions, and integrates <br>
+alerts with an Electronic Health Record (EHR) system.
 
-The platform is built using a microservice-oriented architecture with asynchronous messaging and observability built in from the start. It is intended for demonstration of scalable event-driven healthcare systems using modern .NET technologies and .NET Aspire.
+The platform is built using a microservice-oriented architecture with asynchronous messaging and observability built in from the start. It is intended for demonstration<br>
+of scalable event-driven healthcare systems using modern .NET technologies and .NET Aspire.
 
 ### High-Level Workflow
 
 The following diagram illustrates the overall system interaction between the patient, wearable device, mobile application, backend services, and EHR integration.
 
-![ContextDiagram](/docs/Context_diagram.drawio.png)
+![ContextDiagram](docs/Context_diagram.drawio.png)
 
 ## Table of Contents
 
@@ -49,11 +52,13 @@ The prototype is built using the following technologies:
 - Docker Desktop
 
 ## System Architecture
-The application is composed of several services communicating through MQTT and AMQP messaging patterns. Each component has a dedicated responsibility within the ingestion, monitoring, notification, and integration pipeline.
+The application is composed of several services communicating through MQTT and AMQP messaging patterns. Each component has a dedicated responsibility within the <br>
+ingestion, monitoring, notification, and integration pipeline.
 
-![CCView](/docs/CC_view.jpg)
+![CCView](docs/CC_view.jpg)
 
-The architecture follows an event-driven design where services communicate asynchronously through RabbitMQ and MQTT, enabling loose coupling and independent scaling of components.
+The architecture follows an event-driven design where services communicate asynchronously through RabbitMQ and MQTT, enabling loose coupling and independent <br>
+scaling of components.
 
 ## Component Responsibilities
 
@@ -77,7 +82,7 @@ Install the following:
 - [Aspire](https://aspire.dev/get-started/install-cli/)
 - [Aspire VS Code extension](https://aspire.dev/get-started/aspire-vscode-extension/)
 
-## Start the project
+## Start the project in VS Code
 In the **Debug** tab in the left sidebar:
 Select **Launch AppHost (Aspire)** and press **Run**.  
 The project will be built and started.  
@@ -149,11 +154,41 @@ The simulator uses runtime configuration reloading. While it is running, you can
 
 On the next publish cycle, the simulator picks up the new profile without restarting the process.
 
+### Seeding patients
+When you run the application for the first time, there will be no patients in the system. You can seed patients by sending a POST request to the Mock EHR API <br>
+through postman, swagger or similar (see API Documentation below):
+```https
+POST https://localhost:{mock-ehr-port}/mock/patient
+```
+
+The body of the message should be a JSON object with the following structure:
+```json
+{
+  "PatientId": "12345678-47ef-0002-9a7a-123456789123",
+  "UpdatedAtUtc": "2026-05-28T16:09:00Z",
+  "Careplan": 2, 
+  "Status": 0
+}
+```
+The port is found under the mock-ehr resource tab in the Aspire dashboard.
+The careplan field is an integer corresponding to the care plan enum values: <br>
+0: None
+1. Valve disease
+2. Coronary artery disease
+3. Cardopmyopathy
+
+The status field is an integer corresponding to the patient status enum values:
+0. Active
+1. Inactive
+2. Deceased
+
 ## API Documentation
 
-When the application is running through Aspire, HTTP endpoints can be explored using Swagger UI for the relevant services. Those being the Mock EHR and the Mock Application.
+When the application is running through Aspire, HTTP endpoints can be explored using Swagger UI for the relevant services. <br>
+Those being the Mock EHR and the Mock Application.
 
-Start the project, then open the Swagger endpoint for the service you want to inspect. The ports can be found in the Aspire dashboard under the **resources** tab by clicking on a given project and navigating to the URL section 
+Start the project, then open the Swagger endpoint for the service you want to inspect. The ports can be found in the Aspire dashboard under the **resources** tab by <br>
+clicking on a given project and navigating to the URL section 
 
 Example:
 ```text
@@ -161,10 +196,12 @@ https://localhost:<service-port>/swagger
 ```
 ## Observability
 ### Traces
-In the Aspire web dashboard, navigate to the "Traces" tab to see the traces emitted by the application. You can filter by service name, operation name, or custom attributes to find specific traces.
+In the Aspire web dashboard, navigate to the "Traces" tab to see the traces emitted by the application. You can filter by service name, operation name, or custom <br>
+attributes to find specific traces.
 ### Structured Logs
-In the **Structured** tab in the dashboard, the structured logs are found. These show all logs for all components and can be filtered. The current configuration includes logs from CagHome with level
-**Information** or higher and other logs are only included if they have level **Warning** or higher. This can be configured in each project's appsettings like so:
+In the **Structured** tab in the dashboard, the structured logs are found. These show all logs for all components and can be filtered. The current configuration <br>
+includes logs from CagHome with level **Information** or higher and other logs are only included if they have level **Warning** or higher. This can be configured <br>
+in each project's appsettings like so:
 ```csharp
 {
   "Logging": {
