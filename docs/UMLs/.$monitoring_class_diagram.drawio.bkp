@@ -1,0 +1,160 @@
+<mxfile host="Electron">
+  <diagram name="Side-1" id="m-UGyaPKuOw-wbPzAZ1D">
+    <mxGraphModel dx="1195" dy="3057" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="xBSf29MH0mcwCraRQrMn-46" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;dashed=1;endArrow=open;endFill=0;" target="xBSf29MH0mcwCraRQrMn-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-49" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=open;endFill=0;" target="xBSf29MH0mcwCraRQrMn-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-57" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=open;endFill=0;curved=0;" target="xBSf29MH0mcwCraRQrMn-38">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1510" y="-670" />
+              <mxPoint x="1430" y="-670" />
+              <mxPoint x="1430" y="-529" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-59" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=open;endFill=0;curved=0;" target="xBSf29MH0mcwCraRQrMn-40">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1510" y="-670" />
+              <mxPoint x="1830" y="-670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-1" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;BatchReceivedHandler&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;- patientCareplanStore: IPatientCareplanStore&lt;/span&gt;&lt;br style=&quot;white-space: nowrap;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;- policyResolver: ICareplanPolicyResolver&lt;/span&gt;&lt;br style=&quot;white-space: nowrap;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;- cooldownService: ICooldownService&lt;/span&gt;&lt;br style=&quot;white-space: nowrap;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;- decisionAuditStore: IDecisionAuditStore&lt;/span&gt;&lt;br style=&quot;white-space: nowrap;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;- logger: ILogger&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;+ Handle(message,&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;messageBus): Task&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="150" width="260" x="1380" y="-900" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-56" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=open;endFill=0;curved=0;" target="xBSf29MH0mcwCraRQrMn-40">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1885" y="-680" />
+              <mxPoint x="2060" y="-680" />
+              <mxPoint x="2060" y="-524" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-58" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;dashed=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=open;endFill=0;curved=0;" target="xBSf29MH0mcwCraRQrMn-38">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1885" y="-680" />
+              <mxPoint x="1660" y="-680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-8" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;rounded=0;strokeColor=#82b366;fontFamily=Helvetica;fontSize=12;fillColor=#d5e8d4;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;CareplanUpdateRequestedHandler&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;+ «static» Handle(message,&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;patientCareplanStore&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;logger): Task&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="80" width="270" x="1750" y="-860" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-19" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;dashed=1;" target="xBSf29MH0mcwCraRQrMn-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-11" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;CareplanPolicyResolver&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- _policies: IReadOnlyDictionary&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Resolve(careplan: Careplan):&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;ICareplanDecisionPolicy&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="100" width="210" x="1035" y="-760" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-18" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;dashed=1;" target="xBSf29MH0mcwCraRQrMn-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-12" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;CooldownService&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;- _lastAlertByPatientAndSeverity: ConcurrentDictionary&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Evaluate(patientId, severity, timestampUtc)&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;: CooldownCheckResult&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- GetCooldownWindow(severity: Severity): TimeSpan&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="110" width="310" x="1355" y="-1230" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-45" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" target="xBSf29MH0mcwCraRQrMn-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-13" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;PolicyResolutionStartupCheckService&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- policyResolver: ICareplanPolicyResolver&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- logger: ILogger&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ StartAsync(cancellationToken: CancellationToken): Task&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ StopAsync(cancellationToken: CancellationToken): Task&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="110" width="330" x="975" y="-1070" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-42" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" target="xBSf29MH0mcwCraRQrMn-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-15" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;/span&gt;&lt;br style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;ICareplanDecisionPolicy&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Careplan: Careplan&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Evaluate(context): PolicyDecisionResult&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="100" width="240" x="659.5" y="-870" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-44" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" target="xBSf29MH0mcwCraRQrMn-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-16" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;/span&gt;&lt;br style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;ICareplanPolicyResolver&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;+ Resolve(careplan): ICareplanDecisionPolicy&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="70" width="260" x="1010" y="-880" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-17" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;/span&gt;&lt;br style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;ICooldownService&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Evaluate(patientId, severity, timestampUtc)&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;: CooldownCheckResult&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="80" width="260" x="1380" y="-1040" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-33" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;dashed=1;" target="xBSf29MH0mcwCraRQrMn-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-20" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;abstract&amp;gt;&amp;gt;&lt;/i&gt;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;b&gt;ThresholdCareplanPolicyBase&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ «abstract» Careplan: Careplan&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;# «abstract» Thresholds: IReadOnlyList&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Evaluate(context): PolicyDecisionResult&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- GetMeasurements(batch, metric): IEnumerable&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- IsBreached(value, band, out boundary): bool&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- IsLowerBreached(value, band): bool&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- IsUpperBreached(value, band): bool&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- CreateReason(threshold, measurement,&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;level, boundary, explanation): DecisionReason&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="200" width="279" x="640" y="-710" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-27" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=0;endArrow=block;endFill=0;" target="xBSf29MH0mcwCraRQrMn-20">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="-470" />
+              <mxPoint x="780" y="-470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-21" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;b&gt;CardiomyopathyCareplanPolicy&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Careplan: Careplan = Careplan.Cardiomyopathy&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style: solid;&quot;&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;# Thresholds: IReadOnlyList&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="80" width="279" x="480" y="-440" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-25" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-22" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=0;endArrow=block;endFill=0;" target="xBSf29MH0mcwCraRQrMn-20">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1200" y="-470" />
+              <mxPoint x="780" y="-470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-22" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;ValveDiseaseCareplanPolicy&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Careplan: Careplan = Careplan.ValveDisease&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style: solid;&quot;&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;# Thresholds: IReadOnlyList&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="80" width="279" x="1060" y="-440" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-28" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-23" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=0;endArrow=block;endFill=0;" target="xBSf29MH0mcwCraRQrMn-20">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="315" y="-470" />
+              <mxPoint x="780" y="-470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-23" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;CoronaryArteryDiseaseCareplanPolicy&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Careplan: Careplan =&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;Careplan.&lt;/span&gt;&lt;span style=&quot;background-color: transparent; text-wrap-mode: nowrap;&quot;&gt;CoronaryArteryDisease&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style: solid;&quot;&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;# Thresholds: IReadOnlyList&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="90" width="250" x="190" y="-440" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-26" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-24" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=0;endArrow=block;endFill=0;" target="xBSf29MH0mcwCraRQrMn-20">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="910" y="-470" />
+              <mxPoint x="780" y="-470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-24" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;NoneCareplanPolicy&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Careplan: Careplan =&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); white-space: nowrap;&quot;&gt;Careplan.&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); white-space: nowrap;&quot;&gt;None&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style: solid;&quot;&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;white-space: nowrap; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;# Thresholds: IReadOnlyList&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="80" width="220" x="800" y="-440" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-32" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;/i&gt;&lt;/span&gt;&lt;br style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;Careplan&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;None&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;CoronaryArteryDisease&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;ValveDisease&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;Cardiomyopathy&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="110" width="150" x="324" y="-848" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-39" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;endArrow=block;endFill=0;" target="xBSf29MH0mcwCraRQrMn-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-35" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;MongoPatientCareplanStore&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- _collection: IMongoCollection&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Upsert(patientId , careplan, updatedAtUtc): Task&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ TryGet(patientId): Task&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="100" width="280" x="1450" y="-414" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-41" edge="1" parent="1" source="xBSf29MH0mcwCraRQrMn-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;endArrow=block;endFill=0;" target="xBSf29MH0mcwCraRQrMn-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-36" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;MongoDecisionAuditStore&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- _collection: IMongoCollection&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ RecordAuditEntry(entry): Task&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="80" width="210" x="1795" y="-414" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-38" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;/span&gt;&lt;br style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;&lt;b&gt;IPatientCareplanStore&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- _collection: IMongoCollection&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ Upsert(patientId , careplan, updatedAtUtc): Task&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ TryGet(patientId): Task&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="110" width="280" x="1450" y="-584" as="geometry" />
+        </mxCell>
+        <mxCell id="xBSf29MH0mcwCraRQrMn-40" parent="1" style="verticalAlign=middle;align=left;overflow=fill;html=1;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=12;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;/span&gt;&lt;br style=&quot;font-weight: 700; white-space: nowrap;&quot;&gt;&lt;b&gt;IDecisionAuditStore&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;- _collection: IMongoCollection&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px;&quot;&gt;&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;+ RecordAuditEntry(entry): Task&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="100" width="280" x="1760" y="-574" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
