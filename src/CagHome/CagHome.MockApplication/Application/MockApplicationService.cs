@@ -23,7 +23,6 @@ public class MockApplicationService(
 {
     private readonly Random _random = new();
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
-    private readonly Dictionary<int, Guid> _patientIdsByIndex = [];
     private readonly Dictionary<Guid, List<MeasurementPayload>> _accumulatedMeasurementsByPatient =
     [];
     private static readonly MeasurementSourcePayload DefaultMeasurementSource = new(
@@ -78,7 +77,7 @@ public class MockApplicationService(
                 }
 
                 await Task.Delay(
-                    TimeSpan.FromSeconds(options.PublishBiometricsIntervalSeconds),
+                    TimeSpan.FromSeconds(options.SampleBiometricsIntervalSeconds),
                     stoppingToken
                 );
             }
@@ -110,13 +109,13 @@ public class MockApplicationService(
             BrokerPort = source.BrokerPort,
             TopicPrefix = source.TopicPrefix,
             Profile = profile,
-            DeviceCount = Math.Clamp(source.DeviceCount, 1, 10),
-            PublishBiometricsIntervalSeconds = Math.Clamp(
-                source.PublishBiometricsIntervalSeconds,
+            SampleBiometricsIntervalSeconds = Math.Clamp(
+                source.SampleBiometricsIntervalSeconds,
                 1,
-                60
+                30
             ),
-            PublishBatchIntervalSeconds = Math.Clamp(source.PublishBatchIntervalSeconds, 10, 600),
+            PublishBatchIntervalSeconds = Math.Clamp(source.PublishBatchIntervalSeconds, 10, 60),
+            PatientIds = source.PatientIds
         };
     }
 
@@ -193,16 +192,15 @@ public class MockApplicationService(
     }
 
     /// <summary>
-    /// Samples biometric telemetry for all configured devices and accumulates measurements for batch publishing.
+    /// Samples biometric telemetry for all configured patients and accumulates measurements for batch publishing.
     /// </summary>
     /// <param name="options">Resolved simulator options.</param>
     /// <param name="profile">Active simulation profile strategy.</param>
     private void SampleAndAccumulateBiometrics(SimulatorOptions options, ISimulationProfile profile)
     {
-        for (var index = 1; index <= options.DeviceCount; index++)
+        foreach (var patientId in options.PatientIds)
         {
             var telemetry = profile.CreateSample(_random);
-            var patientId = GetOrCreatePatientId(index);
             var measurements = CreateMeasurements(telemetry);
 
             // Accumulate measurements for batch publishing
@@ -214,8 +212,8 @@ public class MockApplicationService(
         }
 
         logger.LogDebug(
-            "Sampled {Count} biometric measurements from profile '{Profile}'",
-            options.DeviceCount,
+            "Sampled biometrics for {Count} patients using profile '{Profile}'",
+            options.PatientIds.Count,
             profile.Name
         );
     }
@@ -271,24 +269,6 @@ public class MockApplicationService(
 
         // Clear accumulated measurements for next batch cycle
         _accumulatedMeasurementsByPatient.Clear();
-    }
-
-    /// <summary>
-    /// Gets the patient id mapped to the given device index.
-    /// </summary>
-    /// <param name="index">Device index used to resolve a patient identifier.</param>
-    /// <returns>The mapped patient identifier.</returns>
-    private Guid GetOrCreatePatientId(int index)
-    {
-        if (_patientIdsByIndex.TryGetValue(index, out var patientId))
-        {
-            return patientId;
-        }
-
-        // patientId = Guid.NewGuid();
-        patientId = Guid.Parse("12345678-47ef-42c3-9a7a-123456789123");
-        _patientIdsByIndex[index] = patientId;
-        return patientId;
     }
 
     /// <summary>

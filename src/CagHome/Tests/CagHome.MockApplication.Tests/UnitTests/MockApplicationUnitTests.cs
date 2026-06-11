@@ -17,17 +17,24 @@ public class MockApplicationUnitTests
             BrokerPort = 1883,
             TopicPrefix = "biometrics",
             Profile = " EXERCISE ",
-            DeviceCount = 99,
-            PublishBiometricsIntervalSeconds = 0,
+            SampleBiometricsIntervalSeconds = 0,
             PublishBatchIntervalSeconds = 1,
+            PatientIds =
+            [
+                Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            ],
         };
 
         var validated = MockApplicationService.GetValidatedOptions(source);
 
         Assert.Equal("exercise", validated.Profile);
-        Assert.Equal(10, validated.DeviceCount);
-        Assert.Equal(1, validated.PublishBiometricsIntervalSeconds);
+        Assert.Equal(1, validated.SampleBiometricsIntervalSeconds);
         Assert.Equal(10, validated.PublishBatchIntervalSeconds);
+        Assert.Single(validated.PatientIds);
+        Assert.Equal(
+            Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            validated.PatientIds[0]
+        );
     }
 
     [Fact]

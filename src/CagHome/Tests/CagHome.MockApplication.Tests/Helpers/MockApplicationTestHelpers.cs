@@ -24,9 +24,9 @@ internal static class MockApplicationTestHelpers
             BrokerPort = 1883,
             TopicPrefix = "biometrics",
             Profile = SimulationProfiles.Normal,
-            DeviceCount = 1,
-            PublishBiometricsIntervalSeconds = 2,
+            SampleBiometricsIntervalSeconds = 2,
             PublishBatchIntervalSeconds = 60,
+            PatientIds = [Guid.Parse("11111111-1111-1111-1111-111111111111")],
         };
 
         var profiles = new ISimulationProfile[]
