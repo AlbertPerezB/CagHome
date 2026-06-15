@@ -50,7 +50,7 @@ public class MockApplicationService(
         );
 
     /// <summary>
-    /// Runs the simulator worker loop, ensuring MQTT connectivity and publishing telemetry on a fixed interval.
+    /// Runs the simulator worker loop, ensuring MQTT connectivity and publishing telemetry.
     /// </summary>
     /// <param name="stoppingToken">A cancellation token that is triggered when the host is shutting down.</param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -63,17 +63,36 @@ public class MockApplicationService(
 
         if (registrationService is not null)
         {
+            logger.LogInformation(
+                "RegisterPatients enabled — generating and registering {Count} patients",
+                options.DeviceCount
+            );
+
             var registeredIds = await registrationService.RegisterAsync(
                 options.DeviceCount,
                 stoppingToken
             );
+
             foreach (var id in registeredIds)
                 AddPatientToPool(id, options.PublishBatchIntervalSeconds);
         }
         else
         {
-            for (var i = 0; i < options.DeviceCount; i++)
-                AddPatientToPool(Guid.NewGuid(), options.PublishBatchIntervalSeconds);
+            if (options.PatientIds is null || options.PatientIds.Count == 0)
+            {
+                logger.LogWarning(
+                    "RegisterPatients is false and no PatientIds configured — "
+                        + "no patients will be simulated. Add PatientIds to appsettings."
+                );
+                return;
+            }
+
+            logger.LogInformation(
+                $"Using {options.PatientIds.Count} pre-configured patient IDs from appsettings"
+            );
+
+            foreach (var id in options.PatientIds)
+                AddPatientToPool(id, options.PublishBatchIntervalSeconds);
         }
 
         while (!stoppingToken.IsCancellationRequested)
@@ -82,7 +101,7 @@ public class MockApplicationService(
             {
                 options = GetValidatedOptions(optionsMonitor.CurrentValue);
 
-                if (options.DeviceCount > patientIds.Count)
+                if (options.DeviceCount > patientIds.Count && registrationService is not null)
                     await GrowPatientPoolAsync(
                         options.DeviceCount,
                         options.PublishBatchIntervalSeconds,
@@ -173,8 +192,8 @@ public class MockApplicationService(
             TopicPrefix = source.TopicPrefix,
             Profile = profile,
             DeviceCount = source.DeviceCount,
-            PublishBiometricsIntervalSeconds = Math.Clamp(
-                source.PublishBiometricsIntervalSeconds,
+            SampleBiometricsIntervalSeconds = Math.Clamp(
+                source.SampleBiometricsIntervalSeconds,
                 1,
                 30
             ),
@@ -275,7 +294,7 @@ public class MockApplicationService(
 
         logger.LogDebug(
             "Sampled biometrics for {Count} patients using profile '{Profile}'",
-            options.PatientIds.Count,
+            patientIds.Count,
             profile.Name
         );
     }

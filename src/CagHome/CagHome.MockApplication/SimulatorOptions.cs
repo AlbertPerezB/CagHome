@@ -9,7 +9,7 @@ public class SimulatorOptions
     public int DeviceCount { get; set; }
     public required string Profile { get; set; }
     public int PublishBatchIntervalSeconds { get; set; }
-    public int PublishBiometricsIntervalSeconds { get; set; }
+    public int SampleBiometricsIntervalSeconds { get; set; }
     public required string TopicPrefix { get; set; }
     public bool RegisterPatients { get; set; } = false;
 
