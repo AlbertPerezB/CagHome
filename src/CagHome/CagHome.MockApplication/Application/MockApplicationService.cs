@@ -95,7 +95,7 @@ public class MockApplicationService(
                 await PublishAccumulatedBatchAsync(options, stoppingToken);
 
                 await Task.Delay(
-                    TimeSpan.FromSeconds(options.PublishBiometricsIntervalSeconds),
+                    TimeSpan.FromSeconds(options.SampleBiometricsIntervalSeconds),
                     stoppingToken
                 );
             }
@@ -176,9 +176,10 @@ public class MockApplicationService(
             PublishBiometricsIntervalSeconds = Math.Clamp(
                 source.PublishBiometricsIntervalSeconds,
                 1,
-                60
+                30
             ),
-            PublishBatchIntervalSeconds = Math.Clamp(source.PublishBatchIntervalSeconds, 10, 600),
+            PublishBatchIntervalSeconds = Math.Clamp(source.PublishBatchIntervalSeconds, 10, 60),
+            PatientIds = source.PatientIds,
         };
     }
 
@@ -255,7 +256,7 @@ public class MockApplicationService(
     }
 
     /// <summary>
-    /// Samples biometric telemetry for all configured devices and accumulates measurements for batch publishing.
+    /// Samples biometric telemetry for all configured patients and accumulates measurements for batch publishing.
     /// </summary>
     /// <param name="options">Resolved simulator options.</param>
     /// <param name="profile">Active simulation profile strategy.</param>
@@ -273,8 +274,8 @@ public class MockApplicationService(
         }
 
         logger.LogDebug(
-            "Sampled {Count} biometric measurements from profile '{Profile}'",
-            options.DeviceCount,
+            "Sampled biometrics for {Count} patients using profile '{Profile}'",
+            options.PatientIds.Count,
             profile.Name
         );
     }
