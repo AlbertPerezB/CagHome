@@ -12,4 +12,6 @@ public class SimulatorOptions
     public int PublishBiometricsIntervalSeconds { get; set; }
     public required string TopicPrefix { get; set; }
     public bool RegisterPatients { get; set; } = false;
+
+    public List<Guid> PatientIds { get; set; } = new List<Guid>();
 }
