@@ -15,15 +15,18 @@ namespace CagHome.MockApplication.Application;
 /// <param name="logger">Logger used for simulator lifecycle and publish diagnostics.</param>
 /// <param name="optionsMonitor">Options source used to retrieve current simulator settings.</param>
 /// <param name="profiles">Registered simulation profiles used to generate telemetry samples.</param>
+/// <param name="registrationService">The registration service used to register patients in the mock EHR via HTTPS. This value
+/// is null unless the RegisterPatients flag is set to true in the appsettings.</param>
 public class MockApplicationService(
     ILogger<MockApplicationService> logger,
     IOptionsMonitor<SimulatorOptions> optionsMonitor,
-    IEnumerable<ISimulationProfile> profiles
+    IEnumerable<ISimulationProfile> profiles,
+    PatientRegistrationService? registrationService = null
 ) : BackgroundService
 {
     private readonly Random _random = new();
+    private List<Guid> patientIds = new();
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
-    private readonly Dictionary<int, Guid> _patientIdsByIndex = [];
     private readonly Dictionary<Guid, List<MeasurementPayload>> _accumulatedMeasurementsByPatient =
     [];
     private static readonly MeasurementSourcePayload DefaultMeasurementSource = new(
@@ -35,7 +38,7 @@ public class MockApplicationService(
         profiles.ToFrozenDictionary(profile => profile.Name, StringComparer.OrdinalIgnoreCase);
     private IMqttClient? _mqttClient;
     private bool _notificationTopicSubscribed;
-    private DateTime _lastBatchPublishTime = DateTime.UtcNow;
+    private readonly Dictionary<Guid, DateTime> _lastPublishTimeByPatient = [];
 
     // Make sure a default profile called "normal" is registered
     private readonly ISimulationProfile _defaultProfile =
@@ -56,26 +59,40 @@ public class MockApplicationService(
         _mqttClient = factory.CreateMqttClient();
         _mqttClient.ApplicationMessageReceivedAsync += OnMessageReceivedAsync;
 
+        var options = GetValidatedOptions(optionsMonitor.CurrentValue);
+
+        if (registrationService is not null)
+        {
+            var registeredIds = await registrationService.RegisterAsync(
+                options.DeviceCount,
+                stoppingToken
+            );
+            foreach (var id in registeredIds)
+                AddPatientToPool(id, options.PublishBatchIntervalSeconds);
+        }
+        else
+        {
+            for (var i = 0; i < options.DeviceCount; i++)
+                AddPatientToPool(Guid.NewGuid(), options.PublishBatchIntervalSeconds);
+        }
+
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
-                var options = GetValidatedOptions(optionsMonitor.CurrentValue);
+                options = GetValidatedOptions(optionsMonitor.CurrentValue);
+
+                if (options.DeviceCount > patientIds.Count)
+                    await GrowPatientPoolAsync(
+                        options.DeviceCount,
+                        options.PublishBatchIntervalSeconds,
+                        stoppingToken
+                    );
+
                 var profile = ResolveProfile(options.Profile);
-
                 await EnsureConnectedAsync(options, stoppingToken);
-
                 SampleAndAccumulateBiometrics(options, profile);
-
-                // Check if it's time to publish accumulated batch
-                if (
-                    DateTime.UtcNow - _lastBatchPublishTime
-                    >= TimeSpan.FromSeconds(options.PublishBatchIntervalSeconds)
-                )
-                {
-                    await PublishAccumulatedBatchAsync(options, stoppingToken);
-                    _lastBatchPublishTime = DateTime.UtcNow;
-                }
+                await PublishAccumulatedBatchAsync(options, stoppingToken);
 
                 await Task.Delay(
                     TimeSpan.FromSeconds(options.PublishBiometricsIntervalSeconds),
@@ -95,6 +112,51 @@ public class MockApplicationService(
     }
 
     /// <summary>
+    /// Grows the patient pool to match the target device count by registering new patients if a registration service is available,
+    /// or by generating new GUIDs if no registration service is available.
+    /// </summary>
+    /// <param name="targetCount">The target number of patients in the pool.</param>
+    /// <param name="publishBatchIntervalSeconds">The interval in seconds for publishing batches of biometrics.</param>
+    /// <param name="ct">A cancellation token to cancel the operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task GrowPatientPoolAsync(
+        int targetCount,
+        int publishBatchIntervalSeconds,
+        CancellationToken ct
+    )
+    {
+        var toAdd = targetCount - patientIds.Count;
+        logger.LogInformation(
+            $"DeviceCount increased — adding {toAdd} new patients ({patientIds.Count} -> {targetCount})"
+        );
+
+        if (registrationService is not null)
+        {
+            var newIds = await registrationService.RegisterAsync(toAdd, ct);
+            foreach (var id in newIds)
+                AddPatientToPool(id, publishBatchIntervalSeconds);
+        }
+        else
+        {
+            for (var i = 0; i < toAdd; i++)
+                AddPatientToPool(Guid.NewGuid(), publishBatchIntervalSeconds);
+        }
+    }
+
+    /// <summary>
+    /// Adds a patient ID to the pool and initializes their last publish time with a random offset to stagger publish times across patients.
+    /// </summary>
+    /// <param name="patientId">The ID of the patient to add to the pool.</param>
+    /// <param name="publishBatchIntervalSeconds">The interval in seconds for publishing batches of biometrics.</param>
+    private void AddPatientToPool(Guid patientId, int publishBatchIntervalSeconds)
+    {
+        patientIds.Add(patientId);
+        var offsetSeconds = _random.Next(0, publishBatchIntervalSeconds);
+        _lastPublishTimeByPatient[patientId] =
+            DateTime.UtcNow - TimeSpan.FromSeconds(offsetSeconds);
+    }
+
+    /// <summary>
     /// Returns configured simulator options after applying value normalization and guardrails.
     /// </summary>
     /// <returns>A validated <see cref="SimulatorOptions"/> instance.</returns>
@@ -110,7 +172,7 @@ public class MockApplicationService(
             BrokerPort = source.BrokerPort,
             TopicPrefix = source.TopicPrefix,
             Profile = profile,
-            DeviceCount = Math.Clamp(source.DeviceCount, 1, 10),
+            DeviceCount = source.DeviceCount,
             PublishBiometricsIntervalSeconds = Math.Clamp(
                 source.PublishBiometricsIntervalSeconds,
                 1,
@@ -199,18 +261,15 @@ public class MockApplicationService(
     /// <param name="profile">Active simulation profile strategy.</param>
     private void SampleAndAccumulateBiometrics(SimulatorOptions options, ISimulationProfile profile)
     {
-        for (var index = 1; index <= options.DeviceCount; index++)
+        foreach (var id in patientIds)
         {
             var telemetry = profile.CreateSample(_random);
-            var patientId = GetOrCreatePatientId(index);
             var measurements = CreateMeasurements(telemetry);
 
-            // Accumulate measurements for batch publishing
-            if (!_accumulatedMeasurementsByPatient.ContainsKey(patientId))
-            {
-                _accumulatedMeasurementsByPatient[patientId] = new List<MeasurementPayload>();
-            }
-            _accumulatedMeasurementsByPatient[patientId].AddRange(measurements);
+            if (!_accumulatedMeasurementsByPatient.ContainsKey(id))
+                _accumulatedMeasurementsByPatient[id] = new List<MeasurementPayload>();
+
+            _accumulatedMeasurementsByPatient[id].AddRange(measurements);
         }
 
         logger.LogDebug(
@@ -221,7 +280,7 @@ public class MockApplicationService(
     }
 
     /// <summary>
-    /// Publishes accumulated measurements as large batches for all devices.
+    /// Publishes accumulated measurements as batches for each patient that is due for a publish.
     /// </summary>
     /// <param name="options">Resolved simulator options.</param>
     /// <param name="cancellationToken">Token used to cancel publish operations.</param>
@@ -231,23 +290,27 @@ public class MockApplicationService(
     )
     {
         if (_mqttClient is null || !_mqttClient.IsConnected)
-        {
             return;
-        }
+
+        var now = DateTime.UtcNow;
+        var published = 0;
 
         foreach (var (patientId, measurements) in _accumulatedMeasurementsByPatient)
         {
-            if (measurements.Count == 0)
-            {
-                continue;
-            }
+            // Check if this specific patient is due for a publish
+            if (!_lastPublishTimeByPatient.TryGetValue(patientId, out var lastPublish))
+                lastPublish = DateTime.MinValue;
 
-            var correlationId = Guid.NewGuid();
+            if (now - lastPublish < TimeSpan.FromSeconds(options.PublishBatchIntervalSeconds))
+                continue; // not due yet
+
+            if (measurements.Count == 0)
+                continue;
 
             var accumulatedBatch = new MeasurementBatchPayload(
                 SchemaVersion: 1,
                 AppVersion: "2.0.0",
-                CorrelationId: correlationId,
+                CorrelationId: Guid.NewGuid(),
                 PatientId: patientId,
                 Measurements: measurements.ToArray()
             );
@@ -255,40 +318,26 @@ public class MockApplicationService(
             var payload = JsonSerializer.Serialize(accumulatedBatch, _jsonOptions);
             var topic = $"{options.TopicPrefix}/{patientId:D}/telemetry";
 
-            var message = new MqttApplicationMessageBuilder()
-                .WithTopic(topic)
-                .WithPayload(Encoding.UTF8.GetBytes(payload))
-                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
-                .Build();
+            await _mqttClient.PublishAsync(
+                new MqttApplicationMessageBuilder()
+                    .WithTopic(topic)
+                    .WithPayload(Encoding.UTF8.GetBytes(payload))
+                    .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                    .Build(),
+                cancellationToken
+            );
 
-            await _mqttClient.PublishAsync(message, cancellationToken);
+            _lastPublishTimeByPatient[patientId] = now;
+            measurements.Clear(); // clear only this patient's accumulated measurements
+            published++;
         }
 
-        logger.LogInformation(
-            "Published accumulated batch with {PatientCount} patients",
-            _accumulatedMeasurementsByPatient.Count
-        );
-
-        // Clear accumulated measurements for next batch cycle
-        _accumulatedMeasurementsByPatient.Clear();
-    }
-
-    /// <summary>
-    /// Gets the patient id mapped to the given device index.
-    /// </summary>
-    /// <param name="index">Device index used to resolve a patient identifier.</param>
-    /// <returns>The mapped patient identifier.</returns>
-    private Guid GetOrCreatePatientId(int index)
-    {
-        if (_patientIdsByIndex.TryGetValue(index, out var patientId))
-        {
-            return patientId;
-        }
-
-        // patientId = Guid.NewGuid();
-        patientId = Guid.Parse("12345678-47ef-42c3-9a7a-123456789123");
-        _patientIdsByIndex[index] = patientId;
-        return patientId;
+        if (published > 0)
+            logger.LogInformation(
+                "Published batches for {Published}/{Total} patients",
+                published,
+                patientIds.Count
+            );
     }
 
     /// <summary>

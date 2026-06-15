@@ -1,6 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var mongo = builder.AddMongoDB("mongo")
+var mongo = builder
+    .AddMongoDB("mongo")
     .WithLifetime(ContainerLifetime.Persistent)
     .WithArgs("--quiet");
 var patientregistryDb = mongo.AddDatabase("patient-registry");
@@ -22,23 +23,27 @@ var mqttBroker = builder
     .AddProject<Projects.CagHome_MqttBroker>("mqtt-broker")
     .WithEnvironment("MQTT_PORT", brokerPort);
 
+var mockEhr = builder.AddProject<Projects.CagHome_MockEhr>("mock-ehr");
+
+builder
+    .AddProject<Projects.CagHome_MockApplication>("mock-application")
+    .WithReference(mqttBroker)
+    .WithReference(mockEhr)
+    .WaitFor(mockEhr)
+    .WaitFor(mqttBroker)
+    .WithEnvironment("Simulator__BrokerHost", brokerHost)
+    .WithEnvironment("Simulator__BrokerPort", brokerPort);
+
 builder
     .AddProject<Projects.CagHome_IngestionService>("ingestion-service")
     .WithReference(mqttBroker)
     .WithReference(rabbitmqBroker)
     .WithReference(redis)
     .WaitFor(rabbitmqBroker)
+    .WaitFor(redis)
     .WithEnvironment("MQTT_BROKER_PORT", brokerPort);
 
 // .WithReplicas(3);
-
-builder
-    .AddProject<Projects.CagHome_MockApplication>("mock-application")
-    .WithReference(mqttBroker)
-    .WithEnvironment("Simulator__BrokerHost", brokerHost)
-    .WithEnvironment("Simulator__BrokerPort", brokerPort);
-
-var mockEhr = builder.AddProject<Projects.CagHome_MockEhr>("mock-ehr");
 
 builder
     .AddProject<Projects.CagHome_NotificationService>("notification")
